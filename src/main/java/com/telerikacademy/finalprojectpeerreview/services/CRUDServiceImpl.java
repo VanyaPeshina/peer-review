@@ -28,7 +28,6 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
 
     @Override
     public void create(E entity, User user) {
-       /* AuthorizationCheck.checkForEmployee(user);*/
         if (checkEntityForDuplicates(entity)) {
             crudRepository.create(entity);
         }
@@ -36,7 +35,6 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
 
     @Override
     public void update(E entity, User user) {
-        /*AuthorizationCheck.checkForEmployee(user);*/
         if (checkEntityForDuplicates(entity)) {
             crudRepository.update(entity);
         }
@@ -44,7 +42,6 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
 
     @Override
     public void delete(int id, User user) {
-       /* AuthorizationCheck.checkForEmployee(user);*/
         E entityToDelete = crudRepository.getById(id);
         crudRepository.delete(entityToDelete);
     }

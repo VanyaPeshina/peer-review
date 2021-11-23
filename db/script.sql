@@ -35,8 +35,8 @@ create table users
     email    varchar(350) not null,
     phone    varchar(10)  not null,
     photo    blob         not null,
-    team_id  int          not null,
-    role_id  int          not null,
+    team_id  int          null,
+    role_id  int          null,
     constraint users_email_uindex
         unique (email),
     constraint users_phone_uindex
@@ -62,13 +62,16 @@ create table work_items
     reviewer_id int         null,
     status_id   int         null,
     creator_id  int         not null,
-    work_item   blob        null,
+    file        blob        null,
+    team_id     int         not null,
     constraint work_items_creator_fk
         foreign key (creator_id) references users (id),
     constraint work_items_reviewer_fk
         foreign key (reviewer_id) references users (id),
     constraint work_items_status_fk
-        foreign key (status_id) references statuses (id)
+        foreign key (status_id) references statuses (id),
+    constraint work_items_team_fk
+        foreign key (team_id) references teams (id)
 );
 
 create table attachments

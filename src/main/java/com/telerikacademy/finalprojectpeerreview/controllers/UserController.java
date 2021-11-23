@@ -5,6 +5,7 @@ import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundExcept
 import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.UserDTO;
 import com.telerikacademy.finalprojectpeerreview.models.User;
+import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.UserMapper;
 import com.telerikacademy.finalprojectpeerreview.services.UserServiceImpl;
 import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
@@ -35,8 +36,10 @@ public class UserController {
     }
 
     @GetMapping()
-    public List<User> getAll(@RequestParam(required = false) Optional<String> search) {
+    public List<User> getAll(@RequestHeader HttpHeaders headers,
+                             @RequestParam(required = false) Optional<String> search) {
         try {
+            User userToAuthenticate = authenticationHelper.tryGetUser(headers);
             return userService.search(search);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -44,12 +47,24 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable int id) {
+    public User getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
+            User userToAuthenticate = authenticationHelper.tryGetUser(headers);
             return userService.getByField("id", id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    @GetMapping("/{id}/requests")
+    public List<WorkItem> getAllRequests(@RequestHeader HttpHeaders headers, @PathVariable int id) {
+        try {
+            User userToAuthenticate = authenticationHelper.tryGetUser(headers);
+            return userService.getAllRequests(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @PostMapping("/user")

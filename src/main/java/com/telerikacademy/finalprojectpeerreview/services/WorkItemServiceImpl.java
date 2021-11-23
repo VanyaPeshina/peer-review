@@ -1,10 +1,18 @@
 package com.telerikacademy.finalprojectpeerreview.services;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.WorkItemRepository;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.WorkItemService;
+import com.telerikacademy.finalprojectpeerreview.utils.AuthorizationCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+import static com.telerikacademy.finalprojectpeerreview.utils.constants.*;
 
 @Service
 public class WorkItemServiceImpl extends CRUDServiceImpl<WorkItem> implements WorkItemService {
@@ -15,5 +23,44 @@ public class WorkItemServiceImpl extends CRUDServiceImpl<WorkItem> implements Wo
     public WorkItemServiceImpl(WorkItemRepository workItemRepository) {
         super(workItemRepository);
         this.workItemRepository = workItemRepository;
+    }
+
+    @Override
+    public List<WorkItem> search(Optional<String> search) {
+        if (search.get().length() == 0) {
+            return workItemRepository.getAll();
+        }
+        return workItemRepository.search(search.get());
+    }
+    @Override
+    public void create(WorkItem workItem, User user) {
+        checkForTeam(workItem);
+        if (checkEntityForDuplicates(workItem)) {
+            workItemRepository.create(workItem);
+        }
+    }
+
+    @Override
+    public void update(WorkItem workItem, User user) {
+        AuthorizationCheck.checkForInvolved(workItem, user);
+        checkForTeam(workItem);
+        if (checkEntityForDuplicates(workItem)) {
+            workItemRepository.update(workItem);
+        }
+    }
+
+    @Override
+    public List<WorkItem> filter(Optional<String> name, Optional<String> status, Optional<String> sort) {
+        List<WorkItem> filteredItems = workItemRepository.filter(name, status, sort);
+        if (filteredItems.isEmpty()) {
+            throw new EntityNotFoundException("work items", "this", "parameters");
+        }
+        return filteredItems;
+    }
+
+    protected void checkForTeam(WorkItem workItem) {
+        if (workItem.getCreator().getTeam().getId() != workItem.getReviewer().getTeam().getId()) {
+            throw new IllegalArgumentException(TEAM_MUST_BE_SAME);
+        }
     }
 }

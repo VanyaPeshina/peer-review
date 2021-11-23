@@ -1,7 +1,8 @@
 package com.telerikacademy.finalprojectpeerreview.services;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.User;
-import com.telerikacademy.finalprojectpeerreview.repositories.UserRepositoryImpl;
+import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,12 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
         return userRepository.search(search.get());
     }
 
-   /* @Override
-    public User getByUsername(String username) {
-        return userRepositoryImpl.getByUsername(username);
-    }*/
+    @Override
+    public List<WorkItem> getAllRequests(int id) {
+       List<WorkItem> requests = userRepository.getAllRequests(id);
+       if (requests.isEmpty()) {
+           throw new EntityNotFoundException("Request", "this", "user ID");
+       }
+       return requests;
+    }
 }

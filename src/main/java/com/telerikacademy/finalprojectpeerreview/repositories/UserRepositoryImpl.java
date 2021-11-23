@@ -1,6 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.repositories;
 
 import com.telerikacademy.finalprojectpeerreview.models.User;
+import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -37,7 +38,18 @@ public class UserRepositoryImpl extends CRUDRepositoryImpl<User> implements User
         }
     }
 
-   @Override
+    //LEFT JOIN NEEDED BECAUSE OF THE POSSIBLE NULL VALUES FOR REVIEWER IN THE DB
+    @Override
+    public List<WorkItem> getAllRequests(int id) {
+        try (Session session = sessionFactory.openSession()) {
+            String queryString = "select distinct w from WorkItem w left join w.reviewer where w.creator = :id";
+            Query<WorkItem> query = session.createQuery(queryString, WorkItem.class);
+            query.setParameter("id", id);
+            return query.list();
+        }
+    }
+
+    @Override
    protected Class<User> getEntityClass() {
        return User.class;
    }

@@ -32,6 +32,10 @@ public class WorkItem {
     @Column(name = "file")
     private byte[] file;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
+
     public WorkItem() {
     }
 
@@ -83,11 +87,20 @@ public class WorkItem {
         this.creator = creator;
     }
 
-    public byte[] getWorkItem() {
+    public byte[] getFile() {
         return file;
     }
 
-    public void setWorkItem(byte[] file) {
+    public void setFile(byte[] file) {
         this.file = file;
     }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
 }

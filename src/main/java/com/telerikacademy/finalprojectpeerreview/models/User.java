@@ -34,6 +34,10 @@ public class User {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private UserRole role;
+
     public User() {
     }
 
@@ -92,4 +96,13 @@ public class User {
     public void setTeam(Team team) {
         this.team = team;
     }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
 }
+

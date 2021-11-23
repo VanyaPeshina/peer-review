@@ -12,7 +12,7 @@ public class UserDTO {
     @Size(min = 2, max = 20, message = NAME_SHOULD_BE_BETWEEN)
     private String username;
 
-    @Size(min = 8)
+    @Size(min = 8, message = PASSWORD_SHOULD_BE_AT_LEAST)
     private String password;
 
     @Email(message = EMAIL_SHOULD_BE_VALID)

@@ -1,15 +1,23 @@
 package com.telerikacademy.finalprojectpeerreview.models.DTOs;
 
+import org.hibernate.cfg.annotations.reflection.XMLContext;
+import org.hibernate.query.criteria.internal.expression.function.AggregationFunction;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
 import java.io.Serializable;
+
+import static com.telerikacademy.finalprojectpeerreview.utils.constants.*;
 
 public class WorkItemDTO implements Serializable {
 
     private int id;
 
+    @Size(min = 10, max = 80, message = ITEM_TITLE_SHOULD_BE_BETWEEN)
     private String title;
 
+    @Size (min = 20, max = 65535, message = DESCRIPTION_SHOULD_BE_BETWEEN)
     private String description;
 
     private int reviewerId;

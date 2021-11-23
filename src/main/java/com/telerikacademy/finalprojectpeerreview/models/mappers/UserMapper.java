@@ -3,8 +3,10 @@ package com.telerikacademy.finalprojectpeerreview.models.mappers;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.UserDTO;
 import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
+import com.telerikacademy.finalprojectpeerreview.models.UserRole;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.TeamRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
+import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRoleRepository;
 import com.telerikacademy.finalprojectpeerreview.utils.FileConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,12 +21,16 @@ public class UserMapper {
     private final UserRepository userRepository;
     private final FileConverter fileConverter;
     private final TeamRepository teamRepository;
+    private final UserRoleRepository userRoleRepository;
 
     @Autowired
-    public UserMapper(UserRepository userRepository, FileConverter fileConverter, TeamRepository teamRepository) {
+    public UserMapper(UserRepository userRepository, FileConverter fileConverter, TeamRepository teamRepository,
+                      UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.fileConverter = fileConverter;
         this.teamRepository = teamRepository;
+
+        this.userRoleRepository = userRoleRepository;
     }
 
     public User fromDto(UserDTO userDTO) throws IOException {
@@ -88,5 +94,7 @@ public class UserMapper {
             Team team = teamRepository.getById(userDTO.getTeamId());
             user.setTeam(team);
         }
+        UserRole userRole = userRoleRepository.getByField("role", "User");
+        user.setRole(userRole);
     }
 }
