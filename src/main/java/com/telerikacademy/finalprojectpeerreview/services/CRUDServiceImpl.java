@@ -8,7 +8,7 @@ import com.telerikacademy.finalprojectpeerreview.repositories.contracts.CRUDRepo
 
 import java.util.List;
 
-public class CRUDServiceImpl<E> implements CRUDService<E> {
+public abstract class CRUDServiceImpl<E> implements CRUDService<E> {
 
     private final CRUDRepository<E> crudRepository;
 

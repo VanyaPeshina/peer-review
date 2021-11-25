@@ -9,5 +9,6 @@ public interface WorkItemRepository extends CRUDRepository<WorkItem> {
 
     List<WorkItem> search(String search);
 
-    List<WorkItem> filter(Optional<String> name, Optional<String> status, Optional<String> sort);
+    List<WorkItem> filter(Optional<String> name, Optional<String> status,
+                          Optional<String> reviewer, Optional<String> sort);
 }

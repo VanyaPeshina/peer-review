@@ -28,9 +28,11 @@ public class WorkItem {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    @Lob
-    @Column(name = "file")
-    private byte[] file;
+    @Column(name = "file_name")
+    private String fileName;
+
+    @Column(name = "file_download_uri")
+    private String fileDownloadUri;
 
     @ManyToOne
     @JoinColumn(name = "team_id")
@@ -87,14 +89,6 @@ public class WorkItem {
         this.creator = creator;
     }
 
-    public byte[] getFile() {
-        return file;
-    }
-
-    public void setFile(byte[] file) {
-        this.file = file;
-    }
-
     public Team getTeam() {
         return team;
     }
@@ -103,4 +97,19 @@ public class WorkItem {
         this.team = team;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileDownloadUri() {
+        return fileDownloadUri;
+    }
+
+    public void setFileDownloadUri(String fileDownloadUri) {
+        this.fileDownloadUri = fileDownloadUri;
+    }
 }

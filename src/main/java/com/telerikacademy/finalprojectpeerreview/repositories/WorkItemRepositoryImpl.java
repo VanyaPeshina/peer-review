@@ -8,10 +8,12 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.io.File.*;
 
 @Repository
 public class WorkItemRepositoryImpl extends CRUDRepositoryImpl<WorkItem> implements WorkItemRepository {
@@ -37,9 +39,17 @@ public class WorkItemRepositoryImpl extends CRUDRepositoryImpl<WorkItem> impleme
             return query.list();
         }
     }
+/*
+    public void upload(String path) {
+        File fileMetadata = new File(path);
+        java.io.File filePath = new java.io.File(path);
+        FileContent mediaContent = new FileContent("image/jpeg", filePath);
+        File file = driveService.files().create(fileMetadata, media)
+    }*/
 
     @Override
-    public List<WorkItem> filter(Optional<String> name, Optional<String> status, Optional<String> sort) {
+    public List<WorkItem> filter(Optional<String> name, Optional<String> status,
+                                 Optional<String> reviewer, Optional<String> sort) {
         try (Session session = sessionFactory.openSession()) {
             var queryString = new StringBuilder("from WorkItem ");
             var filters = new ArrayList<String>();
@@ -53,6 +63,11 @@ public class WorkItemRepositoryImpl extends CRUDRepositoryImpl<WorkItem> impleme
             status.ifPresent(value -> {
                 filters.add("status.status like :status");
                 params.put("status", value);
+            });
+
+            reviewer.ifPresent(value -> {
+                filters.add("reviewer.username like :reviewer");
+                params.put("reviewer", value);
             });
 
             if (!filters.isEmpty()) {
@@ -80,9 +95,6 @@ public class WorkItemRepositoryImpl extends CRUDRepositoryImpl<WorkItem> impleme
             if (param.equals("title")) {
                 result.append("title ");
             }
-            if (param.equals("reviewer")) {
-                result.append("reviewer.username ");
-            }
             if (param.equals("status")) {
                 result.append("status.status ");
             }
@@ -90,21 +102,8 @@ public class WorkItemRepositoryImpl extends CRUDRepositoryImpl<WorkItem> impleme
                 result.append("id desc ");
             }
         }
-        String stringResult = result.toString();
 
-        /*if (stringResult.contains("id title ")) {
-            stringResult = stringResult.replace("id", "id,");
-        }
-        if (stringResult.contains("title reviewer ")) {
-            stringResult = stringResult.replace("title", "title, ");
-        }
-        if (stringResult.contains("reviewer status")) {
-            stringResult = stringResult.replace("reviewer", "reviewer,");
-        }
-        if (stringResult.contains("status desc")) {
-            stringResult = stringResult.replace("status", "status,");
-        }*/
-        return stringResult;
+        return result.toString();
     }
 
     @Override

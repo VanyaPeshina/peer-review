@@ -2,6 +2,7 @@ package com.telerikacademy.finalprojectpeerreview.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 
 @Entity
@@ -28,6 +29,9 @@ public class User {
     @Lob @Basic(fetch = FetchType.EAGER)
     @Column(name = "photo")
     private byte[] photo;
+
+    @Column(name = "photo_name")
+    private String photoName;
 
     @ManyToOne
     @JsonIgnore
@@ -103,6 +107,14 @@ public class User {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public String getPhotoName() {
+        return photoName;
+    }
+
+    public void setPhotoName(String photoName) {
+        this.photoName = photoName;
     }
 }
 

@@ -32,6 +32,7 @@ public class WorkItemServiceImpl extends CRUDServiceImpl<WorkItem> implements Wo
         }
         return workItemRepository.search(search.get());
     }
+
     @Override
     public void create(WorkItem workItem, User user) {
         checkForTeam(workItem);
@@ -50,8 +51,9 @@ public class WorkItemServiceImpl extends CRUDServiceImpl<WorkItem> implements Wo
     }
 
     @Override
-    public List<WorkItem> filter(Optional<String> name, Optional<String> status, Optional<String> sort) {
-        List<WorkItem> filteredItems = workItemRepository.filter(name, status, sort);
+    public List<WorkItem> filter(Optional<String> name, Optional<String> status,
+                                 Optional<String> reviewer, Optional<String> sort) {
+        List<WorkItem> filteredItems = workItemRepository.filter(name, status, reviewer, sort);
         if (filteredItems.isEmpty()) {
             throw new EntityNotFoundException("work items", "this", "parameters");
         }

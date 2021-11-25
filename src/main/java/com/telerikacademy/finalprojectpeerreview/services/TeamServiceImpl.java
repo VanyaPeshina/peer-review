@@ -4,6 +4,7 @@ import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.TeamRepository;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
+import com.telerikacademy.finalprojectpeerreview.utils.AuthorizationCheck;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,6 @@ public class TeamServiceImpl extends CRUDServiceImpl<Team> implements TeamServic
 
     @Override
     public List<User> getMembers(Team team, User user) {
-        /* AuthorizationCheck.checkForEmployee(user);*/
         return teamRepository.getMembers(team);
     }
 }

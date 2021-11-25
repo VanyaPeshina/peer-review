@@ -1,11 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.models.DTOs;
 
-import org.hibernate.cfg.annotations.reflection.XMLContext;
-import org.hibernate.query.criteria.internal.expression.function.AggregationFunction;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import javax.validation.constraints.Size;
-import javax.validation.groups.Default;
 import java.io.Serializable;
 
 import static com.telerikacademy.finalprojectpeerreview.utils.constants.*;
@@ -25,8 +20,6 @@ public class WorkItemDTO implements Serializable {
     private int statusId;
 
     private int creatorId;
-
-    private CommonsMultipartFile file;
 
     public WorkItemDTO() {
     }
@@ -77,13 +70,5 @@ public class WorkItemDTO implements Serializable {
 
     public void setCreatorId(int creatorId) {
         this.creatorId = creatorId;
-    }
-
-    public CommonsMultipartFile getWork_item() {
-        return file;
-    }
-
-    public void setWork_item(CommonsMultipartFile file) {
-        this.file = file;
     }
 }

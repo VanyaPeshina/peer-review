@@ -9,5 +9,6 @@ public interface WorkItemService extends CRUDService<WorkItem> {
 
     List<WorkItem> search(Optional<String> search);
 
-    List<WorkItem> filter(Optional<String> name, Optional<String> status, Optional<String> sort);
+    List<WorkItem> filter(Optional<String> name, Optional<String> status,
+                          Optional<String> reviewer, Optional<String> sort);
 }

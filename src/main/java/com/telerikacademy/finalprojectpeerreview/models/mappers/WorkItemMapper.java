@@ -8,9 +8,9 @@ import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.ItemStatusRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.WorkItemRepository;
+import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.ItemStatusService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
-import com.telerikacademy.finalprojectpeerreview.utils.FileConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,20 +22,21 @@ public class WorkItemMapper {
     private final ItemStatusService statusService;
     private final TeamService teamService;
     private final ItemStatusRepository itemStatusRepository;
-    private final FileConverter fileConverter;
+    private final FileStorageService fileStorageService;
 
     @Autowired
     public WorkItemMapper(WorkItemRepository workItemRepository, UserRepository userRepository,
-                          ItemStatusService statusService, TeamService teamService, ItemStatusRepository itemStatusRepository, FileConverter fileConverter) {
+                          ItemStatusService statusService, TeamService teamService,
+                          ItemStatusRepository itemStatusRepository, FileStorageService fileStorageService) {
         this.workItemRepository = workItemRepository;
         this.userRepository = userRepository;
         this.statusService = statusService;
         this.teamService = teamService;
         this.itemStatusRepository = itemStatusRepository;
-        this.fileConverter = fileConverter;
+        this.fileStorageService = fileStorageService;
     }
 
-    public WorkItem fromDto(WorkItemDTO workItemDTO) /*throws SQLException, FileNotFoundException */{
+    public WorkItem fromDto(WorkItemDTO workItemDTO){
         WorkItem workItem;
         if (workItemDTO.getId() == 0) {
             workItem = new WorkItem();
@@ -46,7 +47,7 @@ public class WorkItemMapper {
         return workItem;
     }
 
-    private void DTOtoObject(WorkItemDTO workItemDTO, WorkItem workItem) /*throws SQLException, FileNotFoundException*/ {
+    private void DTOtoObject(WorkItemDTO workItemDTO, WorkItem workItem) {
         if (workItemDTO.getTitle() != null) {
             workItem.setTitle(workItemDTO.getTitle());
         }
@@ -74,8 +75,5 @@ public class WorkItemMapper {
                 workItem.setTeam(team);
             }
         }
-       /* if (workItemDTO.getWork_item() != null) {
-            workItem.setFile(workItemDTO.getWork_item().getBytes());
-        }*/
     }
 }
