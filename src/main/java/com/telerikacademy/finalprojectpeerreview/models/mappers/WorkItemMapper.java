@@ -47,6 +47,16 @@ public class WorkItemMapper {
         return workItem;
     }
 
+    public WorkItemDTO toDto(WorkItem workItem) {
+        WorkItemDTO workItemDTO = new WorkItemDTO();
+        workItemDTO.setCreatorId(workItem.getId());
+        workItemDTO.setDescription(workItem.getDescription());
+        workItemDTO.setTitle(workItem.getTitle());
+        workItemDTO.setReviewerId(workItem.getReviewer().getId());
+        workItemDTO.setStatusId(workItem.getStatus().getId());
+        return workItemDTO;
+    }
+
     private void DTOtoObject(WorkItemDTO workItemDTO, WorkItem workItem) {
         if (workItemDTO.getTitle() != null) {
             workItem.setTitle(workItemDTO.getTitle());

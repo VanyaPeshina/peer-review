@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpSession;
 
@@ -31,24 +32,24 @@ public class HomeMvcController {
     public String showHomePage(Model model) {
         try {
             return "index";
-        } catch (EntityNotFoundException e) {
-            return "not_found";
-        }
-     }
-
-    @GetMapping("/home")
-    public String showHomePageAfterLogin(Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException e) {
-            return "redirect:/login";
-        }
-        try {
-            model.addAttribute("user", user);
-            return "index";
-        } catch (EntityNotFoundException | NullPointerException e) {
-            return "index";
+        } catch (HttpClientErrorException | EntityNotFoundException e) {
+            return "error-404";
         }
     }
+
+   /* @GetMapping()
+    public String showHomePageAfterLogin(Model model, HttpSession session) {
+            User user;
+            try {
+                user = authenticationHelper.tryGetUser(session);
+            } catch (AuthenticationFailureException e) {
+                return "redirect:/login";
+            }
+            try {
+                model.addAttribute("user", user);
+                return "index";
+            } catch (EntityNotFoundException | NullPointerException e) {
+                return "index";
+            }
+        } */
 }

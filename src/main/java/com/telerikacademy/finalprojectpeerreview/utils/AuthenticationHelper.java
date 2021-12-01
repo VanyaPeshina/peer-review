@@ -44,9 +44,9 @@ public class AuthenticationHelper {
         return service.getByField("username", currentUser);
     }
 
-    public User verifyAuthentication(String email, String password) {
+    public User verifyAuthentication(String username, String password) {
         try {
-            User user = service.getByField("email", email);
+            User user = service.getByField("username", username);
             if (!user.getPassword().equals(password)) {
                 throw new AuthenticationFailureException(AUTHENTICATION_FAILURE_MESSAGE);
             }

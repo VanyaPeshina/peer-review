@@ -42,7 +42,7 @@ public class UserRepositoryImpl extends CRUDRepositoryImpl<User> implements User
     @Override
     public List<WorkItem> getAllRequests(int id) {
         try (Session session = sessionFactory.openSession()) {
-            String queryString = "select distinct w from WorkItem w left join w.reviewer where w.creator = :id";
+            String queryString = "select distinct w from WorkItem w left join w.reviewer where w.creator.id = :id";
             Query<WorkItem> query = session.createQuery(queryString, WorkItem.class);
             query.setParameter("id", id);
             return query.list();

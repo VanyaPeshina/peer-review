@@ -1,9 +1,13 @@
 package com.telerikacademy.finalprojectpeerreview.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.telerikacademy.finalprojectpeerreview.exceptions.MyFileNotFoundException;
+import org.springframework.core.io.UrlResource;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 
 @Entity
 @Table(name = "users")

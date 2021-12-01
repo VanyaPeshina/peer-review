@@ -35,7 +35,8 @@ public class WorkItemServiceImpl extends CRUDServiceImpl<WorkItem> implements Wo
 
     @Override
     public void create(WorkItem workItem, User user) {
-        checkForTeam(workItem);
+        //TODO -> трябва ли да проверяваме за reviewer при създаването? Той не е задължителен.
+//        checkForTeam(workItem);
         if (checkEntityForDuplicates(workItem)) {
             workItemRepository.create(workItem);
         }

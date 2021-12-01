@@ -2,6 +2,7 @@ package com.telerikacademy.finalprojectpeerreview.repositories;
 
 import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
+import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.TeamRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,6 +32,15 @@ public class TeamRepositoryImpl extends CRUDRepositoryImpl<Team> implements Team
     public List<User> getMembers(Team team) {
         try(Session session = sessionFactory.openSession()) {
             Query<User> query = session.createQuery("from User where team = :team", User.class);
+            query.setParameter("team", team);
+            return query.list();
+        }
+    }
+
+    @Override
+    public List<WorkItem> getTeamWorkItems(Team team) {
+        try(Session session = sessionFactory.openSession()) {
+            Query<WorkItem> query = session.createQuery("from WorkItem where team = :team", WorkItem.class);
             query.setParameter("team", team);
             return query.list();
         }
