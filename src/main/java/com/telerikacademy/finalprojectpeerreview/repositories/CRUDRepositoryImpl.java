@@ -19,18 +19,18 @@ public abstract class CRUDRepositoryImpl<E> implements CRUDRepository<E> {
     }
 
     @Override
-    public List<E> getAll() {
+    public List<E> getAll() throws EntityNotFoundException {
         try (Session session = sessionFactory.openSession()) {
             Query<E> query = session.createQuery(" from " + getEntityClass().getName(), getEntityClass());
-            if (query.list().size() == 0) {
+            /*if (query.list().size() == 0) {
                 throw new EntityNotFoundException(getEntityClass().getName(), "this", "name");
-            }
+            }*/
             return query.list();
         }
     }
 
     @Override
-    public E getById(int id) {
+    public E getById(int id) throws EntityNotFoundException {
         try (Session session = sessionFactory.openSession()) {
             E entity = session.get(getEntityClass(), id);
             if (entity == null) {
@@ -66,7 +66,7 @@ public abstract class CRUDRepositoryImpl<E> implements CRUDRepository<E> {
     }
 
     @Override
-    public <V> E getByField(String name, V value) {
+    public <V> E getByField(String name, V value) throws EntityNotFoundException {
         final String query = format("from %s where %s = :value", getEntityClass().getSimpleName(), name);
 
         try (Session session = sessionFactory.openSession()) {

@@ -51,7 +51,7 @@ public class UserController {
     public List<User> getAll(@RequestHeader HttpHeaders headers,
                              @RequestParam(required = false) Optional<String> search) {
         try {
-            User userToAuthenticate = authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUser(headers);
             return userService.search(search);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -61,7 +61,7 @@ public class UserController {
     @GetMapping("/{id}")
     public User getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
-            User userToAuthenticate = authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUser(headers);
             return userService.getByField("id", id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -131,7 +131,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{id}/uploadFile")
+    @PostMapping("/{id}/file")
     public void uploadPhoto(@PathVariable int id, @RequestHeader HttpHeaders headers,
                             @RequestParam("file") MultipartFile file) {
         try {

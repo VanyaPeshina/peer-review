@@ -2,6 +2,7 @@ package com.telerikacademy.finalprojectpeerreview.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.telerikacademy.finalprojectpeerreview.exceptions.MyFileNotFoundException;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.UrlResource;
 
 import javax.annotation.Resource;
@@ -30,7 +31,8 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
-    @Lob @Basic(fetch = FetchType.EAGER)
+    @Lob
+    @Basic(fetch = FetchType.EAGER)
     @Column(name = "photo")
     private byte[] photo;
 
@@ -45,6 +47,9 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private UserRole role;
+
+    @Transient
+    private String getPhotoForMVC;
 
     public User() {
     }
@@ -119,6 +124,14 @@ public class User {
 
     public void setPhotoName(String photoName) {
         this.photoName = photoName;
+    }
+
+    public String getGetPhotoForMVC() {
+        return "/api/users/" + getId() + "/photo";
+    }
+
+    public void setGetPhotoForMVC(String getPhotoForMVC) {
+        this.getPhotoForMVC = getPhotoForMVC;
     }
 }
 

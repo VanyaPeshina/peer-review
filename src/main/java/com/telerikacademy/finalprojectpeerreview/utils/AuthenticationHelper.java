@@ -16,10 +16,10 @@ import static com.telerikacademy.finalprojectpeerreview.utils.constants.*;
 @Component
 public class AuthenticationHelper {
 
-    private final UserService service;
+    private final UserService userService;
 
-    public AuthenticationHelper(UserService service) {
-        this.service = service;
+    public AuthenticationHelper(UserService userService) {
+        this.userService = userService;
     }
 
     public User tryGetUser(HttpHeaders headers) {
@@ -28,25 +28,25 @@ public class AuthenticationHelper {
         }
         try {
             String username = headers.getFirst(AUTHORIZATION_HEADER_NAME);
-            return service.getByField("username", username);
+            return userService.getByField("username", username);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username.");
         }
     }
 
-    public User tryGetUser(HttpSession session) {
+    public User tryGetUser(HttpSession session) throws EntityNotFoundException {
         String currentUser = (String) session.getAttribute("currentUser");
 
         if (currentUser == null) {
             throw new AuthenticationFailureException("No user logged in.");
         }
 
-        return service.getByField("username", currentUser);
+        return userService.getByField("username", currentUser);
     }
 
     public User verifyAuthentication(String username, String password) {
         try {
-            User user = service.getByField("username", username);
+            User user = userService.getByField("username", username);
             if (!user.getPassword().equals(password)) {
                 throw new AuthenticationFailureException(AUTHENTICATION_FAILURE_MESSAGE);
             }
@@ -57,6 +57,6 @@ public class AuthenticationHelper {
     }
 
     public User returnUserFromSession(HttpSession session) {
-        return service.getByField("username", session.getAttribute("currentUser").toString());
+        return userService.getByField("username", session.getAttribute("currentUser").toString());
     }
 }

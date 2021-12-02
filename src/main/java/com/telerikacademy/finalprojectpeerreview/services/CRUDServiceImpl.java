@@ -17,12 +17,12 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
     }
 
     @Override
-    public List<E> getAll() {
+    public List<E> getAll() throws EntityNotFoundException {
         return crudRepository.getAll();
     }
 
     @Override
-    public E getById(int id) {
+    public E getById(int id) throws EntityNotFoundException {
         return crudRepository.getById(id);
     }
 
@@ -41,13 +41,13 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
     }
 
     @Override
-    public void delete(int id, User user) {
+    public void delete(int id, User user) throws EntityNotFoundException {
         E entityToDelete = crudRepository.getById(id);
         crudRepository.delete(entityToDelete);
     }
 
     @Override
-    public <V> E getByField(String name, V value) {
+    public <V> E getByField(String name, V value) throws EntityNotFoundException {
         return crudRepository.getByField(name, value);
     }
 
@@ -59,7 +59,7 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
                     throw new DuplicateEntityException(entity.getClass().getSimpleName(), "these", "parameters");
                 }
             }
-        } catch (EntityNotFoundException | NullPointerException e) {
+        } catch (EntityNotFoundException e) {
             return true;
         }
         return true;

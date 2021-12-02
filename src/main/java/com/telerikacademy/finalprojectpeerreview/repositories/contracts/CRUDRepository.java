@@ -1,12 +1,14 @@
 package com.telerikacademy.finalprojectpeerreview.repositories.contracts;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+
 import java.util.List;
 
 public interface CRUDRepository<E> {
 
-    List<E> getAll();
+    List<E> getAll() throws EntityNotFoundException;
 
-    E getById(int id);
+    E getById(int id) throws EntityNotFoundException;
 
     void create(E entity);
 
@@ -14,6 +16,6 @@ public interface CRUDRepository<E> {
 
     void delete(E entity);
 
-    <V> E getByField(String name, V value);
+    <V> E getByField(String name, V value) throws EntityNotFoundException;
 
 }

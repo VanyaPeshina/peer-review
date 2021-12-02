@@ -5,6 +5,7 @@ import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 
     private final UserRepository userRepository;
 
+    @Autowired
     public UserServiceImpl(UserRepository userRepository) {
         super(userRepository);
         this.userRepository = userRepository;

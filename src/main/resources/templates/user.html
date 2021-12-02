@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Dashboard</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../dashboard/feather/feather.css">
+    <link rel="stylesheet" href="../dashboard/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="../dashboard/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="../dashboard/datatables.net-bs4/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="../dashboard/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" type="text/css" href="../dashboard/js/select.dataTables.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../dashboard/css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="../dashboard/images/peer-review-logo.png"/>
+</head>
+<body>
+<div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+            <a class="navbar-brand brand-logo mr-5" th:href="@{/}"><img src="../dashboard/images/PEER_REVIEW_2.png"
+                                                                        class="mr-2" alt="logo"/></a>
+            <!--  <a class="navbar-brand brand-logo-mini" th:href="@{/}"><img src="/dashboard/images/p-r-logo-2.png"
+                                                                          alt="logo"/></a>-->
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+            <!-- <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+                 <span class="icon-menu"></span>
+             </button>-->
+            <ul class="navbar-nav navbar-nav-right">
+                <li class="nav-item dropdown">
+                    <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
+                       data-toggle="dropdown">
+                        <i class="icon-bell mx-0"></i>
+                        <span class="count"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                         aria-labelledby="notificationDropdown">
+                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                        <a class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-success">
+                                    <i class="ti-info-alt mx-0"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">Application Error</h6>
+                                <p class="font-weight-light small-text mb-0 text-muted">
+                                    Just now
+                                </p>
+                            </div>
+                        </a>
+                        <a class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-warning">
+                                    <i class="ti-settings mx-0"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">Settings</h6>
+                                <p class="font-weight-light small-text mb-0 text-muted">
+                                    Private message
+                                </p>
+                            </div>
+                        </a>
+                        <a class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-info">
+                                    <i class="ti-user mx-0"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                                <p class="font-weight-light small-text mb-0 text-muted">
+                                    2 days ago
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item nav-profile dropdown">
+                    <a class="nav-link dropdown-toggle" type="file" href="#" data-toggle="dropdown"
+                       id="profileDropdown">
+                        <img th:src="${user.getGetPhotoForMVC()}" alt="profile"/>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                        <a class="dropdown-item">
+                            <i class="ti-settings text-primary"></i>
+                            Settings
+                        </a>
+                        <a class="dropdown-item" th:href="@{/login/logout}">
+                            <i class="ti-power-off text-primary"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                <span class="icon-menu"></span>
+            </button>
+        </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial -->
+        <!-- partial:partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar" style="background-image: url('/images/hero_bg_1.jpg');">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/dashboard}" style="color: #FFFFFF">
+                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false"
+                       aria-controls="charts">
+                        <i class="icon-bar-graph menu-icon" style="color: #FFFFFF"></i>
+                        <span class="menu-title" style="color: #FFFFFF">Work items</span>
+                        <i class="menu-arrow" style="color: #FFFFFF"></i>
+                    </a>
+                    <div class="collapse" id="charts">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/work_item}">Submit Work Item</a></li>
+                        </ul>
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/work_item/all}">Your work Items</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/team}" style="color: #FFFFFF">
+                        <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>
+                        <span class="menu-title" th:href="@{/team}">Your Team</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="main-panel">
+            <div class="content-wrapper">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Profile</h4>
+                            <!--<p class="card-description">
+                                Basic form elements
+                            </p>-->
+                            <form class="forms-sample" th:action="@{/users}" th:object="${userDto}" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="exampleInputName1">Username</label>
+                                    <input type="text" class="form-control" id="exampleInputName1" placeholder="Name"
+                                           th:field="*{username}" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail3">Email address</label>
+                                    <input type="email" class="form-control" id="exampleInputEmail3"
+                                           placeholder="Email" th:field="*{email}">
+                                </div>
+                                <!--   <div class="form-group">
+                                       <label for="exampleInputPassword4">Password</label>
+                                       <input type="text" class="form-control" id="exampleInputPassword4"
+                                              placeholder="Password" th:field="*{password}">
+                                   </div>-->
+                                <div class="form-group">
+                                    <label for="">Phone</label>
+                                    <input type="text" class="form-control" id=""
+                                           placeholder="Phone" th:field="*{phone}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Photo upload</label>
+                                    <input type="file" name="img[]" class="file-upload-default" th:field="*{multipartFile}">
+                                    <div class="input-group col-xs-12">
+                                        <input type="text" class="form-control file-upload-info" disabled placeholder="Upload Image" th:field="*{photoName}">
+                                        <span class="input-group-append">
+                          <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputCity1">Team</label>
+                                    <input type="text" class="form-control" id="exampleInputCity1"
+                                           placeholder="Team" th:field="*{teamId}" disabled>
+                                </div>
+                                <!-- <div class="form-group">
+                                     <label for="exampleTextarea1">Textarea</label>
+                                     <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
+                                 </div>-->
+                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                <button class="btn btn-light">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--   Core JS Files   -->
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="../dashboard/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="../dashboard/typeahead.js/typeahead.bundle.min.js"></script>
+<script src="../dashboard/select2/select2.min.js"></script>
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="../dashboard/js/off-canvas.js"></script>
+<script src="../dashboard/js/hoverable-collapse.js"></script>
+<script src="../dashboard/js/template.js"></script>
+<script src="../dashboard/js/settings.js"></script>
+<script src="../dashboard/js/todolist.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="../dashboard/js/file-upload.js"></script>
+<script src="../dashboard/js/typeahead.js"></script>
+<script src="../dashboard/js/select2.js"></script>
+<!-- End custom js for this page-->
+
+<!-- file upload/download -->
+<script>'use strict'
+
+var singleUploadForm = document.querySelector('#singleUploadForm');
+var singleFileUploadInput = document.querySelector('#singleFileUploadInput');
+var singleFileUploadError = document.querySelector('#singleFileUploadError');
+var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
+
+var multipleUploadForm = document.querySelector('#multipleUploadForm');
+var multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
+var multipleFileUploadError = document.querySelector('#multipleFileUploadError');
+var multipleFileUploadSuccess = document.querySelector('#multipleFileUploadSuccess');
+
+function uploadSingleFile(file) {
+    var formData = new FormData();
+    formData.append("file", file);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/uploadFile");
+
+    xhr.onload = function () {
+        console.log(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status == 200) {
+            singleFileUploadError.style.display = "none";
+            singleFileUploadSuccess.innerHTML = "<p>File Uploaded Successfully.</p><p>DownloadUrl : <a href='" + response.fileDownloadUri + "' target='_blank'>" + response.fileDownloadUri + "</a></p>";
+            singleFileUploadSuccess.style.display = "block";
+        } else {
+            singleFileUploadSuccess.style.display = "none";
+            singleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
+        }
+    }
+
+    xhr.send(formData);
+}
+
+function uploadMultipleFiles(files) {
+    var formData = new FormData();
+    for (var index = 0; index < files.length; index++) {
+        formData.append("files", files[index]);
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/uploadMultipleFiles");
+
+    xhr.onload = function () {
+        console.log(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status == 200) {
+            multipleFileUploadError.style.display = "none";
+            var content = "<p>All Files Uploaded Successfully</p>";
+            for (var i = 0; i < response.length; i++) {
+                content += "<p>DownloadUrl : <a href='" + response[i].fileDownloadUri + "' target='_blank'>" + response[i].fileDownloadUri + "</a></p>";
+            }
+            multipleFileUploadSuccess.innerHTML = content;
+            multipleFileUploadSuccess.style.display = "block";
+        } else {
+            multipleFileUploadSuccess.style.display = "none";
+            multipleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
+        }
+    }
+
+    xhr.send(formData);
+}
+
+
+singleUploadForm.addEventListener('submit', function (event) {
+    var files = singleFileUploadInput.files;
+    if (files.length === 0) {
+        singleFileUploadError.innerHTML = "Please select a file";
+        singleFileUploadError.style.display = "block";
+    }
+    uploadSingleFile(files[0]);
+    event.preventDefault();
+}, true);
+
+
+multipleUploadForm.addEventListener('submit', function (event) {
+    var files = multipleFileUploadInput.files;
+    if (files.length === 0) {
+        multipleFileUploadError.innerHTML = "Please select at least one file";
+        multipleFileUploadError.style.display = "block";
+    }
+    uploadMultipleFiles(files);
+    event.preventDefault();
+}, true);
+
+</body>
+
+</html>

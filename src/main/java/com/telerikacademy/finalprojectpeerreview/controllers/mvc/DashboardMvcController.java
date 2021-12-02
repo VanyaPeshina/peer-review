@@ -7,23 +7,18 @@ import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
+import com.telerikacademy.finalprojectpeerreview.services.contracts.WorkItemService;
 import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,11 +31,14 @@ public class DashboardMvcController {
     private final UserService userService;
     private final AuthenticationHelper authenticationHelper;
     private final FileStorageService fileStorageService;
+    private final WorkItemService workItemService;
 
-    public DashboardMvcController(UserService userService, AuthenticationHelper authenticationHelper, FileStorageService fileStorageService) {
+    public DashboardMvcController(UserService userService, AuthenticationHelper authenticationHelper,
+                                  FileStorageService fileStorageService, WorkItemService workItemService) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.fileStorageService = fileStorageService;
+        this.workItemService = workItemService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -73,18 +71,24 @@ public class DashboardMvcController {
                     .filter(workItem -> workItem.getReviewer().getId() == user.getId())
                     .collect(Collectors.toList());
 
+            List<WorkItem> teamItems = workItemService.getAll()
+                    .stream()
+                    .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
+                    .collect(Collectors.toList());
+
             model.addAttribute("workItems", workItemsCreatedByUser.size());
             model.addAttribute("requestsForReview", workItemsForReview.size());
             model.addAttribute("items", items);
-            ResponseEntity<Resource> resourceResponseEntity = downloadFile(user.getPhotoName(), request);
-            model.addAttribute("photo", resourceResponseEntity);
+            model.addAttribute("teamItems", teamItems);
+
+            model.addAttribute("photo", "/api/users/" + user.getId() + "/photo");
             return "dashboard";
         } catch (EntityNotFoundException e) {
             return "error-404";
         }
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
+   /* @GetMapping("/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         // Load file as Resource
         Resource resource = fileStorageService.loadFileAsResource(fileName);
@@ -106,5 +110,5 @@ public class DashboardMvcController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
-    }
+    }*/
 }

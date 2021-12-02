@@ -1,5 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.models.DTOs;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
@@ -23,9 +25,26 @@ public class UserDTO {
 
     private String photo;
 
+    private String photoName;
+
     private int teamId;
 
+    private MultipartFile multipartFile;
+
     public UserDTO() {
+    }
+
+    public UserDTO(int id, String username, String password, String email, String phone, String photo, String photoName,
+                   int teamId, MultipartFile multipartFile) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.photo = photo;
+        this.photoName = photoName;
+        this.teamId = teamId;
+        this.multipartFile = multipartFile;
     }
 
     public int getId() {
@@ -82,5 +101,21 @@ public class UserDTO {
 
     public void setTeamId(int teamId) {
         this.teamId = teamId;
+    }
+
+    public String getPhotoName() {
+        return photoName;
+    }
+
+    public void setPhotoName(String photoName) {
+        this.photoName = photoName;
+    }
+
+    public MultipartFile getMultipartFile() {
+        return multipartFile;
+    }
+
+    public void setMultipartFile(MultipartFile multipartFile) {
+        this.multipartFile = multipartFile;
     }
 }

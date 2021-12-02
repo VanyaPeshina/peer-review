@@ -52,6 +52,7 @@ public class TeamMvcController {
             model.addAttribute("teamMembers", teamMembers);
             List<WorkItem> workItems = teamService.getTeamWorkItems(team);
             model.addAttribute("workItems", workItems);
+            /*model.addAttribute("photo", "/api/users/" + user.getId() + "/photo");*/
             return "team";
         } catch (EntityNotFoundException | NullPointerException e) {
             return "team";
