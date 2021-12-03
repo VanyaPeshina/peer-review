@@ -23,28 +23,27 @@ public class UserDTO {
     @Size(min = 10, max = 10, message = PHONE_SHOULD_BE_EXACTLY)
     private String phone;
 
-    private String photo;
-
     private String photoName;
 
     private int teamId;
 
     private MultipartFile multipartFile;
 
+    private int userRole;
+
     public UserDTO() {
     }
 
-    public UserDTO(int id, String username, String password, String email, String phone, String photo, String photoName,
-                   int teamId, MultipartFile multipartFile) {
+    public UserDTO(int id, String username, String password, String email, String phone, String photoName,
+                   int teamId, int userRole) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.phone = phone;
-        this.photo = photo;
         this.photoName = photoName;
         this.teamId = teamId;
-        this.multipartFile = multipartFile;
+        this.userRole = userRole;
     }
 
     public int getId() {
@@ -87,14 +86,6 @@ public class UserDTO {
         this.phone = phone;
     }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
     public int getTeamId() {
         return teamId;
     }
@@ -117,5 +108,13 @@ public class UserDTO {
 
     public void setMultipartFile(MultipartFile multipartFile) {
         this.multipartFile = multipartFile;
+    }
+
+    public int getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(int userRole) {
+        this.userRole = userRole;
     }
 }

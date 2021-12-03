@@ -6,6 +6,7 @@ import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundExcept
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
+import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.WorkItemService;
 import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
@@ -32,13 +33,15 @@ public class DashboardMvcController {
     private final AuthenticationHelper authenticationHelper;
     private final FileStorageService fileStorageService;
     private final WorkItemService workItemService;
+    private final TeamService teamService;
 
     public DashboardMvcController(UserService userService, AuthenticationHelper authenticationHelper,
-                                  FileStorageService fileStorageService, WorkItemService workItemService) {
+                                  FileStorageService fileStorageService, WorkItemService workItemService, TeamService teamService) {
         this.userService = userService;
         this.authenticationHelper = authenticationHelper;
         this.fileStorageService = fileStorageService;
         this.workItemService = workItemService;
+        this.teamService = teamService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -51,41 +54,40 @@ public class DashboardMvcController {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
             return "redirect:/login";
         }
-        try {
-            model.addAttribute("user", user);
+        model.addAttribute("user", user);
 
-            List<WorkItem> items = userService.getAllRequests(user.getId());
+        List<WorkItem> workItemsCreatedByUser = workItemService.getAll()
+                .stream()
+                .filter(workItem -> workItem.getCreator().getId() == user.getId())
+                .collect(Collectors.toList());
 
-            List<WorkItem> workItemsCreatedByUser = userService.getAllRequests(user.getId())
-                    .stream()
-                    .filter(workItem -> workItem.getCreator() != null)
-                    .filter(workItem -> workItem.getCreator().getId() == user.getId())
-                    .collect(Collectors.toList());
+        List<WorkItem> teamItems = workItemService.getAll()
+                .stream()
+                .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
+                .collect(Collectors.toList());
 
-            List<WorkItem> workItemsForReview = userService.getAllRequests(user.getId())
-                    .stream()
-                    .filter(workItem -> workItem.getReviewer() != null)
-                    .filter(workItem -> workItem.getReviewer().getId() == user.getId())
-                    .collect(Collectors.toList());
+        List<WorkItem> workItemsForReview = userService.getAllRequests(user.getId())
+                .stream()
+                .filter(workItem -> workItem.getReviewer() != null)
+                .filter(workItem -> workItem.getReviewer().getId() == user.getId())
+                .collect(Collectors.toList());
 
-            List<WorkItem> teamItems = workItemService.getAll()
-                    .stream()
-                    .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
-                    .collect(Collectors.toList());
+        List<WorkItem> itemsNeedingChange = userService.getAllRequests(user.getId())
+                .stream()
+                .filter(workItem -> workItem.getStatus().getStatus().equals("Change Requested"))
+                .collect(Collectors.toList());
 
-            model.addAttribute("workItems", workItemsCreatedByUser.size());
-            model.addAttribute("requestsForReview", workItemsForReview.size());
-            model.addAttribute("items", items);
-            model.addAttribute("teamItems", teamItems);
+        model.addAttribute("workItems", workItemsCreatedByUser);
+        model.addAttribute("teamItems", teamItems);
+        model.addAttribute("waitingForReview", workItemsForReview);
+        model.addAttribute("needingChange", itemsNeedingChange);
+        model.addAttribute("members", teamService.getMembers(user.getTeam(), user));
 
-            model.addAttribute("photo", "/api/users/" + user.getId() + "/photo");
-            return "dashboard";
-        } catch (EntityNotFoundException e) {
-            return "error-404";
-        }
+        model.addAttribute("photo", "/api/users/" + user.getId() + "/photo");
+        return "dashboard";
     }
 
    /* @GetMapping("/downloadFile/{fileName:.+}")

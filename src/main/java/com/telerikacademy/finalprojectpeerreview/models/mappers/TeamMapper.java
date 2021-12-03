@@ -1,5 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.models.mappers;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.TeamDTO;
 import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
@@ -22,7 +23,7 @@ public class TeamMapper {
         this.userRepository = userRepository;
     }
 
-    public Team fromDto(TeamDTO teamDTO){
+    public Team fromDto(TeamDTO teamDTO) throws EntityNotFoundException {
         Team team;
         if (teamDTO.getId() == 0) {
             team = new Team();
@@ -33,7 +34,7 @@ public class TeamMapper {
         return team;
     }
 
-    private void DTOtoObject(TeamDTO teamDTO, Team team){
+    private void DTOtoObject(TeamDTO teamDTO, Team team) throws EntityNotFoundException {
         if (teamDTO.getName() != null) {
             if (teamRepository.getAll().stream().anyMatch(team1 -> team1.getName().equals(teamDTO.getName()))) {
                 throw new IllegalArgumentException(TEAM_NAME_SHOULD_BE_UNIQUE);

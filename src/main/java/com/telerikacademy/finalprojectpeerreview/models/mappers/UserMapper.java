@@ -1,5 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.models.mappers;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.UserDTO;
 import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
@@ -8,7 +9,6 @@ import com.telerikacademy.finalprojectpeerreview.repositories.contracts.TeamRepo
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRoleRepository;
 import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
-import com.telerikacademy.finalprojectpeerreview.utils.FileConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,23 +20,20 @@ import static com.telerikacademy.finalprojectpeerreview.utils.constants.*;
 public class UserMapper {
 
     private final UserRepository userRepository;
-    private final FileConverter fileConverter;
     private final TeamRepository teamRepository;
     private final UserRoleRepository userRoleRepository;
     private final FileStorageService fileStorageService;
 
     @Autowired
-    public UserMapper(UserRepository userRepository, FileConverter fileConverter, TeamRepository teamRepository,
+    public UserMapper(UserRepository userRepository, TeamRepository teamRepository,
                       UserRoleRepository userRoleRepository, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
-        this.fileConverter = fileConverter;
         this.teamRepository = teamRepository;
-
         this.userRoleRepository = userRoleRepository;
         this.fileStorageService = fileStorageService;
     }
 
-    public User fromDto(UserDTO userDTO) throws IOException {
+    public User fromDto(UserDTO userDTO) throws IOException, EntityNotFoundException {
         User user;
         if (userDTO.getId() == 0) {
             user = new User();
@@ -47,13 +44,79 @@ public class UserMapper {
         return user;
     }
 
-    private void DTOtoObject(UserDTO userDTO, User user) throws IOException {
+    private void DTOtoObject(UserDTO userDTO, User user) throws EntityNotFoundException {
+        doUsername(userDTO, user);
+        doPassword(userDTO, user);
+        doEmail(userDTO, user);
+        doPhone(userDTO, user);
+        doPhotoName(userDTO, user);
+        doTeam(userDTO, user);
+        doUserRole(userDTO, user);
+        /*if (userDTO.getPhoto() != null) {
+            byte[] imageInBytes = fileConverter.convertToBytes(userDTO.getPhoto());
+            user.setPhoto(imageInBytes);
+        }*/
+    }
+
+    public UserDTO toDto(User user) {
+        return new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(),
+                user.getPhone(), user.getPhotoName(), user.getTeam().getId(), user.getRole().getId());
+        /*userDTO.setPhoto(user.getPhotoName());*/
+    }
+
+    private void doUserRole(UserDTO userDTO, User user) throws EntityNotFoundException {
+        UserRole userRole;
+        if (userDTO.getUserRole() > 0) {
+            userRole = userRoleRepository.getByField("role", userDTO.getUserRole());
+        } else {
+            userRole = userRoleRepository.getByField("role", "User");
+        }
+        user.setRole(userRole);
+    }
+
+    private void doTeam(UserDTO userDTO, User user) throws EntityNotFoundException {
+        if (userDTO.getTeamId() > 0) {
+            Team team = teamRepository.getById(userDTO.getTeamId());
+            user.setTeam(team);
+        }
+    }
+
+    private void doPhotoName(UserDTO userDTO, User user) {
+        if (userDTO.getPhotoName() != null) {
+            user.setPhotoName(userDTO.getPhotoName());
+        } else if (user.getPhotoName() == null) {
+            user.setPhotoName("avatardefault.png");
+        }
+    }
+
+    private void doPhone(UserDTO userDTO, User user) {
+        if (userDTO.getPhone() != null && !userDTO.getPhone().equals(user.getPhone())) {
+            if (userRepository.getAll().stream().anyMatch(user1 -> user1.getPhone().equals(userDTO.getPhone()))) {
+                throw new IllegalArgumentException(PHONE_SHOULD_BE_UNIQUE);
+            }
+            user.setPhone(userDTO.getPhone());
+        }
+    }
+
+    private void doEmail(UserDTO userDTO, User user) {
+        if (userDTO.getEmail() != null && !userDTO.getEmail().equals(user.getEmail())) {
+            if (userRepository.getAll().stream().anyMatch(user1 -> user1.getEmail().equals(userDTO.getEmail()))) {
+                throw new IllegalArgumentException(EMAIL_SHOULD_BE_UNIQUE);
+            }
+            user.setEmail(userDTO.getEmail());
+        }
+    }
+
+    private void doUsername(UserDTO userDTO, User user) {
         if (userDTO.getUsername() != null) {
             if (userRepository.getAll().stream().anyMatch(user1 -> user1.getUsername().equals(userDTO.getUsername()))) {
                 throw new IllegalArgumentException(USERNAME_SHOULD_BE_UNIQUE);
             }
             user.setUsername(userDTO.getUsername());
         }
+    }
+
+    private void doPassword(UserDTO userDTO, User user) {
         if (userDTO.getPassword() != null) {
             //check for capital letter
             boolean capitalLetter = false;
@@ -77,46 +140,5 @@ public class UserMapper {
                 throw new IllegalArgumentException(PASSWORD_SHOULD_CONTAIN);
             }
         }
-        if (userDTO.getEmail() != null && !userDTO.getEmail().equals(user.getEmail())) {
-            if (userRepository.getAll().stream().anyMatch(user1 -> user1.getEmail().equals(userDTO.getEmail()))) {
-                throw new IllegalArgumentException(EMAIL_SHOULD_BE_UNIQUE);
-            }
-            user.setEmail(userDTO.getEmail());
-        }
-        if (userDTO.getPhone() != null && !userDTO.getPhone().equals(user.getPhone())) {
-            if (userRepository.getAll().stream().anyMatch(user1 -> user1.getPhone().equals(userDTO.getPhone()))) {
-                throw new IllegalArgumentException(PHONE_SHOULD_BE_UNIQUE);
-            }
-            user.setPhone(userDTO.getPhone());
-        }
-        if (userDTO.getPhoto() != null) {
-            byte[] imageInBytes = fileConverter.convertToBytes(userDTO.getPhoto());
-            user.setPhoto(imageInBytes);
-        }
-        if (userDTO.getPhotoName() != null) {
-            user.setPhotoName(userDTO.getPhotoName());
-        } else if (user.getPhotoName() == null) {
-            user.setPhotoName("avatardefault.png");
-        }
-
-        if (userDTO.getTeamId() > 0) {
-            Team team = teamRepository.getById(userDTO.getTeamId());
-            user.setTeam(team);
-        }
-        UserRole userRole = userRoleRepository.getByField("role", "User");
-        user.setRole(userRole);
-    }
-
-    public UserDTO toDto(User user) {
-        ///TODO Constructor с всички параметри
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setUsername(user.getUsername());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPhone(user.getPhone());
-        userDTO.setPassword(user.getPassword());
-        userDTO.setTeamId(user.getTeam().getId());
-        userDTO.setPhoto(user.getPhotoName());
-        return userDTO;
     }
 }

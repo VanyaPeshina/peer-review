@@ -50,12 +50,8 @@ public class UserController {
     @GetMapping()
     public List<User> getAll(@RequestHeader HttpHeaders headers,
                              @RequestParam(required = false) Optional<String> search) {
-        try {
-            authenticationHelper.tryGetUser(headers);
-            return userService.search(search);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
+        authenticationHelper.tryGetUser(headers);
+        return userService.search(search);
     }
 
     @GetMapping("/{id}")
@@ -70,9 +66,14 @@ public class UserController {
 
     @GetMapping("/{id}/photo")
     public ResponseEntity<Resource> downloadFile(@PathVariable int id, HttpServletRequest request) {
-        // Load file as Resource
-        User user = userService.getById(id);
-        Resource resource = fileStorageService.loadFileAsResource(user.getPhotoName());
+        Resource resource = null;
+        try {
+            // Load file as Resource
+            User user = userService.getById(id);
+            resource = fileStorageService.loadFileAsResource(user.getPhotoName());
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+        }
         // Try to determine file's content type
         String contentType = null;
         try {
@@ -92,12 +93,8 @@ public class UserController {
 
     @GetMapping("/{id}/requests")
     public List<WorkItem> getAllRequests(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-        try {
-            User userToAuthenticate = authenticationHelper.tryGetUser(headers);
-            return userService.getAllRequests(id);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        User userToAuthenticate = authenticationHelper.tryGetUser(headers);
+        return userService.getAllRequests(id);
     }
 
     @PostMapping()
@@ -109,6 +106,8 @@ public class UserController {
             return user;
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -124,10 +123,10 @@ public class UserController {
             return user;
         } catch (IOException | DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (UnauthorizedOperationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 

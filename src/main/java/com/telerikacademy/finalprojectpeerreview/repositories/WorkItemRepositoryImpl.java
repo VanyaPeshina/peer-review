@@ -39,13 +39,6 @@ public class WorkItemRepositoryImpl extends CRUDRepositoryImpl<WorkItem> impleme
             return query.list();
         }
     }
-/*
-    public void upload(String path) {
-        File fileMetadata = new File(path);
-        java.io.File filePath = new java.io.File(path);
-        FileContent mediaContent = new FileContent("image/jpeg", filePath);
-        File file = driveService.files().create(fileMetadata, media)
-    }*/
 
     @Override
     public List<WorkItem> filter(Optional<String> name, Optional<String> status,

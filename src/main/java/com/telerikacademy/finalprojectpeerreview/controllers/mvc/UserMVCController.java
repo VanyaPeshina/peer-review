@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -40,7 +39,7 @@ public class UserMVCController {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
             return "redirect:/login";
         }
         try {
@@ -49,7 +48,7 @@ public class UserMVCController {
             model.addAttribute("userDto", userDto);
             model.addAttribute("user", user);
             return "user";
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
             return "redirect:/login";
         }
     }
@@ -60,30 +59,29 @@ public class UserMVCController {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
             return "redirect:/login";
         }
         if (errors.hasErrors()) {
             return "user";
         }
         try {
-           /* model.addAttribute("upload", "/api/users/" + user.getId() + "/file");*/
             dto.setId(user.getId());
-            if (dto.getMultipartFile() != null) {
+            if (dto.getMultipartFile() != null && !dto.getMultipartFile().isEmpty()) {
                 String fileName = fileStorageService.storeFile(dto.getMultipartFile());
                 dto.setPhotoName(fileName);
             }
             User userToUpdate = userMapper.fromDto(dto);
             userService.update(userToUpdate, user);
             return "redirect:/users";
-        } catch (EntityNotFoundException e) {
-            model.addAttribute("error", e.getMessage());
-            return "error-404";
         } catch (DuplicateEntityException e) {
-            return "user_profile_conflict_409";
+            return "error-404";
         } catch (IOException e) {
             e.printStackTrace();
             return "error-404";
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return "redirect:/login";
         }
     }
 }

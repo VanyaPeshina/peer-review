@@ -31,11 +31,11 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
-    @Lob
+  /*  @Lob
     @Basic(fetch = FetchType.EAGER)
     @Column(name = "photo")
     private byte[] photo;
-
+*/
     @Column(name = "photo_name")
     private String photoName;
 
@@ -94,13 +94,13 @@ public class User {
         this.phone = phone;
     }
 
-    public byte[] getPhoto() {
+ /*   public byte[] getPhoto() {
         return photo;
     }
 
     public void setPhoto(byte[] photo) {
         this.photo = photo;
-    }
+    }*/
 
     public Team getTeam() {
         return team;

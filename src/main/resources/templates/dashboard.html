@@ -20,6 +20,16 @@
     <link rel="stylesheet" href="dashboard/css/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="dashboard/images/peer-review-logo.png"/>
+    <style>
+        .vertical {
+            border-left: 1px solid darkblue;
+            height: 500px;
+            position: absolute;
+            left: 89%;
+            margin-left: 3px;
+            top: 0;
+        }
+    </style>
 </head>
 <body>
 <div class="container-scroller">
@@ -36,6 +46,56 @@
                  <span class="icon-menu"></span>
              </button>-->
             <ul class="navbar-nav navbar-nav-right">
+                <li class="nav-item dropdown">
+                    <a class="nav-link count-indicator dropdown-toggle" id="teamDropDown" href="#"
+                       data-toggle="dropdown">
+                        <i class="ti-crown"></i>
+                        <span class="count"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                         aria-labelledby="notificationDropdown">
+                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                        <a class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-success">
+                                    <i class="ti-info-alt mx-0"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">Application Error</h6>
+                                <p class="font-weight-light small-text mb-0 text-muted">
+                                    Just now
+                                </p>
+                            </div>
+                        </a>
+                        <a class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-warning">
+                                    <i class="ti-settings mx-0"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">Settings</h6>
+                                <p class="font-weight-light small-text mb-0 text-muted">
+                                    Private message
+                                </p>
+                            </div>
+                        </a>
+                        <a class="dropdown-item preview-item">
+                            <div class="preview-thumbnail">
+                                <div class="preview-icon bg-info">
+                                    <i class="ti-user mx-0"></i>
+                                </div>
+                            </div>
+                            <div class="preview-item-content">
+                                <h6 class="preview-subject font-weight-normal">New user registration</h6>
+                                <p class="font-weight-light small-text mb-0 text-muted">
+                                    2 days ago
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
                        data-toggle="dropdown">
@@ -125,769 +185,320 @@
                     <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false"
                        aria-controls="charts">
                         <i class="icon-bar-graph menu-icon" style="color: #FFFFFF"></i>
-                        <span class="menu-title" style="color: #FFFFFF">Work items</span>
+                        <span class="menu-title" style="color: #FFFFFF">Work Items</span>
                         <i class="menu-arrow" style="color: #FFFFFF"></i>
                     </a>
                     <div class="collapse" id="charts">
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item"><a class="nav-link"
-                                                    th:href="@{/work_item}">Submit Work Item</a></li>
+                                                    th:href="@{/work_item}">Create Work Item</a></li>
                         </ul>
                         <ul class="nav flex-column sub-menu">
                             <li class="nav-item"><a class="nav-link"
-                                                    th:href="@{/work_item/all}">Your work Items</a></li>
+                                                    th:href="@{/work_item/all}">My Work Items</a></li>
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/team}" style="color: #FFFFFF">
+                    <a class="nav-link" data-toggle="collapse" href="#team" aria-expanded="false"
+                       aria-controls="team">
                         <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>
-                        <span class="menu-title" th:href="@{/team}">Your Team</span>
+                        <span class="menu-title" style="color: #FFFFFF">Team</span>
+                        <i class="menu-arrow" style="color: #FFFFFF"></i>
                     </a>
+                    <div class="collapse" id="team">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/team/all}">My Team</a></li>
+                        </ul>
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/team}">Create team</a></li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </nav>
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper" style="background-color: #C4E613">
-                <div class="row">
-                    <div class="col-md-12 grid-margin">
-                        <div class="row">
-                            <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 class="font-weight-bold">Welcome, <span th:text="${user.getUsername()}"></span>!
-                                </h3>
-                                <!--  <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span
-                                          class="text-primary">3 unread alerts!</span></h6>-->
+                <div class="col-md-12 stretch-card grid-margin grid-margin-md-0">
+                    <div class="card data-icon-card-primary">
+                        <div class="card-body" style="background-color: #C4E613">
+                            <p class="card-title text-white"></p>
+                            <div class="row">
+                                <div class="col-8 text-white">
+                                    <h2>Welcome, <span th:text="${user.getUsername()}"></span></h2>
+                                    <!-- <h3 th:if="${user.getTeam() != null}" class="text-white font-weight-500 mb-0">
+                                         Team: <span class="text-primary" th:text="${user.getTeam.getName()}"></span></h3>
+                                     <h3 th:if="${user.getTeam() != null}" class="text-white font-weight-500 mb-0">
+                                         Team Members: <span class="text-primary" th:text="${members.size()}"></span></h3>
+                                     <h3 th:if="${user.getTeam() == null}" class="text-white font-weight-500 mb-0">
+                                         No Team</h3>-->
+                                </div>
+                                <div class="col-4 background-icon">
+                                </div>
                             </div>
-                            <button type="button" class="btn btn-rounded btn-primary btn-lg" th:href="@{/work_item}">Submit Item
-                            </button>
                         </div>
                     </div>
                 </div>
+                <!-- <div class="row">
+                     <div class="col-md-12 grid-margin">
+                         <div class="row">
+                             <div class="col-12 col-xl-8 mb-4 mb-xl-0">
+                                 <div class="col-4 background-icon"></div>
+                                 &lt;!&ndash;  <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span
+                                           class="text-primary">3 unread alerts!</span></h6>&ndash;&gt;
+                             </div>
+                         </div>
+                     </div>
+                     <div class="row">
+                         <h2 class="font-weight-bolder" style="color: #FFFFFF">Welcome, <span
+                                 th:text="${user.getUsername()}"></span>!
+                         </h2>
+                     </div>
+                 </div>
+                 <div class="row">
+                     <h3 th:if="${user.getTeam() != null}" class="font-weight-normal mb-0">Your
+                         team:
+                         <span class="text-primary" th:text="${user.getTeam().getName()}">
+                                                 <a th:href="@{/team}"></a></span></h3>
+                     <h3 th:if="${user.getTeam() == null}" class="font-weight-normal mb-0">
+                         <span class="text-primary">No team at the moment</span>
+                     </h3>
+                 </div>-->
+                <!-- <h3 class="font-weight-bolder" style="color: #FFFFFF">Welcome, <span th:text="${user.getUsername()}"></span>!
+                 </h3>-->
 
                 <!-- dashboard -->
-
                 <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="card-title">Advanced Table</p>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="table-responsive">
-                                            <table id="example" class="display expandable-table" style="width:100%">
-                                                <thead>
-                                                <tr>
-                                                    <th>#ID</th>
-                                                    <th>Creator</th>
-                                                    <th>Title</th>
-                                                    <th>Reviewer</th>
-                                                    <th>Status</th>
-                                                    <th>File</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr th:each="workItem : ${teamItems}">
-                                                    <td><a th:href="@{/work_item/{id}(id=${workItem.getId()})}"
-                                                           th:text="${workItem.id}"> </a>
-                                                    </td>
-                                                    <td type="photo" th:text="${workItem.creator.username}">Photoshop</td>
-                                                    <td th:text="${workItem.title}"></td>
-                                                    <td th:text="${workItem.reviewer.username}"></td>
-                                                    <td>
-                                                        <th:block th:switch="${workItem.status.status}">
-                                                            <div th:case="'Pending'">
-                                                                <span class="badge bg-info rounded-pill">Pending</span>
-                                                            </div>
-                                                            <div th:case="'Under Review'">
-                                                                <span class="badge bg-primary rounded-pill">Under Review</span>
-                                                            </div>
-                                                            <div th:case="'Change Requested'">
-                                                                <span class="badge bg-warning rounded-pill">Change Requested</span>
-                                                            </div>
-                                                            <div th:case="'Accepted'">
-                                                                <span class="badge bg-success rounded-pill">Accepted</span>
-                                                            </div>
-                                                            <div th:case="'Rejected'">
-                                                                <span class="badge bg-danger rounded-pill">Rejected</span>
-                                                            </div>
-                                                        </th:block>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                    <div class="col-lg-6 grid-margin stretch-card">
+                        <!--<div class="card tale-bg">-->
+                        <div class="card-people mt-auto">
+                            <div class="row">
+                                <a th:href="@{/team/all}">
+                                    <button type="submit" class="btn btn-block btn-primary btn-lg"
+                                            th:href="@{/team/all}">
+                                        MY TEAM
+                                    </button>
+                                </a>
+                                <a th:href="@{/work_item}">
+                                    <button type="submit" class="btn btn-block btn-primary btn-lg"
+                                            th:href="@{/work_item}">
+                                        SEND INVITATION
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="row">
+                                <img src="dashboard/images/team.jpg" alt="team">
+                            </div>
+                            <!--<img src="dashboard/images/dashboard/people.svg" alt="team">-->
+                            <!--  <div class="weather-info">
+                                  <div class="d-flex">-->
+                            <!--<div>
+                                <h2 class="mb-0 font-weight-normal"><i
+                                        class="icon-sun mr-2"></i>31<sup>C</sup></h2>
+                            </div>-->
+                            <!--   <div class="ml-2">-->
+                            <!-- <h3 th:if="${user.getTeam() != null}" class="font-weight-normal mb-0">Your
+                                 team:
+                                 <span class="text-primary" th:text="${user.getTeam().getName()}">
+                                     <a th:href="@{/team}"></a></span></h3>
+                             <h3 th:if="${user.getTeam() == null}" class="font-weight-normal mb-0">
+                                 <span class="text-primary">No team at the moment</span>
+                             </h3>-->
+                            <!--<h6 class="font-weight-normal">Team</h6>-->
+                            <!--</div>
+                        </div>
+                        &lt;!&ndash; </div>&ndash;&gt;
+                    </div>-->
+                        </div>
+                        <div class="vertical"></div>
+                    </div>
+
+
+                    <div class="col-lg-6 grid-margin">
+                        <div class="row">
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                <div class="card card-tale">
+                                    <div class="card-body">
+                                        <p class="mb-4">My Work Items</p>
+                                        <p class="fs-30 mb-2" th:text="${workItems.size()}"></p>
+                                        <!--<p>10.00% (30 days)</p>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4 stretch-card transparent">
+                                <div class="card card-dark-blue">
+                                    <div class="card-body">
+                                        <p class="mb-4">Work Items of My Team</p>
+                                        <p class="fs-30 mb-2" th:text="${teamItems.size()}"></p>
+                                        <!--<p>22.00% (30 days)</p>-->
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="content-wrapper" style="background-color: #C4E613">
-                    <div class="col-lg-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Work Items</h4>
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th>Id</th>
-                                            <th>Creator</th>
-                                            <th>Title</th>
-                                            <th>Reviewer</th>
-                                            <th>Status</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr th:each="workItem : ${teamItems}">
-                                            <td><a th:href="@{/work_item/{id}(id=${workItem.getId()})}"
-                                                   th:text="${workItem.id}"> </a>
-                                            </td>
-                                            <td type="photo" th:text="${workItem.creator.username}">Photoshop</td>
-                                            <td th:text="${workItem.title}"></td>
-                                            <td th:text="${workItem.reviewer.username}"></td>
-                                            <td>
-                                                <th:block th:switch="${workItem.status.status}">
-                                                    <div th:case="'Pending'">
-                                                        <span class="badge bg-info rounded-pill">Pending</span>
-                                                    </div>
-                                                    <div th:case="'Under Review'">
-                                                        <span class="badge bg-primary rounded-pill">Under Review</span>
-                                                    </div>
-                                                    <div th:case="'Change Requested'">
-                                                        <span class="badge bg-warning rounded-pill">Change Requested</span>
-                                                    </div>
-                                                    <div th:case="'Accepted'">
-                                                        <span class="badge bg-success rounded-pill">Accepted</span>
-                                                    </div>
-                                                    <div th:case="'Rejected'">
-                                                        <span class="badge bg-danger rounded-pill">Rejected</span>
-                                                    </div>
-                                                </th:block>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                        <div class="row">
+                            <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                                <div class="card card-light-blue">
+                                    <div class="card-body">
+                                        <p class="mb-4">Waiting for Review</p>
+                                        <p class="fs-30 mb-2" th:text="${waitingForReview.size()}"></p>
+                                        <!-- <p>2.00% (30 days)</p>-->
+                                    </div>
                                 </div>
-                                <div class="text-right"> * If you want to update click on ID</div>
+                            </div>
+                            <div class="col-md-6 stretch-card transparent">
+                                <div class="card card-light-orange" style="background-color: #FA9742">
+                                    <div class="card-body">
+                                        <p class="mb-4" style="color: #FFFFFF">Items Needing Change</p>
+                                        <p class="fs-30 mb-2" style="color: #FFFFFF"
+                                           th:text="${needingChange.size()}"></p>
+                                        <p style="color: #FFFFFF">Status: 'Change Requested'</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12 stretch-card transparent">
+                                <div class="card-body">
+                                    <a th:href="@{/work_item}">
+                                        <button type="submit" class="btn btn-block btn-primary btn-lg"
+                                                th:href="@{/work_item}">
+                                            CREATE NEW WORK ITEM
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 stretch-card transparent">
+                                <div class="card-body">
+                                    <a th:href="@{/team}">
+                                        <button type="submit" class="btn btn-block btn-primary btn-lg"
+                                                th:href="@{/team}">
+                                            CREATE NEW TEAM
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- main-panel ends -->
                     </div>
                 </div>
-
-
-                <!-- end dashboard -->
-
-                <!-- <div class="row">
-                     <div class="col-md-12 grid-margin stretch-card">
-                         <div class="card position-relative">
-                             <div class="card-body">
-                                 <div id="detailedReports"
-                                      class="carousel slide detailed-report-carousel position-static pt-2"
-                                      data-ride="carousel">
-                                     <div class="carousel-inner">
-                                         <div class="carousel-item active">
-                                             <div class="row">
-                                                 <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
-                                                     <div class="ml-xl-4 mt-3">
-                                                         <p class="card-title">Your Team Report</p>
-                                                         <h1 class="text-primary" th:text="${items.size()}"></h1>
-                                                         <h3 class="font-weight-500 mb-xl-4 text-primary">Work Items</h3>
-                                                         &lt;!&ndash;<p class="mb-2 mb-xl-0">The total number of work items in
-                                                             your container.</p>&ndash;&gt;
-                                                     </div>
-                                                 </div>
-
-                                                 <div class="col-md-12 col-md">
-                                                     <div class="row">
-                                                         <div class="col-md-6 border-right">
-                                                             <div class="table-responsive mb-3 mb-md-0 mt-3">
-                                                                 <table class="table table-hover">
-                                                                     <tr>
-                                                                         <th>Id</th>
-                                                                         <th>Title</th>
-                                                                    &lt;!&ndash;     <th>Creator</th>&ndash;&gt;
-                                                                         <th>Reviewer</th>
-                                                                         <th>Status</th>
-                                                                     </tr>
-                                                                     </thead>
-                                                                     <tbody>
-                                                                     <tr th:each="workItem : ${teamItems}">
-                                                                         <td>
-                                                                             <a th:href="@{/work_item/{id}(id=${workItem.getId()})}"
-                                                                                th:text="${workItem.id}"> </a>
-                                                                         </td>
-                                                                        &lt;!&ndash; <td th:text="${workItem.creator.username}">
-                                                                             Photoshop
-                                                                         </td>&ndash;&gt;
-                                                                         <td th:text="${workItem.title}"></td>
-                                                                         <td th:text="${workItem.reviewer.username}"></td>
-                                                                         <td>
-                                                                             <th:block
-                                                                                     th:switch="${workItem.status.status}">
-                                                                                 <div th:case="'Pending'">
-                                                                                     <span class="badge bg-warning rounded-pill">Pending</span>
-                                                                                 </div>
-                                                                                 <div th:case="'Under Review'">
-                                                                                     <span class="badge bg-success rounded-pill">Under Review</span>
-                                                                                 </div>
-                                                                                 <div th:case="'Change Requested'">
-                                                                                     <span class="badge bg-danger rounded-pill">Change Requested</span>
-                                                                                 </div>
-                                                                                 <div th:case="'Accepted'">
-                                                                                     <span class="badge bg-danger rounded-pill">Accepted</span>
-                                                                                 </div>
-                                                                                 <div th:case="'Rejected'">
-                                                                                     <span class="badge bg-danger rounded-pill">Rejected</span>
-                                                                                 </div>
-                                                                             </th:block>
-                                                                         </td>
-                                                                     </tr>
-                                                                 </table>
-                                                             </div>
-                                                         </div>
-                                                         <div class="col-md-6 mt-3">
-                                                             <canvas id="south-america-chart"></canvas>
-                                                             <div id="south-america-legend"></div>
-                                                         </div>
-                                                     </div>
-                                                 </div>
-
-                                                 &lt;!&ndash; <div class="col-md-12 col-xl-9">
-                                                      <div class="row">
-                                                          <div class="col-md-6 border-right">
-                                                              <div class="table-responsive mb-3 mb-md-0 mt-3">
-                                                                  <table class="table table-borderless report-table">
-                                                                      <tr th:each="item : ${teamItems}">
-                                                                          <td class="text-muted"><a
-                                                                                  th:href="@{/work_item/{id}(id=${item.getId()})}"
-                                                                                  th:text="${item.id}"></a>
-                                                                          </td>
-                                                                          <td class="text-muted"
-                                                                              th:text="${item.getTitle()}"></td>
-                                                                          <td class="w-100 px-0">
-                                                                              <th:block
-                                                                                      th:switch="${item.status.status.toUpperCase()}">
-                                                                                  <div th:case="'PENDING'">
-                                                                                      <span class="badge bg-info rounded-pill">Pending</span>
-                                                                                  </div>
-                                                                                  <div th:case="'UNDER REVIEW'">
-                                                                                      <span class="badge bg-primary rounded-pill">Under Review</span>
-                                                                                  </div>
-                                                                                  <div th:case="'CHANGE REQUESTED'">
-                                                                                      <span class="badge bg-warning rounded-pill">Change Requested</span>
-                                                                                  </div>
-                                                                                  <div th:case="'ACCEPTED'">
-                                                                                      <span class="badge bg-success rounded-pill">Accepted</span>
-                                                                                  </div>
-                                                                                  <div th:case="'REJECTED'">
-                                                                                      <span class="badge bg-danger rounded-pill">Rejected</span>
-                                                                                  </div>
-                                                                              </th:block>
-                                                                          </td>
-                                                                      </tr>
-                                                                  </table>
-                                                              </div>
-                                                          </div>&ndash;&gt;
-                                             </div>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-
-
-         &lt;!&ndash; <div class="row">
-              <div class="col-md-6 grid-margin stretch-card">
-                  &lt;!&ndash;<div class="card tale-bg">&ndash;&gt; &lt;!&ndash;style="background-image: url(images/team.jpg);"&ndash;&gt;
-                  &lt;!&ndash;<div class="card-people mt-auto">&ndash;&gt;
-                  <h2 class="mb-0 font-weight-normal"><sup></sup></h2>
-                  &lt;!&ndash;  <div class="col-lg-6 grid-margin stretch-card">&ndash;&gt;
-                  <div class="card">
-                      <div class="card-body">
-                          <h4 class="card-title" th:text="*{user.team.name}"></h4>
-                          <p class="card-description">
-                              A report for your team <code></code>
-                          </p>
-                          <tr>
-                              <th class="text-center">#ID</th>
-                              <th class="text-center">Cretor</th>
-                              <th class="text-center">Reviewer</th>
-                              <th class="text-center">Status</th>
-                              <th class="text-center">File</th>
-                          </tr>
-                          <div class="table-responsive">
-                              <table class="table">
-                                  <thead>
-                                  <tr th:each="item : ${teamItems}">
-                                      <td class="text-muted"><a
-                                              th:href="@{/work_item/{id}(id=${item.getId()})}"
-                                              th:text="${item.id}"></a>
-                                      </td>
-                                      <td class="text-muted"
-                                          th:text="${item.getTitle()}"></td>
-                                      <td class="text-muted"
-                                          th:text="${item.getCreator().getUsername()}"></td>
-                                      <td class="text-muted"
-                                          th:if="${item.getReviewer() != null}"
-                                          th:text="${item.getReviewer().getUsername()}"></td>
-                                      <td class="text-muted"
-                                          th:if="${item.getReviewer() == null}" text="No Reviewer"></td>
-                                      <td class="w-100 px-0">
-                                          <th:block
-                                                  th:switch="${item.status.status.toUpperCase()}">
-                                              <div th:case="'PENDING'">
-                                                  <span class="badge bg-info rounded-pill">Pending</span>
-                                              </div>
-                                              <div th:case="'UNDER REVIEW'">
-                                                  <span class="badge bg-primary rounded-pill">Under Review</span>
-                                              </div>
-                                              <div th:case="'CHANGE REQUESTED'">
-                                                  <span class="badge bg-warning rounded-pill">Change Requested</span>
-                                              </div>
-                                              <div th:case="'ACCEPTED'">
-                                                  <span class="badge bg-success rounded-pill">Accepted</span>
-                                              </div>
-                                              <div th:case="'REJECTED'">
-                                                  <span class="badge bg-danger rounded-pill">Rejected</span>
-                                              </div>
-                                          </th:block>
-                                      </td>
-                                      <td th:if="${item.getFileDownloadUri() != null}">
-                                          <button class="btn btn-mdi mdi-cloud-download btn-success"
-                                                  type="submit">
-                                              <i class="mdi mdi-cloud-download"></i>
-                                          </button>
-                                      </td>
-                                      <td class="text-muted"
-                                          th:if="${item.getFileDownloadUri() == null}" text="-"></td>
-                                  </tr>
-                                  </tbody>
-                              </table>
-                          </div>
-                      </div>
-                  </div>
-                  &lt;!&ndash; </div>&ndash;&gt;
-                  &lt;!&ndash;<div class="weather-info">&ndash;&gt;
-                  &lt;!&ndash;<div>
-                      <h2 class="mb-0 font-weight-normal" th:text="*{user.team.name}"><sup></sup></h2>
-                  </div>&ndash;&gt;
-                  &lt;!&ndash; <div class="d-flex">&ndash;&gt;
-                  &lt;!&ndash; <div class="ml-2">
-                       <h4 class="location font-weight-normal" th:text="*{user.team.name}"></h4>
-                       &lt;!&ndash;                        <h6 class="font-weight-normal"></h6>&ndash;&gt;
-                   </div>&ndash;&gt;
-                  &lt;!&ndash;   </div>
-                 </div>&ndash;&gt;
-                  &lt;!&ndash;    </div>&ndash;&gt;
-                  &lt;!&ndash;  </div>&ndash;&gt;
-              </div>&ndash;&gt;
-
-
-         &lt;!&ndash;  <div class="row">
-               <div class="col-md-3 mb-3 stretch-card transparent">
-                   <button type="button" class="btn btn-rounded btn-block btn-lg btn-primary"
-                           th:text="'Your review requests:' + ' ' + ${workItems}">
-                       <a th:href="@{/work_item/all}"></a>
-                   </button>
-                   <button type="button" class="btn btn-rounded btn-block btn-lg btn-primary"
-                           th:text="'Items to review:' + ' ' + ${requestsForReview}">
-                       <a th:href="@{/work_item/all}"></a>
-                   </button>
-                   <button type="button" class="btn btn-rounded btn-block btn-lg btn-primary"
-                           th:text="'Submit an item'">
-                       <a th:href="@{/work_item}"></a>
-                   </button>
-                   <button type="button" class="btn btn-rounded btn-block btn-lg btn-light"
-                           th:text="'Pending team invitations: '">
-                       <a th:href="@{/team}"></a>
-                   </button>
-               </div>
-           </div>&ndash;&gt;
-         &lt;!&ndash;       -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
-                <div class="col-md-6 grid-margin transparent">
-                    <div class="col-md-3 mb-3 stretch-card transparent">
-                        <div class="card card-tale">
-                            <div class="card-body" type="button">
-                                <p class="mb-4">Your review requests</p>
-                                <p class="fs-30 mb-2" th:text="${workItems}"></p>
-                                &lt;!&ndash; <p>10.00% (30 days)</p>&ndash;&gt;
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3 stretch-card transparent">
-                        <div class="card card-dark-blue">
-                            <div class="card-body">
-                                <p class="mb-4">Requests for review</p>
-                                <p class="fs-30 mb-2" th:text="${requestsForReview}"></p>
-                                &lt;!&ndash;  <p>22.00% (30 days)</p>&ndash;&gt;
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3 stretch-card transparent">
-                        <div class="card card-light-blue">
-                            <div class="card-body">
-                                <p class="fs-30 mb-2">Submit</p>
-                                <p class="mb-4">a work item</p>
-                                &lt;!&ndash;    <p>2.00% (30 days)</p>&ndash;&gt;
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3 stretch-card transparent">
-                        <div class="card" style="background: #FFFFFF">
-                            <div class="card-body">
-                                <p class="mb-4">Pending team invitations</p>
-                                <p class="fs-30 mb-2">47033</p>
-                                &lt;!&ndash; <p>0.22% (30 days)</p>&ndash;&gt;
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <canvas id="south-america-chart"></canvas>
-                            <div id="south-america-legend"></div>
-                        </div>
-                    </div>
-                </div>
+                <!-- page-body-wrapper ends -->
             </div>
-            -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;
-         &lt;!&ndash; <div class="row">&ndash;&gt;
-         &lt;!&ndash; <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-              <div class="card card-light-blue">
-                  <div class="card-body">
-                      <p class="fs-30 mb-2">Submit</p>
-                      <p class="mb-4">a work item</p>
-                      &lt;!&ndash;    <p>2.00% (30 days)</p>&ndash;&gt;
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-6 stretch-card transparent">
-              <div class="card" style="background: #FFFFFF">
-                  <div class="card-body">
-                      <p class="mb-4">Pending team invitations</p>
-                      <p class="fs-30 mb-2">47033</p>
-                      &lt;!&ndash; <p>0.22% (30 days)</p>&ndash;&gt;
-                  </div>
-              </div>
-          </div>&ndash;&gt;
-         &lt;!&ndash;  </div>&ndash;&gt;
-         &lt;!&ndash;  </div>&ndash;&gt;
-         <div class="row">
-             <div class="col-md-12 grid-margin stretch-card">
-                 <div class="card position-relative">
-                     <div class="card-body">
-                         <div id="detailedReports"
-                              class="carousel slide detailed-report-carousel position-static pt-2"
-                              data-ride="carousel">
-                             <div class="carousel-inner">
-                                 <div class="carousel-item active">
-                                     <div class="row">
-                                         <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
-                                             <div class="ml-xl-4 mt-3">
-                                                 <p class="card-title">Your Personal Report</p>
-                                                 <h1 class="text-primary" th:text="${items.size()}"></h1>
-                                                 <h3 class="font-weight-500 mb-xl-4 text-primary">Work Items</h3>
-                                                 &lt;!&ndash; <p class="mb-2 mb-xl-0">The total number of work items in
-                                                      your container.</p>&ndash;&gt;
-                                             </div>
-                                         </div>
-                                         <div class="col-md-12 col-xl-9">
-                                             <div class="row">
-                                                 <div class="col-md-6 border-right">
-                                                     <div class="table-responsive mb-3 mb-md-0 mt-3">
-                                                         <table class="table table-borderless report-table">
-                                                             <tr th:each="item : ${items}">
-                                                                 <td class="text-muted"><a
-                                                                         th:href="@{/work_item/{id}(id=${item.getId()})}"
-                                                                         th:text="${item.id}"></a>
-                                                                 </td>
-                                                                 <td class="text-muted"
-                                                                     th:text="${item.getTitle()}"></td>
-                                                                 <td class="w-100 px-0">
-                                                                     <th:block
-                                                                             th:switch="${item.status.status.toUpperCase()}">
-                                                                         <div th:case="'PENDING'">
-                                                                             <span class="badge bg-info rounded-pill">Pending</span>
-                                                                         </div>
-                                                                         <div th:case="'UNDER REVIEW'">
-                                                                             <span class="badge bg-primary rounded-pill">Under Review</span>
-                                                                         </div>
-                                                                         <div th:case="'CHANGE REQUESTED'">
-                                                                             <span class="badge bg-warning rounded-pill">Change Requested</span>
-                                                                         </div>
-                                                                         <div th:case="'ACCEPTED'">
-                                                                             <span class="badge bg-success rounded-pill">Accepted</span>
-                                                                         </div>
-                                                                         <div th:case="'REJECTED'">
-                                                                             <span class="badge bg-danger rounded-pill">Rejected</span>
-                                                                         </div>
-                                                                     </th:block>
-                                                                 </td>
-                                                             </tr>
-                                                         </table>
-                                                     </div>
-                                                 </div>
-                                             </div>
-                                         </div>
-                                         <div class="col-md-6 mt-3">
-                                             <canvas id="north-america-chart"></canvas>
-                                             <div id="north-america-legend"></div>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-         &lt;!&ndash;  <div class="col-md-5 grid-margin stretch-card">
-               <div class="card">
-                   <div class="card-body">
-                       <h4 class="card-title">To Do Lists</h4>
-                       <div class="list-wrapper pt-2">
-                           <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
-                               <li>
-                                   <div class="form-check form-check-flat">
-                                       <label class="form-check-label">
-                                           <input class="checkbox" type="checkbox">
-                                           Meeting with Urban Team
-                                       </label>
-                                   </div>
-                                   <i class="remove ti-close"></i>
-                               </li>
-                               <li class="completed">
-                                   <div class="form-check form-check-flat">
-                                       <label class="form-check-label">
-                                           <input class="checkbox" type="checkbox" checked>
-                                           Duplicate a project for new customer
-                                       </label>
-                                   </div>
-                                   <i class="remove ti-close"></i>
-                               </li>
-                               <li>
-                                   <div class="form-check form-check-flat">
-                                       <label class="form-check-label">
-                                           <input class="checkbox" type="checkbox">
-                                           Project meeting with CEO
-                                       </label>
-                                   </div>
-                                   <i class="remove ti-close"></i>
-                               </li>
-                               <li class="completed">
-                                   <div class="form-check form-check-flat">
-                                       <label class="form-check-label">
-                                           <input class="checkbox" type="checkbox" checked>
-                                           Follow up of team zilla
-                                       </label>
-                                   </div>
-                                   <i class="remove ti-close"></i>
-                               </li>
-                               <li>
-                                   <div class="form-check form-check-flat">
-                                       <label class="form-check-label">
-                                           <input class="checkbox" type="checkbox">
-                                           Level up for Antony
-                                       </label>
-                                   </div>
-                                   <i class="remove ti-close"></i>
-                               </li>
-                           </ul>
-                       </div>
-                       <div class="add-items d-flex mb-0 mt-2">
-                           <input type="text" class="form-control todo-list-input" placeholder="Add new task">
-                           <button class="add btn btn-icon text-primary todo-list-add-btn bg-transparent"><i
-                                   class="icon-circle-plus"></i></button>
-                       </div>
-                   </div>
-               </div>
-           </div>
-       </div>&ndash;&gt;
-         &lt;!&ndash; <div class="col-md-4 stretch-card grid-margin">
-              <div class="card">
-                  <div class="card-body">
-                      <p class="card-title">Notifications</p>
-                      <ul class="icon-data-list">
-                          <li>
-                              <div class="d-flex">
-                                  <img src="dashboard/images/faces/face1.jpg" alt="user">
-                                  <div>
-                                      <p class="text-info mb-1">Isabella Becker</p>
-                                      <p class="mb-0">Sales dashboard have been created</p>
-                                      <small>9:30 am</small>
-                                  </div>
-                              </div>
-                          </li>
-                          <li>
-                              <div class="d-flex">
-                                  <img src="dashboard/images/faces/face2.jpg" alt="user">
-                                  <div>
-                                      <p class="text-info mb-1">Adam Warren</p>
-                                      <p class="mb-0">You have done a great job #TW111</p>
-                                      <small>10:30 am</small>
-                                  </div>
-                              </div>
-                          </li>
-                          <li>
-                              <div class="d-flex">
-                                  <img src="dashboard/images/faces/face3.jpg" alt="user">
-                                  <div>
-                                      <p class="text-info mb-1">Leonard Thornton</p>
-                                      <p class="mb-0">Sales dashboard have been created</p>
-                                      <small>11:30 am</small>
-                                  </div>
-                              </div>
-                          </li>
-                          <li>
-                              <div class="d-flex">
-                                  <img src="dashboard/images/faces/face4.jpg" alt="user">
-                                  <div>
-                                      <p class="text-info mb-1">George Morrison</p>
-                                      <p class="mb-0">Sales dashboard have been created</p>
-                                      <small>8:50 am</small>
-                                  </div>
-                              </div>
-                          </li>
-                          <li>
-                              <div class="d-flex">
-                                  <img src="dashboard/images/faces/face5.jpg" alt="user">
-                                  <div>
-                                      <p class="text-info mb-1">Ryan Cortez</p>
-                                      <p class="mb-0">Herbs are fun and easy to grow.</p>
-                                      <small>9:00 am</small>
-                                  </div>
-                              </div>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
-          </div>
-      </div>&ndash;&gt;
-     </div>-->
-            </div>
-            <!-- main-panel ends -->
         </div>
-        <!-- page-body-wrapper ends -->
-    </div>
-</div>
-<!-- container-scroller -->
+        <!-- container-scroller -->
 
-<!-- plugins:js -->
-<script src="dashboard/js/vendor.bundle.base.js"></script>
-<!-- endinject -->
-<!-- Plugin js for this page -->
-<script src="dashboard/chart.js/Chart.min.js"></script>
-<script src="dashboard/datatables.net/jquery.dataTables.js"></script>
-<script src="dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
-<script src="dashboard/js/dataTables.select.min.js"></script>
+        <!-- plugins:js -->
+        <script src="dashboard/js/vendor.bundle.base.js"></script>
+        <!-- endinject -->
+        <!-- Plugin js for this page -->
+        <script src="dashboard/chart.js/Chart.min.js"></script>
+        <script src="dashboard/datatables.net/jquery.dataTables.js"></script>
+        <script src="dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+        <script src="dashboard/js/dataTables.select.min.js"></script>
 
-<!-- End plugin js for this page -->
-<!-- inject:js -->
-<script src="dashboard/js/off-canvas.js"></script>
-<script src="dashboard/js/hoverable-collapse.js"></script>
-<script src="dashboard/js/template.js"></script>
-<script src="dashboard/js/settings.js"></script>
-<script src="dashboard/js/todolist.js"></script>
-<!-- endinject -->
-<!-- Custom js for this page-->
-<script src="dashboard/js/dashboard.js"></script>
-<script src="dashboard/js/Chart.roundedBarCharts.js"></script>
-<!-- file upload/download -->
-<script>'use strict'
+        <!-- End plugin js for this page -->
+        <!-- inject:js -->
+        <script src="dashboard/js/off-canvas.js"></script>
+        <script src="dashboard/js/hoverable-collapse.js"></script>
+        <script src="dashboard/js/template.js"></script>
+        <script src="dashboard/js/settings.js"></script>
+        <script src="dashboard/js/todolist.js"></script>
+        <!-- endinject -->
+        <!-- Custom js for this page-->
+        <script src="dashboard/js/dashboard.js"></script>
+        <script src="dashboard/js/Chart.roundedBarCharts.js"></script>
+        <!-- file upload/download -->
+        <script>'use strict'
 
-var singleUploadForm = document.querySelector('#singleUploadForm');
-var singleFileUploadInput = document.querySelector('#singleFileUploadInput');
-var singleFileUploadError = document.querySelector('#singleFileUploadError');
-var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
+        var singleUploadForm = document.querySelector('#singleUploadForm');
+        var singleFileUploadInput = document.querySelector('#singleFileUploadInput');
+        var singleFileUploadError = document.querySelector('#singleFileUploadError');
+        var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
 
-var multipleUploadForm = document.querySelector('#multipleUploadForm');
-var multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
-var multipleFileUploadError = document.querySelector('#multipleFileUploadError');
-var multipleFileUploadSuccess = document.querySelector('#multipleFileUploadSuccess');
+        var multipleUploadForm = document.querySelector('#multipleUploadForm');
+        var multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
+        var multipleFileUploadError = document.querySelector('#multipleFileUploadError');
+        var multipleFileUploadSuccess = document.querySelector('#multipleFileUploadSuccess');
 
-function uploadSingleFile(file) {
-    var formData = new FormData();
-    formData.append("file", file);
+        function uploadSingleFile(file) {
+            var formData = new FormData();
+            formData.append("file", file);
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/uploadFile");
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/uploadFile");
 
-    xhr.onload = function () {
-        console.log(xhr.responseText);
-        var response = JSON.parse(xhr.responseText);
-        if (xhr.status == 200) {
-            singleFileUploadError.style.display = "none";
-            singleFileUploadSuccess.innerHTML = "<p>File Uploaded Successfully.</p><p>DownloadUrl : <a href='" + response.fileDownloadUri + "' target='_blank'>" + response.fileDownloadUri + "</a></p>";
-            singleFileUploadSuccess.style.display = "block";
-        } else {
-            singleFileUploadSuccess.style.display = "none";
-            singleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
-        }
-    }
-
-    xhr.send(formData);
-}
-
-function uploadMultipleFiles(files) {
-    var formData = new FormData();
-    for (var index = 0; index < files.length; index++) {
-        formData.append("files", files[index]);
-    }
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/uploadMultipleFiles");
-
-    xhr.onload = function () {
-        console.log(xhr.responseText);
-        var response = JSON.parse(xhr.responseText);
-        if (xhr.status == 200) {
-            multipleFileUploadError.style.display = "none";
-            var content = "<p>All Files Uploaded Successfully</p>";
-            for (var i = 0; i < response.length; i++) {
-                content += "<p>DownloadUrl : <a href='" + response[i].fileDownloadUri + "' target='_blank'>" + response[i].fileDownloadUri + "</a></p>";
+            xhr.onload = function () {
+                console.log(xhr.responseText);
+                var response = JSON.parse(xhr.responseText);
+                if (xhr.status == 200) {
+                    singleFileUploadError.style.display = "none";
+                    singleFileUploadSuccess.innerHTML = "<p>File Uploaded Successfully.</p><p>DownloadUrl : <a href='" + response.fileDownloadUri + "' target='_blank'>" + response.fileDownloadUri + "</a></p>";
+                    singleFileUploadSuccess.style.display = "block";
+                } else {
+                    singleFileUploadSuccess.style.display = "none";
+                    singleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
+                }
             }
-            multipleFileUploadSuccess.innerHTML = content;
-            multipleFileUploadSuccess.style.display = "block";
-        } else {
-            multipleFileUploadSuccess.style.display = "none";
-            multipleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
+
+            xhr.send(formData);
         }
-    }
 
-    xhr.send(formData);
-}
+        function uploadMultipleFiles(files) {
+            var formData = new FormData();
+            for (var index = 0; index < files.length; index++) {
+                formData.append("files", files[index]);
+            }
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/uploadMultipleFiles");
+
+            xhr.onload = function () {
+                console.log(xhr.responseText);
+                var response = JSON.parse(xhr.responseText);
+                if (xhr.status == 200) {
+                    multipleFileUploadError.style.display = "none";
+                    var content = "<p>All Files Uploaded Successfully</p>";
+                    for (var i = 0; i < response.length; i++) {
+                        content += "<p>DownloadUrl : <a href='" + response[i].fileDownloadUri + "' target='_blank'>" + response[i].fileDownloadUri + "</a></p>";
+                    }
+                    multipleFileUploadSuccess.innerHTML = content;
+                    multipleFileUploadSuccess.style.display = "block";
+                } else {
+                    multipleFileUploadSuccess.style.display = "none";
+                    multipleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
+                }
+            }
+
+            xhr.send(formData);
+        }
 
 
-singleUploadForm.addEventListener('submit', function (event) {
-    var files = singleFileUploadInput.files;
-    if (files.length === 0) {
-        singleFileUploadError.innerHTML = "Please select a file";
-        singleFileUploadError.style.display = "block";
-    }
-    uploadSingleFile(files[0]);
-    event.preventDefault();
-}, true);
+        singleUploadForm.addEventListener('submit', function (event) {
+            var files = singleFileUploadInput.files;
+            if (files.length === 0) {
+                singleFileUploadError.innerHTML = "Please select a file";
+                singleFileUploadError.style.display = "block";
+            }
+            uploadSingleFile(files[0]);
+            event.preventDefault();
+        }, true);
 
 
-multipleUploadForm.addEventListener('submit', function (event) {
-    var files = multipleFileUploadInput.files;
-    if (files.length === 0) {
-        multipleFileUploadError.innerHTML = "Please select at least one file";
-        multipleFileUploadError.style.display = "block";
-    }
-    uploadMultipleFiles(files);
-    event.preventDefault();
-}, true);
-</script>
-<!-- End custom js for this page-->
+        multipleUploadForm.addEventListener('submit', function (event) {
+            var files = multipleFileUploadInput.files;
+            if (files.length === 0) {
+                multipleFileUploadError.innerHTML = "Please select at least one file";
+                multipleFileUploadError.style.display = "block";
+            }
+            uploadMultipleFiles(files);
+            event.preventDefault();
+        }, true);
+        </script>
+        <!-- End custom js for this page-->
 </body>
 
 </html>

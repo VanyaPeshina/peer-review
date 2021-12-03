@@ -140,15 +140,27 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/team}" style="color: #FFFFFF">
+                    <a class="nav-link" data-toggle="collapse" href="#team" aria-expanded="false"
+                       aria-controls="team">
                         <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>
-                        <span class="menu-title" th:href="@{/team}">Your Team</span>
+                        <span class="menu-title" style="color: #FFFFFF">Team</span>
+                        <i class="menu-arrow" style="color: #FFFFFF"></i>
                     </a>
+                    <div class="collapse" id="team">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/team/all}">My Team</a></li>
+                        </ul>
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/team}">Create team</a></li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </nav>
         <div class="main-panel">
-            <div class="content-wrapper">
+            <div class="content-wrapper" style="background-color: #C4E613">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">

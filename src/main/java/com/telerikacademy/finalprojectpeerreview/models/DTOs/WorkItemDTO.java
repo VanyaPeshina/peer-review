@@ -1,5 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.models.DTOs;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -20,6 +22,10 @@ public class WorkItemDTO implements Serializable {
     private int statusId;
 
     private int creatorId;
+
+    private MultipartFile multipartFile;
+
+    private String fileName;
 
     public WorkItemDTO() {
     }
@@ -70,5 +76,21 @@ public class WorkItemDTO implements Serializable {
 
     public void setCreatorId(int creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public MultipartFile getMultipartFile() {
+        return multipartFile;
+    }
+
+    public void setMultipartFile(MultipartFile multipartFile) {
+        this.multipartFile = multipartFile;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

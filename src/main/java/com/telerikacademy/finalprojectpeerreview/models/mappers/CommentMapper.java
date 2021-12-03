@@ -1,5 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.models.mappers;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.Comment;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.CommentDTO;
 import com.telerikacademy.finalprojectpeerreview.models.User;
@@ -22,7 +23,7 @@ public class CommentMapper {
         this.workItemService = workItemService;
     }
 
-    public Comment fromDto(CommentDTO commentDTO) {
+    public Comment fromDto(CommentDTO commentDTO) throws EntityNotFoundException {
         Comment comment;
         if (commentDTO.getId() == 0) {
             comment = new Comment();
@@ -33,7 +34,7 @@ public class CommentMapper {
         return comment;
     }
 
-    private void DTOtoObject(CommentDTO commentDTO, Comment comment) {
+    private void DTOtoObject(CommentDTO commentDTO, Comment comment) throws EntityNotFoundException {
         if (commentDTO.getComment() != null) {
             comment.setComment(commentDTO.getComment());
         }

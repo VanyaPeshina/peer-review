@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CRUDService<E> {
 
-    List<E> getAll() throws EntityNotFoundException;
+    List<E> getAll();
 
     E getById(int id) throws EntityNotFoundException;
 

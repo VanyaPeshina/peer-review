@@ -19,12 +19,9 @@ public abstract class CRUDRepositoryImpl<E> implements CRUDRepository<E> {
     }
 
     @Override
-    public List<E> getAll() throws EntityNotFoundException {
+    public List<E> getAll() {
         try (Session session = sessionFactory.openSession()) {
             Query<E> query = session.createQuery(" from " + getEntityClass().getName(), getEntityClass());
-            /*if (query.list().size() == 0) {
-                throw new EntityNotFoundException(getEntityClass().getName(), "this", "name");
-            }*/
             return query.list();
         }
     }

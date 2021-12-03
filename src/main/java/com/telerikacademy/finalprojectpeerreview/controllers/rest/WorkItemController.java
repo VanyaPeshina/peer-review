@@ -27,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +55,7 @@ public class WorkItemController {
     public List<WorkItem> getAll(@RequestHeader HttpHeaders headers,
                                  @RequestParam(required = false) Optional<String> search) {
         try {
-            User userToAuthenticate = authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUser(headers);
             return workItemService.search(search);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -64,7 +65,7 @@ public class WorkItemController {
     @GetMapping("/{id}")
     public WorkItem getById(@RequestHeader HttpHeaders headers, @PathVariable int id) {
         try {
-            User userToAuthenticate = authenticationHelper.tryGetUser(headers);
+            authenticationHelper.tryGetUser(headers);
             return workItemService.getById(id);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -81,6 +82,8 @@ public class WorkItemController {
             return workItem;
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -96,6 +99,8 @@ public class WorkItemController {
             return workItemService.getById(id);
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 
@@ -163,6 +168,11 @@ public class WorkItemController {
                                  @RequestParam(required = false) Optional<String> status,
                                  @RequestParam(required = false) Optional<String> reviewer,
                                  @RequestParam(required = false) Optional<String> sort) {
-        return workItemService.filter(name, status, reviewer, sort);
+        try {
+            return workItemService.filter(name, status, reviewer, sort);
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

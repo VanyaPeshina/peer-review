@@ -56,7 +56,9 @@ public class AuthenticationHelper {
         }
     }
 
-    public User returnUserFromSession(HttpSession session) {
+    public User returnUserFromSession(HttpSession session) throws EntityNotFoundException {
         return userService.getByField("username", session.getAttribute("currentUser").toString());
     }
+
+
 }

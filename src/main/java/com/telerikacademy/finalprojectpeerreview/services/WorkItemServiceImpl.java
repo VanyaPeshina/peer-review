@@ -1,5 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.services;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
@@ -37,23 +38,25 @@ public class WorkItemServiceImpl extends CRUDServiceImpl<WorkItem> implements Wo
     public void create(WorkItem workItem, User user) {
         //TODO -> трябва ли да проверяваме за reviewer при създаването? Той не е задължителен.
 //        checkForTeam(workItem);
-        if (checkEntityForDuplicates(workItem)) {
-            workItemRepository.create(workItem);
+        if (checkForDuplicates(workItem)) {
+            throw new DuplicateEntityException(workItem.getClass().getSimpleName(), "these", "parameters");
         }
+        workItemRepository.create(workItem);
     }
 
     @Override
     public void update(WorkItem workItem, User user) {
         AuthorizationCheck.checkForInvolved(workItem, user);
         checkForTeam(workItem);
-        if (checkEntityForDuplicates(workItem)) {
-            workItemRepository.update(workItem);
+        if (checkForDuplicates(workItem)) {
+            throw new DuplicateEntityException(workItem.getClass().getSimpleName(), "these", "parameters");
         }
+        workItemRepository.update(workItem);
     }
 
     @Override
     public List<WorkItem> filter(Optional<String> name, Optional<String> status,
-                                 Optional<String> reviewer, Optional<String> sort) {
+                                 Optional<String> reviewer, Optional<String> sort) throws EntityNotFoundException {
         List<WorkItem> filteredItems = workItemRepository.filter(name, status, reviewer, sort);
         if (filteredItems.isEmpty()) {
             throw new EntityNotFoundException("work items", "this", "parameters");

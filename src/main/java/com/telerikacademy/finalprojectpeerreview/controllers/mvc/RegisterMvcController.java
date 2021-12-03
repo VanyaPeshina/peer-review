@@ -1,6 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.controllers.mvc;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.UserDTO;
 import com.telerikacademy.finalprojectpeerreview.models.User;
@@ -61,8 +62,8 @@ public class RegisterMvcController {
             return "register";
         } catch (UnauthorizedOperationException e) {
             return "forbidden_403";
-        } catch (IOException e) {
-            return "forbidden";
+        } catch (IOException | EntityNotFoundException e) {
+            return "error-404";
         }
     }
 }

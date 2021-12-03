@@ -327,10 +327,22 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/team}" style="color: #FFFFFF">
+                    <a class="nav-link" data-toggle="collapse" href="#team" aria-expanded="false"
+                       aria-controls="team">
                         <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>
-                        <span class="menu-title">Your Team</span>
+                        <span class="menu-title" style="color: #FFFFFF">Team</span>
+                        <i class="menu-arrow" style="color: #FFFFFF"></i>
                     </a>
+                    <div class="collapse" id="team">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/team/all}">My Team</a></li>
+                        </ul>
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/team}">Create team</a></li>
+                        </ul>
+                    </div>
                 </li>
             </ul>
         </nav>
@@ -342,7 +354,7 @@
                         <div class="card-body">
                             <h4 class="card-title">Update work item</h4>
                             <form class="forms-sample" th:action="@{__${#httpServletRequest.requestURI}__}"
-                                  th:object="${workItemDTO}" method="post">
+                                  th:object="${workItemDTO}" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="exampleInputName1">Title</label>
                                     <input type="text" class="form-control" id="exampleInputName1" placeholder="Title"
@@ -367,17 +379,17 @@
                                         </option>
                                     </select>
                                 </div>
-<!--                                <div class="form-group">-->
-<!--                                    <label>File upload</label>-->
-<!--                                    <input type="file" name="img[]" class="file-upload-default">-->
-<!--                                    <div class="input-group col-xs-12">-->
-<!--                                        <input type="text" class="form-control file-upload-info" disabled-->
-<!--                                               placeholder="Upload Image">-->
-<!--                                        <span class="input-group-append">-->
-<!--                          <button class="file-upload-browse btn btn-primary" type="button">Upload</button>-->
-<!--                        </span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                               <div class="form-group">
+                                    <label>File upload</label>-
+                                    <input type="file" name="img[]" class="file-upload-default" th:field="*{multipartFile}">
+                                    <div class="input-group col-xs-12">
+                                        <input type="text" class="form-control file-upload-info" disabled
+                                               placeholder="Upload Image" th:field="*{fileName}">
+                                        <span class="input-group-append">
+                          <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                        </span>
+                                   </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="exampleTextarea1">Description</label>
                                     <textarea class="form-control" id="exampleTextarea1" rows="4"
@@ -397,25 +409,114 @@
 <!-- container-scroller -->
 
 <!-- plugins:js -->
-<script src="/dashboard/js/vendor.bundle.base.js"></script>
+<!--   Core JS Files   -->
+<!-- container-scroller -->
+<!-- plugins:js -->
+<script src="../dashboard/js/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
-<script src="/dashboard/chart.js/Chart.min.js"></script>
-<script src="/dashboard/datatables.net/jquery.dataTables.js"></script>
-<script src="/dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
-<script src="/dashboard/js/dataTables.select.min.js"></script>
-
+<script src="../dashboard/typeahead.js/typeahead.bundle.min.js"></script>
+<script src="../dashboard/select2/select2.min.js"></script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
-<script src="/dashboard/js/off-canvas.js"></script>
-<script src="/dashboard/js/hoverable-collapse.js"></script>
-<script src="/dashboard/js/template.js"></script>
-<script src="/dashboard/js/settings.js"></script>
-<script src="/dashboard/js/todolist.js"></script>
+<script src="../dashboard/js/off-canvas.js"></script>
+<script src="../dashboard/js/hoverable-collapse.js"></script>
+<script src="../dashboard/js/template.js"></script>
+<script src="../dashboard/js/settings.js"></script>
+<script src="../dashboard/js/todolist.js"></script>
 <!-- endinject -->
 <!-- Custom js for this page-->
-<script src="/dashboard/js/dashboard.js"></script>
-<script src="/dashboard/js/Chart.roundedBarCharts.js"></script>
+<script src="../dashboard/js/file-upload.js"></script>
+<script src="../dashboard/js/typeahead.js"></script>
+<script src="../dashboard/js/select2.js"></script>
+<!-- End custom js for this page-->
+
+<!-- file upload/download -->
+<script>'use strict'
+
+var singleUploadForm = document.querySelector('#singleUploadForm');
+var singleFileUploadInput = document.querySelector('#singleFileUploadInput');
+var singleFileUploadError = document.querySelector('#singleFileUploadError');
+var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
+
+var multipleUploadForm = document.querySelector('#multipleUploadForm');
+var multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
+var multipleFileUploadError = document.querySelector('#multipleFileUploadError');
+var multipleFileUploadSuccess = document.querySelector('#multipleFileUploadSuccess');
+
+function uploadSingleFile(file) {
+    var formData = new FormData();
+    formData.append("file", file);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/uploadFile");
+
+    xhr.onload = function () {
+        console.log(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status == 200) {
+            singleFileUploadError.style.display = "none";
+            singleFileUploadSuccess.innerHTML = "<p>File Uploaded Successfully.</p><p>DownloadUrl : <a href='" + response.fileDownloadUri + "' target='_blank'>" + response.fileDownloadUri + "</a></p>";
+            singleFileUploadSuccess.style.display = "block";
+        } else {
+            singleFileUploadSuccess.style.display = "none";
+            singleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
+        }
+    }
+
+    xhr.send(formData);
+}
+
+function uploadMultipleFiles(files) {
+    var formData = new FormData();
+    for (var index = 0; index < files.length; index++) {
+        formData.append("files", files[index]);
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/uploadMultipleFiles");
+
+    xhr.onload = function () {
+        console.log(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status == 200) {
+            multipleFileUploadError.style.display = "none";
+            var content = "<p>All Files Uploaded Successfully</p>";
+            for (var i = 0; i < response.length; i++) {
+                content += "<p>DownloadUrl : <a href='" + response[i].fileDownloadUri + "' target='_blank'>" + response[i].fileDownloadUri + "</a></p>";
+            }
+            multipleFileUploadSuccess.innerHTML = content;
+            multipleFileUploadSuccess.style.display = "block";
+        } else {
+            multipleFileUploadSuccess.style.display = "none";
+            multipleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
+        }
+    }
+
+    xhr.send(formData);
+}
+
+
+singleUploadForm.addEventListener('submit', function (event) {
+    var files = singleFileUploadInput.files;
+    if (files.length === 0) {
+        singleFileUploadError.innerHTML = "Please select a file";
+        singleFileUploadError.style.display = "block";
+    }
+    uploadSingleFile(files[0]);
+    event.preventDefault();
+}, true);
+
+
+multipleUploadForm.addEventListener('submit', function (event) {
+    var files = multipleFileUploadInput.files;
+    if (files.length === 0) {
+        multipleFileUploadError.innerHTML = "Please select at least one file";
+        multipleFileUploadError.style.display = "block";
+    }
+    uploadMultipleFiles(files);
+    event.preventDefault();
+}, true);
 <!-- End custom js for this page-->
 </body>
 

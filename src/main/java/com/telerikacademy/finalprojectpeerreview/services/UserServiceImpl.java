@@ -32,10 +32,9 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 
     @Override
     public List<WorkItem> getAllRequests(int id) {
-       List<WorkItem> requests = userRepository.getAllRequests(id);
+       return userRepository.getAllRequests(id);
      /*  if (requests.isEmpty()) {
            throw new EntityNotFoundException("Request", "this", "user ID");
        }*/
-       return requests;
     }
 }

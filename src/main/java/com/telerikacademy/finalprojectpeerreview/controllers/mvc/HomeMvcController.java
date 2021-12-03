@@ -32,7 +32,7 @@ public class HomeMvcController {
     public String showHomePage(Model model) {
         try {
             return "index";
-        } catch (HttpClientErrorException | EntityNotFoundException e) {
+        } catch (HttpClientErrorException e) {
             return "error-404";
         }
     }

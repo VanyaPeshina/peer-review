@@ -66,8 +66,6 @@ public class UserRoleController {
             User user = authenticationHelper.tryGetUser(headers);
             userRoleService.update(userRole, user);
             return userRole;
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (UnauthorizedOperationException e) {

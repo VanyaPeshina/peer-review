@@ -63,8 +63,6 @@ public class ItemStatusController {
             User user = authenticationHelper.tryGetUser(headers);
             service.update(itemStatus, user);
             return itemStatus;
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (UnauthorizedOperationException e) {

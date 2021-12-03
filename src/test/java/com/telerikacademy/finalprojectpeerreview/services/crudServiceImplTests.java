@@ -5,7 +5,6 @@ import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundExcept
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.CRUDRepository;
-import com.telerikacademy.finalprojectpeerreview.services.CRUDServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +41,7 @@ public class crudServiceImplTests<E> {
     }
 
     @Test
-    public void getById_should_returnUser_when_matchExists() {
+    public void getById_should_returnUser_when_matchExists() throws EntityNotFoundException {
         //Arrange
         User user = createMockStandardUser();
         Mockito.when(repository.getById(Mockito.anyInt())).thenReturn((E) user);
@@ -112,7 +111,7 @@ public class crudServiceImplTests<E> {
     }
 
     @Test
-    public void delete_should_callRepository() {
+    public void delete_should_callRepository() throws EntityNotFoundException {
         //Arrange
         WorkItem workItem = createMockWorkItem();
         User user = createMockStandardUser();

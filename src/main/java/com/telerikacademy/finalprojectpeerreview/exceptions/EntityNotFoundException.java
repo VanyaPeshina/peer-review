@@ -1,6 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.exceptions;
 
-public class EntityNotFoundException extends RuntimeException {
+public class EntityNotFoundException extends Exception {
 
     public EntityNotFoundException(String type, String name) {
         this(type, "name", name);

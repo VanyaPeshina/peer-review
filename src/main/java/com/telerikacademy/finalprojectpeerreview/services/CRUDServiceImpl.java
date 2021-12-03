@@ -17,7 +17,7 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
     }
 
     @Override
-    public List<E> getAll() throws EntityNotFoundException {
+    public List<E> getAll() {
         return crudRepository.getAll();
     }
 
@@ -28,16 +28,18 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
 
     @Override
     public void create(E entity, User user) {
-        if (checkEntityForDuplicates(entity)) {
-            crudRepository.create(entity);
+        if (checkForDuplicates(entity)) {
+            throw new DuplicateEntityException(entity.getClass().getSimpleName(), "these", "parameters");
         }
+        crudRepository.create(entity);
     }
 
     @Override
     public void update(E entity, User user) {
-        if (checkEntityForDuplicates(entity)) {
-            crudRepository.update(entity);
+        if (checkForDuplicates(entity)) {
+            throw new DuplicateEntityException(entity.getClass().getSimpleName(), "these", "parameters");
         }
+        crudRepository.update(entity);
     }
 
     @Override
@@ -51,17 +53,13 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
         return crudRepository.getByField(name, value);
     }
 
-    protected boolean checkEntityForDuplicates(E entity) {
-        try {
-            List<E> allEntities = crudRepository.getAll();
-            for (E existingEntity : allEntities) {
-                if (existingEntity.equals(entity)) {
-                    throw new DuplicateEntityException(entity.getClass().getSimpleName(), "these", "parameters");
-                }
+    protected boolean checkForDuplicates(E entity) {
+        List<E> allEntities = crudRepository.getAll();
+        for (E existingEntity : allEntities) {
+            if (existingEntity.equals(entity)) {
+                return true;
             }
-        } catch (EntityNotFoundException e) {
-            return true;
         }
-        return true;
+        return false;
     }
 }

@@ -1,11 +1,9 @@
 package com.telerikacademy.finalprojectpeerreview.services;
 
-import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
-import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.WorkItemRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -101,7 +99,7 @@ public class WorkItemServiceImplTests {
     }
 
     @Test
-    public void filter_should_call_Repository() {
+    public void filter_should_call_Repository() throws EntityNotFoundException {
         //Arrange
         WorkItem workItem = createMockWorkItem();
         Optional<String> filterParameter = Optional.of("filter");

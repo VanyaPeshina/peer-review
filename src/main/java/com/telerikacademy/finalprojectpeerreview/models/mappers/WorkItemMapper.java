@@ -1,5 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.models.mappers;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.WorkItemDTO;
 import com.telerikacademy.finalprojectpeerreview.models.ItemStatus;
 import com.telerikacademy.finalprojectpeerreview.models.Team;
@@ -36,7 +37,7 @@ public class WorkItemMapper {
         this.fileStorageService = fileStorageService;
     }
 
-    public WorkItem fromDto(WorkItemDTO workItemDTO){
+    public WorkItem fromDto(WorkItemDTO workItemDTO) throws EntityNotFoundException {
         WorkItem workItem;
         if (workItemDTO.getId() == 0) {
             workItem = new WorkItem();
@@ -48,16 +49,19 @@ public class WorkItemMapper {
     }
 
     public WorkItemDTO toDto(WorkItem workItem) {
+        //TODO Set Constructor
         WorkItemDTO workItemDTO = new WorkItemDTO();
-        workItemDTO.setCreatorId(workItem.getId());
+        workItemDTO.setId(workItem.getId());
+        workItemDTO.setCreatorId(workItem.getCreator().getId());
         workItemDTO.setDescription(workItem.getDescription());
         workItemDTO.setTitle(workItem.getTitle());
         workItemDTO.setReviewerId(workItem.getReviewer().getId());
         workItemDTO.setStatusId(workItem.getStatus().getId());
+        workItem.setFileName(workItem.getFileName());
         return workItemDTO;
     }
 
-    private void DTOtoObject(WorkItemDTO workItemDTO, WorkItem workItem) {
+    private void DTOtoObject(WorkItemDTO workItemDTO, WorkItem workItem) throws EntityNotFoundException {
         if (workItemDTO.getTitle() != null) {
             workItem.setTitle(workItemDTO.getTitle());
         }
@@ -84,6 +88,9 @@ public class WorkItemMapper {
                 Team team = teamService.getById(creator.getTeam().getId());
                 workItem.setTeam(team);
             }
+        }
+        if (workItemDTO.getFileName() != null) {
+            workItem.setFileName(workItemDTO.getFileName());
         }
     }
 }

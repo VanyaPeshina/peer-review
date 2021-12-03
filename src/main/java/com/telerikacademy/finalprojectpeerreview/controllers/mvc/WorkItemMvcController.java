@@ -58,16 +58,34 @@ public class WorkItemMvcController {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
+            return "redirect:/login";
+        }
+        model.addAttribute("user", user);
+        model.addAttribute("workItems", workItemService.getAll()
+                .stream().filter(workItem -> workItem.getCreator().getId() == user.getId())
+                .collect(Collectors.toList()));
+        return "workItems";
+    }
+
+    @GetMapping("/view/{id}")
+    public String viewWorkItemPage(@PathVariable int id,Model model,
+                                   HttpSession session) {
+        User user;
+        try {
+            user = authenticationHelper.tryGetUser(session);
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
             return "redirect:/login";
         }
         try {
-            model.addAttribute("workItems", workItemService.getAll()
-                    .stream().filter(workItem -> workItem.getCreator().getId() == user.getId())
-                    .collect(Collectors.toList()));
-            return "workItems";
+            model.addAttribute("user", user);
+            WorkItem workItem = workItemService.getById(id);
+            model.addAttribute("workItem",workItem);
+            return "view_workItem";
         } catch (EntityNotFoundException e) {
-            return "not_found";
+            return "error-404";
+        } catch (AuthenticationFailureException e) {
+            return "redirect:/login";
         }
     }
 
@@ -76,9 +94,10 @@ public class WorkItemMvcController {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
             return "redirect:/login";
         }
+        model.addAttribute("user", user);
         model.addAttribute("workItemDto", new WorkItemDTO());
         model.addAttribute("members", teamService.getMembers(user.getTeam(), user));
         return "submit_workItem";
@@ -90,7 +109,7 @@ public class WorkItemMvcController {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
             return "redirect:/login";
         }
         if (result.hasErrors()) {
@@ -106,6 +125,9 @@ public class WorkItemMvcController {
             return "conflict_409";
         } catch (UnauthorizedOperationException e) {
             return "new_workItem";
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+            return "redirect:/login";
         }
     }
 
@@ -114,7 +136,7 @@ public class WorkItemMvcController {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
             return "redirect:/login";
         }
         try {
@@ -134,13 +156,11 @@ public class WorkItemMvcController {
 
     @PostMapping("/{id}")
     public String updateWorkItem(@PathVariable int id, @Valid @ModelAttribute("workItemDto") WorkItemDTO dto,
-                                 BindingResult errors, HttpSession session
-//                                 @RequestParam("file") MultipartFile file
-    ) {
+                                 BindingResult errors, HttpSession session) {
         User user;
         try {
             user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException e) {
+        } catch (AuthenticationFailureException | EntityNotFoundException e) {
             return "redirect:/login";
         }
         if (errors.hasErrors()) {
@@ -148,18 +168,33 @@ public class WorkItemMvcController {
         }
         try {
             WorkItem workItemToUpdate = workItemMapper.fromDto(dto);
-//            String fileName = fileStorageService.storeFile(file);
-//            workItemToUpdate.setFileName(fileName);
             workItemService.update(workItemToUpdate, user);
             return "redirect:/work_item/all";
-        } catch (EntityNotFoundException e) {
-            return "single_workItem";
         } catch (DuplicateEntityException | IllegalArgumentException e) {
             return "conflict_409";
         } catch (UnauthorizedOperationException e) {
             return "unauthorized_error";
         } catch (ChangeNotPossibleException e) {
             return "parcel_forbidden_403";
+        } catch (EntityNotFoundException e) {
+            return "redirect:/login";
+        }
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteWorkItem(@PathVariable int id, Model model, HttpSession session) {
+        User userToAuthenticate;
+        try {
+            userToAuthenticate = authenticationHelper.tryGetUser(session);
+        } catch (UnauthorizedOperationException | EntityNotFoundException e) {
+            return "redirect:/login";
+        }
+        try {
+            workItemService.delete(id, userToAuthenticate);
+            return "redirect:/work_item/all";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("error", e.getMessage());
+            return "error-404";
         }
     }
 }

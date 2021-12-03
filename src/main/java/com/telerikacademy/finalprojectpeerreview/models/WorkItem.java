@@ -38,6 +38,9 @@ public class WorkItem {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @Transient
+    private String downloadForMvc;
+
     public WorkItem() {
     }
 
@@ -111,5 +114,13 @@ public class WorkItem {
 
     public void setFileDownloadUri(String fileDownloadUri) {
         this.fileDownloadUri = fileDownloadUri;
+    }
+
+    public String getDownloadForMvc() {
+        return "/api/work_items/"+ getId() + "/downloadFile/" + getFileName();
+    }
+
+    public void setDownloadForMvc(String downloadForMvc) {
+        this.downloadForMvc = downloadForMvc;
     }
 }
