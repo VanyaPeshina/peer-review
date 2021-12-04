@@ -51,4 +51,12 @@ public class CommentMapper {
             }
         }
     }
+
+    public CommentDTO toDTO(String comment, User user, WorkItem workItem) {
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setComment(comment);
+        commentDTO.setCreatorId(user.getId());
+        commentDTO.setWorkItemId(workItem.getId());
+        return commentDTO;
+    }
 }

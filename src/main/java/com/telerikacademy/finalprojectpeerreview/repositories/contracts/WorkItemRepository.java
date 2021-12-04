@@ -11,4 +11,8 @@ public interface WorkItemRepository extends CRUDRepository<WorkItem> {
 
     List<WorkItem> filter(Optional<String> name, Optional<String> status,
                           Optional<String> reviewer, Optional<String> sort);
+
+    List<WorkItem> filterMVC(Optional<Integer> creatorId,
+                             Optional<Integer> reviewerId,
+                             Optional<Integer> statusId);
 }

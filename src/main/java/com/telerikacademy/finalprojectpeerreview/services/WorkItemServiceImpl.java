@@ -7,6 +7,7 @@ import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.WorkItemRepository;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.WorkItemService;
 import com.telerikacademy.finalprojectpeerreview.utils.AuthorizationCheck;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +63,11 @@ public class WorkItemServiceImpl extends CRUDServiceImpl<WorkItem> implements Wo
             throw new EntityNotFoundException("work items", "this", "parameters");
         }
         return filteredItems;
+    }
+
+    @Override
+    public List<WorkItem> filterMVC(Optional<Integer> creatorId, Optional<Integer> reviewerId, Optional<Integer> statusId) {
+        return workItemRepository.filterMVC(creatorId, reviewerId, statusId);
     }
 
     protected void checkForTeam(WorkItem workItem) {

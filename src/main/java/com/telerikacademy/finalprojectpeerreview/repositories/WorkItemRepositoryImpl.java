@@ -4,6 +4,7 @@ import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.WorkItemRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.jdbc.Work;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -70,6 +71,44 @@ public class WorkItemRepositoryImpl extends CRUDRepositoryImpl<WorkItem> impleme
             sort.ifPresent(value -> {
                 queryString.append(generateSortingString(value));
             });
+
+            Query<WorkItem> query = session.createQuery(queryString.toString(), WorkItem.class);
+            query.setProperties(params);
+            return query.list();
+        }
+    }
+
+    @Override
+    public List<WorkItem> filterMVC(Optional<Integer> creatorId,
+                                    Optional<Integer> reviewerId,
+                                    Optional<Integer> statusId) {
+
+        try (Session session = sessionFactory.openSession()) {
+            var queryString  = new StringBuilder("from WorkItem ");
+            var filters = new ArrayList<String>();
+            var params = new HashMap<String, Object>();
+
+            if (creatorId.get() > 0) {
+                creatorId.ifPresent(value -> {
+                    filters.add("creator.id = :creatorId");
+                    params.put("creatorId", value);
+                });
+            }
+            if (reviewerId.get() > 0) {
+                reviewerId.ifPresent(value -> {
+                    filters.add("reviewer.id = :reviewerId");
+                    params.put("reviewerId", value);
+                });
+            }
+            if (statusId.get() > 0) {
+                statusId.ifPresent(value -> {
+                    filters.add("status.id = :statusId");
+                    params.put("statusId", value);
+                });
+            }
+            if (!filters.isEmpty()) {
+                queryString.append("where ").append(String.join(" and ", filters));
+            }
 
             Query<WorkItem> query = session.createQuery(queryString.toString(), WorkItem.class);
             query.setProperties(params);

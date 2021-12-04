@@ -8,7 +8,7 @@ import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.UserMapper;
 import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
-import com.telerikacademy.finalprojectpeerreview.services.UserServiceImpl;
+import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
 import org.springframework.core.io.Resource;
 import org.slf4j.Logger;
@@ -34,13 +34,14 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final UserMapper userMapper;
     private final AuthenticationHelper authenticationHelper;
     private final FileStorageService fileStorageService;
 
     @Autowired
-    public UserController(UserServiceImpl userService, UserMapper userMapper, AuthenticationHelper authenticationHelper, FileStorageService fileStorageService) {
+    public UserController(UserService userService, UserMapper userMapper, AuthenticationHelper authenticationHelper,
+                          FileStorageService fileStorageService) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.authenticationHelper = authenticationHelper;
@@ -50,8 +51,12 @@ public class UserController {
     @GetMapping()
     public List<User> getAll(@RequestHeader HttpHeaders headers,
                              @RequestParam(required = false) Optional<String> search) {
-        authenticationHelper.tryGetUser(headers);
-        return userService.search(search);
+        try {
+            authenticationHelper.tryGetUser(headers);
+            return userService.search(search);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")

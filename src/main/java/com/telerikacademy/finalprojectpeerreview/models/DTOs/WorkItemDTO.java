@@ -1,7 +1,10 @@
 package com.telerikacademy.finalprojectpeerreview.models.DTOs;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.ChangeNotPossibleException;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Constraint;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -14,7 +17,7 @@ public class WorkItemDTO implements Serializable {
     @Size(min = 10, max = 80, message = ITEM_TITLE_SHOULD_BE_BETWEEN)
     private String title;
 
-    @Size (min = 20, max = 65535, message = DESCRIPTION_SHOULD_BE_BETWEEN)
+    @Size(min = 20, max = 65535, message = DESCRIPTION_SHOULD_BE_BETWEEN)
     private String description;
 
     private int reviewerId;
@@ -26,6 +29,8 @@ public class WorkItemDTO implements Serializable {
     private MultipartFile multipartFile;
 
     private String fileName;
+
+    private String comment;
 
     public WorkItemDTO() {
     }
@@ -70,6 +75,7 @@ public class WorkItemDTO implements Serializable {
         this.statusId = statusId;
     }
 
+
     public int getCreatorId() {
         return creatorId;
     }
@@ -92,5 +98,13 @@ public class WorkItemDTO implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

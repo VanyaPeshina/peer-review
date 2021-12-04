@@ -134,7 +134,7 @@
                             <li class="nav-item"><a class="nav-link"
                                                     th:href="@{/work_item/all}">Your work Items</a></li>
                         </ul>
-                        <ul class="nav flex-column sub-menu" style="color: #FFFFFF">
+                        <ul class="nav flex-column sub-menu">
                             <li class="nav-item"><a class="nav-link"
                                                     th:href="@{/work_item/for_review}">For Review</a></li>
                         </ul>
@@ -167,49 +167,10 @@
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper" style="background-color: #C4E613">
-                <form action="#" th:action="@{/work_item/filter}" th:object="${workItemDto}" method="post">
-                    <div class="d-flex mb-4 justify-content-center">
-
-                        <!-- Creator filter -->
-                        <select th:field="*{creatorId}" name="user"
-                                class="btn btn-black btn-outline-black small rounded-0"
-                                style="background-color: #FFFFFF">
-                            <option name="user" th:value="-1" value="default">Select creator</option>
-                            <option name="user" th:each="user : ${users}"
-                                    th:value="${user.id}"
-                                    th:text="${user.getUsername()}"></option>
-                        </select>
-
-                        <!-- Reviewer filter -->
-                        <select th:field="*{reviewerId}" name="user"
-                                class="btn btn-black btn-outline-black small rounded-0"
-                                style="background-color: #FFFFFF">
-                            <option name="user" th:value="-1" value="default">Select reviewer</option>
-                            <option name="user" th:each="user : ${users}"
-                                    th:value="${user.id}"
-                                    th:text="${user.getUsername()}"></option>
-                        </select>
-
-                        <!--Status filter-->
-                        <select th:field="*{statusId}" name="category"
-                                class="btn btn-black btn-outline-black small rounded-0"
-                                style="background-color: #FFFFFF">
-                            <option name="category" th:value="-1" value="default">Select Status
-                            </option>
-                            <option name="category" th:each="status : ${statuses}"
-                                    th:value="${status.id}"
-                                    th:text="${status.getStatus()}"></option>
-                        </select>
-
-                        <!--Filter button-->
-                        <input type="submit" class="btn btn-black btn-outline-black small rounded-0"
-                               style="background-color: #3B83CD" value="Filter"/>
-                    </div>
-                </form>
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Work Items</h4>
+                            <h4 class="card-title">Work Items for change</h4>
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
@@ -226,7 +187,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="workItem : ${workItems}">
+                                    <tr th:each="workItem : ${workItemsForChange}">
                                         <td class="text-center"><a
                                                 th:href="@{/work_item/view/{id}(id=${workItem.getId()})}">
                                             <button type="button" class="btn btn-primary btn-rounded btn-icon">
@@ -245,16 +206,16 @@
                                         <td class="text-center">
                                             <th:block th:switch="${workItem.status.status}">
                                                 <div th:case="'Pending'">
-                                                    <span class="badge bg-info rounded-pill">Pending</span>
+                                                    <span class="badge bg-warning rounded-pill">Pending</span>
                                                 </div>
                                                 <div th:case="'Under Review'">
-                                                    <span class="badge bg-primary rounded-pill">Under Review</span>
+                                                    <span class="badge bg-success rounded-pill">Under Review</span>
                                                 </div>
                                                 <div th:case="'Change Requested'">
-                                                    <span class="badge bg-warning rounded-pill">Change Requested</span>
+                                                    <span class="badge bg-danger rounded-pill">Change Requested</span>
                                                 </div>
                                                 <div th:case="'Accepted'">
-                                                    <span class="badge bg-success rounded-pill">Accepted</span>
+                                                    <span class="badge bg-danger rounded-pill">Accepted</span>
                                                 </div>
                                                 <div th:case="'Rejected'">
                                                     <span class="badge bg-danger rounded-pill">Rejected</span>
@@ -276,17 +237,8 @@
                                                 <i class="ti-download"></i>
                                             </button>
                                         </td>
-                                        <td th:if="${workItem.getCreator().getId() == user.getId()} or ${workItem.getReviewer().getId() == user.getId()}"
-                                            class="text-center"><a th:href="@{/work_item/{id}(id=${workItem.getId()})}">
+                                        <td class="text-center"><a th:href="@{/work_item/{id}(id=${workItem.getId()})}">
                                             <button type="button" class="btn btn-warning btn-rounded btn-icon-text">
-                                                Update
-                                                <i class="ti-pencil btn-icon-append"></i>
-                                            </button>
-                                        </a>
-                                        </td>
-                                        <td th:unless="${workItem.getCreator().getId() == user.getId()} or ${workItem.getReviewer().getId() == user.getId()}"
-                                            class="text-center"><a th:href="@{/work_item/{id}(id=${workItem.getId()})}">
-                                            <button type="button" class="btn btn-secondary btn-rounded btn-icon-text" disabled>
                                                 Update
                                                 <i class="ti-pencil btn-icon-append"></i>
                                             </button>

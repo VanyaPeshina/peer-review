@@ -28,8 +28,8 @@
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
             <a class="navbar-brand brand-logo mr-5" href="dashboard.html" th:href="@{/}"><img
                     src="/dashboard/images/PEER_REVIEW_2.png" class="mr-2" alt="logo"/></a>
-<!--            <a class="navbar-brand brand-logo-mini" href="dashboard.html" th:href="@{/}"><img-->
-<!--                    src="/dashboard/images/logo-mini.svg" alt="logo"/></a>-->
+            <!--            <a class="navbar-brand brand-logo-mini" href="dashboard.html" th:href="@{/}"><img-->
+            <!--                    src="/dashboard/images/logo-mini.svg" alt="logo"/></a>-->
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
             <ul class="navbar-nav navbar-nav-right">
@@ -92,17 +92,17 @@
                             <i class="ti-settings text-primary"></i>
                             Settings
                         </a>
-                        <a class="dropdown-item"  th:href="@{/login/logout}">
+                        <a class="dropdown-item" th:href="@{/login/logout}">
                             <i class="ti-power-off text-primary"></i>
                             Logout
                         </a>
                     </div>
                 </li>
-<!--                <li class="nav-item nav-settings d-none d-lg-flex">-->
-<!--                    <a class="nav-link" href="#">-->
-<!--                        <i class="icon-ellipsis"></i>-->
-<!--                    </a>-->
-<!--                </li>-->
+                <!--                <li class="nav-item nav-settings d-none d-lg-flex">-->
+                <!--                    <a class="nav-link" href="#">-->
+                <!--                        <i class="icon-ellipsis"></i>-->
+                <!--                    </a>-->
+                <!--                </li>-->
             </ul>
             <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
                     data-toggle="offcanvas">
@@ -113,30 +113,6 @@
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_settings-panel.html -->
-        <div class="theme-setting-wrapper">
-            <div id="settings-trigger"><i class="ti-settings"></i></div>
-            <div id="theme-settings" class="settings-panel">
-                <i class="settings-close ti-close"></i>
-                <p class="settings-heading">SIDEBAR SKINS</p>
-                <div class="sidebar-bg-options selected" id="sidebar-light-theme">
-                    <div class="img-ss rounded-circle bg-light border mr-3"></div>
-                    Light
-                </div>
-                <div class="sidebar-bg-options" id="sidebar-dark-theme">
-                    <div class="img-ss rounded-circle bg-dark border mr-3"></div>
-                    Dark
-                </div>
-                <p class="settings-heading mt-2">HEADER SKINS</p>
-                <div class="color-tiles mx-0 px-4">
-                    <div class="tiles success"></div>
-                    <div class="tiles warning"></div>
-                    <div class="tiles danger"></div>
-                    <div class="tiles info"></div>
-                    <div class="tiles dark"></div>
-                    <div class="tiles default"></div>
-                </div>
-            </div>
-        </div>
         <div id="right-sidebar" class="settings-panel">
             <i class="settings-close ti-close"></i>
             <div class="tab-content" id="setting-content">
@@ -168,6 +144,14 @@
                         <ul class="nav flex-column sub-menu" style="color: #FFFFFF">
                             <li class="nav-item"><a class="nav-link"
                                                     th:href="@{/work_item/all}">Your work Items</a></li>
+                        </ul>
+                        <ul class="nav flex-column sub-menu" style="color: #FFFFFF">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/work_item/for_review}">For Review</a></li>
+                        </ul>
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/work_item/change_request}">Change Requested</a></li>
                         </ul>
                     </div>
                 </li>
@@ -213,13 +197,13 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="user : ${teamMembers}">
-                                            <td class="py-1"><img th:src="${user.getGetPhotoForMVC()}" alt="image" src=""/></td>
+                                            <td class="py-1"><img th:src="${user.getGetPhotoForMVC()}" alt="image"
+                                                                  src=""/></td>
                                             <td th:text="${user.id}"></td>
                                             <td th:text="${user.username}"></td>
                                             <td th:text="${user.email}"></td>
                                             <td th:text="${user.phone}"></td>
                                             <td>
-                                                <!--//TODO да взима ролята в отбора-->
                                                 <div th:unless="${user.id == user.team.owner.id}">
                                                     <span class="badge bg-success rounded-pill">Member</span>
                                                 </div>
@@ -235,53 +219,165 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Work Items</h4>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>Id</th>
-                                        <th>Creator</th>
-                                        <th>Title</th>
-                                        <th>Reviewer</th>
-                                        <th>Status</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="workItem : ${workItems}">
-                                        <td th:text="${workItem.id}"></td>
-                                        <td th:text="${workItem.creator.username}">Photoshop</td>
-                                        <td th:text="${workItem.title}"></td>
-                                        <td th:text="${workItem.reviewer.username}"></td>
-                                        <td>
-                                            <th:block th:switch="${workItem.status.status}">
-                                                <div th:case="'Pending'">
-                                                    <span class="badge bg-info rounded-pill">Pending</span>
-                                                </div>
-                                                <div th:case="'Under Review'">
-                                                    <span class="badge bg-primary rounded-pill">Under Review</span>
-                                                </div>
-                                                <div th:case="'Change Requested'">
-                                                    <span class="badge bg-warning rounded-pill">Change Requested</span>
-                                                </div>
-                                                <div th:case="'Accepted'">
-                                                    <span class="badge bg-success rounded-pill">Accepted</span>
-                                                </div>
-                                                <div th:case="'Rejected'">
-                                                    <span class="badge bg-danger rounded-pill">Rejected</span>
-                                                </div>
-                                            </th:block>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+
+                <!--<div class="main-panel">-->
+                    <div class="content-wrapper" style="background-color: #C4E613">
+                        <form action="#" th:action="@{/work_item/filter}" th:object="${workItemDto}" method="post">
+                            <div class="d-flex mb-4 justify-content-center">
+
+                                <!-- Creator filter -->
+                                <select th:field="*{creatorId}" name="user"
+                                        class="btn btn-black btn-outline-black small rounded-0"
+                                        style="background-color: #FFFFFF">
+                                    <option name="user" th:value="-1" value="default">Select creator</option>
+                                    <option name="user" th:each="user : ${teamMembers}"
+                                            th:value="${user.id}"
+                                            th:text="${user.getUsername()}"></option>
+                                </select>
+
+                                <!-- Reviewer filter -->
+                                <select th:field="*{reviewerId}" name="user"
+                                        class="btn btn-black btn-outline-black small rounded-0"
+                                        style="background-color: #FFFFFF">
+                                    <option name="user" th:value="-1" value="default">Select reviewer</option>
+                                    <option name="user" th:each="user : ${teamMembers}"
+                                            th:value="${user.id}"
+                                            th:text="${user.getUsername()}"></option>
+                                </select>
+
+                                <!--Status filter-->
+                                <select th:field="*{statusId}" name="category"
+                                        class="btn btn-black btn-outline-black small rounded-0"
+                                        style="background-color: #FFFFFF">
+                                    <option name="category" th:value="-1" value="default">Select Status
+                                    </option>
+                                    <option name="category" th:each="status : ${statuses}"
+                                            th:value="${status.id}"
+                                            th:text="${status.getStatus()}"></option>
+                                </select>
+
+                                <!--Filter button-->
+                                <input type="submit" class="btn btn-black btn-outline-black small rounded-0"
+                                       style="background-color: #3B83CD" value="Filter"/>
+                            </div>
+                        </form>
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Work Items</h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">Review</th>
+                                                <th class="text-center">Title</th>
+                                                <th class="text-center">Creator</th>
+                                                <th class="text-center">Reviewer</th>
+                                                <th class="text-center">Team</th>
+                                                <th class="text-center">Status</th>
+                                                <th class="text-center">File</th>
+                                                <th class="text-center">Update</th>
+                                                <th class="text-center">Delete</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:each="workItem : ${workItems}">
+                                                <td class="text-center"><a
+                                                        th:href="@{/work_item/view/{id}(id=${workItem.getId()})}">
+                                                    <button type="button" class="btn btn-primary btn-rounded btn-icon">
+                                                        <i class="ti-eye"></i>
+                                                    </button>
+                                                </a>
+                                                </td>
+                                                <td class="text-center" th:text="${workItem.title}"></td>
+                                                <td class="text-center"><img
+                                                        th:src="${workItem.getCreator().getGetPhotoForMVC()}"
+                                                        alt="image"/>
+                                                </td>
+                                                <td class="text-center" th:if="${workItem.getReviewer() != null}">
+                                                    <img th:src="${workItem.getReviewer().getGetPhotoForMVC()}"
+                                                         alt="image"/>
+                                                </td>
+                                                <td class="text-center" th:text="${workItem.team.name}"></td>
+                                                <td class="text-center">
+                                                    <th:block th:switch="${workItem.status.status}">
+                                                        <div th:case="'Pending'">
+                                                            <span class="badge bg-info rounded-pill">Pending</span>
+                                                        </div>
+                                                        <div th:case="'Under Review'">
+                                                            <span class="badge bg-primary rounded-pill">Under Review</span>
+                                                        </div>
+                                                        <div th:case="'Change Requested'">
+                                                            <span class="badge bg-warning rounded-pill">Change Requested</span>
+                                                        </div>
+                                                        <div th:case="'Accepted'">
+                                                            <span class="badge bg-success rounded-pill">Accepted</span>
+                                                        </div>
+                                                        <div th:case="'Rejected'">
+                                                            <span class="badge bg-danger rounded-pill">Rejected</span>
+                                                        </div>
+                                                    </th:block>
+                                                </td>
+                                                <td class="text-center"
+                                                    th:if="${workItem.getFileName() != null && workItem.getFileName().length() > 0}">
+                                                    <a th:method="get" th:href="${workItem.getDownloadForMvc()}"
+                                                       th:download="${workItem.getFileName()}">
+                                                        <button type="button"
+                                                                class="btn btn-success btn-rounded btn-icon">
+                                                            <i class="ti-download"></i>
+                                                        </button>
+                                                    </a></td>
+                                                <td class="text-center"
+                                                    th:if="${workItem.getFileName() == null || workItem.getFileName().length() == 0}">
+                                                    <button type="button" class="btn btn-secondary btn-rounded btn-icon"
+                                                            disabled>
+                                                        <i class="ti-download"></i>
+                                                    </button>
+                                                </td>
+                                                <td th:if="${workItem.getCreator().getId() == user.getId()} or ${workItem.getReviewer().getId() == user.getId()}"
+                                                    class="text-center"><a
+                                                        th:href="@{/work_item/{id}(id=${workItem.getId()})}">
+                                                    <button type="button"
+                                                            class="btn btn-warning btn-rounded btn-icon-text">
+                                                        Update
+                                                        <i class="ti-pencil btn-icon-append"></i>
+                                                    </button>
+                                                </a>
+                                                </td>
+                                                <td th:unless="${workItem.getCreator().getId() == user.getId()} or ${workItem.getReviewer().getId() == user.getId()}"
+                                                    class="text-center"><a
+                                                        th:href="@{/work_item/{id}(id=${workItem.getId()})}">
+                                                    <button type="button"
+                                                            class="btn btn-secondary btn-rounded btn-icon-text"
+                                                            disabled>
+                                                        Update
+                                                        <i class="ti-pencil btn-icon-append"></i>
+                                                    </button>
+                                                </a>
+                                                </td>
+                                                <td th:if="${workItem.getCreator().getId() == user.getId()}" class="text-center"><a
+                                                        th:href="@{/work_item/delete/{id}(id=${workItem.getId()})}">
+                                                    <button type="button" class="btn btn-danger btn-rounded btn-icon">
+                                                        <i class="ti-close"></i>
+                                                    </button>
+                                                </a>
+                                                </td>
+                                                <td th:unless="${workItem.getCreator().getId() == user.getId()}" class="text-center"><a
+                                                        th:href="@{/work_item/delete/{id}(id=${workItem.getId()})}">
+                                                    <button type="button" class="btn btn-secondary btn-rounded btn-icon" disabled>
+                                                        <i class="ti-close"></i>
+                                                    </button>
+                                                </a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+               <!-- </div>-->
             </div>
         </div>
     </div>

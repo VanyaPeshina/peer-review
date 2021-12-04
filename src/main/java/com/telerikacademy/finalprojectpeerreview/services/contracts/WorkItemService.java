@@ -12,4 +12,8 @@ public interface WorkItemService extends CRUDService<WorkItem> {
 
     List<WorkItem> filter(Optional<String> name, Optional<String> status,
                           Optional<String> reviewer, Optional<String> sort) throws EntityNotFoundException;
+
+    List<WorkItem> filterMVC(Optional<Integer> creatorId,
+                             Optional<Integer> reviewerId,
+                             Optional<Integer> statusId);
 }

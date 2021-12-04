@@ -1,9 +1,12 @@
 package com.telerikacademy.finalprojectpeerreview.models.DTOs;
 
+import javax.validation.constraints.NotBlank;
+
 public class CommentDTO {
 
     private int id;
 
+    @NotBlank
     private String comment;
 
     private int creatorId;

@@ -5,10 +5,12 @@ import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityExcep
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.TeamDTO;
+import com.telerikacademy.finalprojectpeerreview.models.DTOs.WorkItemDTO;
 import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.TeamMapper;
+import com.telerikacademy.finalprojectpeerreview.services.contracts.ItemStatusService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
@@ -32,13 +34,15 @@ public class TeamMvcController {
     private final UserService userService;
     private final TeamService teamService;
     private final TeamMapper teamMapper;
+    private final ItemStatusService itemStatusService;
 
     public TeamMvcController(AuthenticationHelper authenticationHelper, UserService userService,
-                             TeamService teamService, TeamMapper teamMapper) {
+                             TeamService teamService, TeamMapper teamMapper, ItemStatusService itemStatusService) {
         this.authenticationHelper = authenticationHelper;
         this.userService = userService;
         this.teamService = teamService;
         this.teamMapper = teamMapper;
+        this.itemStatusService = itemStatusService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -63,7 +67,8 @@ public class TeamMvcController {
             List<WorkItem> workItems = teamService.getTeamWorkItems(team);
             model.addAttribute("workItems", workItems);
             model.addAttribute("team", team);
-            /*model.addAttribute("photo", "/api/users/" + user.getId() + "/photo");*/
+            model.addAttribute("workItemDto", new WorkItemDTO());
+            model.addAttribute("statuses", itemStatusService.getAll());
             return "team";
         } catch (EntityNotFoundException | NullPointerException e) {
             return "team";
