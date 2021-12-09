@@ -17,6 +17,9 @@ public class Team {
     @JoinColumn(name = "owner_id")
     private User owner;
 
+    @Column(name = "to_delete")
+    private int delete;
+
     public Team() {
     }
 
@@ -42,5 +45,13 @@ public class Team {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public int getDelete() {
+        return delete;
+    }
+
+    public void setDelete(int delete) {
+        this.delete = delete;
     }
 }

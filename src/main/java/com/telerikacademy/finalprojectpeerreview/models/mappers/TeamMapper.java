@@ -45,5 +45,8 @@ public class TeamMapper {
             User owner = userRepository.getById(teamDTO.getOwnerId());
             team.setOwner(owner);
         }
+        if (teamDTO.getId() == 0) {
+            team.setDelete(0);
+        }
     }
 }

@@ -28,7 +28,8 @@ public class LoginMvcController {
 
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
-        return session.getAttribute("currentUser") != null;
+
+        return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
     }
 
     @GetMapping
@@ -48,7 +49,6 @@ public class LoginMvcController {
         try {
             authenticationHelper.verifyAuthentication(userToLogin.getUsername(), userToLogin.getPassword());
             session.setAttribute("currentUser", userToLogin.getUsername());
-            /*session.setAttribute("currentRole", service.getByUsername(userToLogin.getEmail()).getUserType());*/
             return "redirect:/";
         } catch (AuthenticationFailureException e) {
             bindingResult.rejectValue("username", "auth_error", e.getMessage());

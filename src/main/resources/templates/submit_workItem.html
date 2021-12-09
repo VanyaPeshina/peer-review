@@ -167,6 +167,12 @@
                         </ul>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/invitation/all}" style="color: #FFFFFF">
+                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>
+                        <span class="menu-title">Invitations</span>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- partial -->
@@ -186,8 +192,6 @@
                                 <div class="row">
                                     <div class="col-md-2 pr-1">
                                         <label>Submit Reviewer</label>
-                                            <!--                                    <input type="number" class="form-control" id="exampleInputEmail3"-->
-                                            <!--                                           placeholder="Reviewer" th:field="*{reviewerId}">-->
                                             <select type="text" class="form-control" th:field="*{reviewerId}">
                                                 <option th:each="user : ${members}"
                                                         th:value="${user.getId()}"

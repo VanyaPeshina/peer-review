@@ -54,43 +54,33 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="notificationDropdown">
-                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
-                        <a class="dropdown-item preview-item">
+                        <p class="mb-0 font-weight-normal float-left dropdown-header">Invitations</p>
+                        <a class="dropdown-item preview-item" th:each="invitation : ${invitations}">
                             <div class="preview-thumbnail">
-                                <div class="preview-icon bg-success">
-                                    <i class="ti-info-alt mx-0"></i>
-                                </div>
+                                <img class="image" th:src="${invitation.getCreator().getGetPhotoForMVC()}" alt="image"/>
                             </div>
                             <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">Application Error</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    Just now
+                                <h6 class="preview-subject font-weight-normal"
+                                    th:value="${invitation.getId()}"
+                                    th:text="${invitation.getCreator().getUsername()} +
+                                         ' invited you to join team: ' +
+                                          ${invitation.getTeam().getName()}"></h6>
+                              <!--  <p class="font-weight-light small-text mb-0 text-muted"
+                                   th:if="${invitation.getDate() == today}"
+                                   th:text="JUST NOW">
                                 </p>
-                            </div>
-                        </a>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-warning">
-                                    <i class="ti-settings mx-0"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">Settings</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    Private message
+                                <p class="font-weight-light small-text mb-0 text-muted"
+                                   th:if="${invitation.getDate().plusDays(1) == today}"
+                                   th:text="TODAY">
                                 </p>
-                            </div>
-                        </a>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-info">
-                                    <i class="ti-user mx-0"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">New user registration</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    2 days ago
+                                <p class="font-weight-light small-text mb-0 text-muted"
+                                   th:if="${invitation.getDate().plusDays(2) == today}"
+                                   th:text="YESTERDAY">
+                                </p>-->
+                                <p class="font-weight-light small-text mb-0 text-muted"
+                                   th:text="${invitation.getDate().getDayOfMonth()} + '/' +
+                                   ${invitation.getDate().getMonth().toString().toLowerCase()} + '/' +
+                                    ${invitation.getDate().getYear()}">
                                 </p>
                             </div>
                         </a>
@@ -225,6 +215,12 @@
                         </ul>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/invitation/all}" style="color: #FFFFFF">
+                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>
+                        <span class="menu-title">Invitations</span>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- partial -->
@@ -237,12 +233,6 @@
                             <div class="row">
                                 <div class="col-8 text-white">
                                     <h2>Welcome, <span th:text="${user.getUsername()}"></span></h2>
-                                    <!-- <h3 th:if="${user.getTeam() != null}" class="text-white font-weight-500 mb-0">
-                                         Team: <span class="text-primary" th:text="${user.getTeam.getName()}"></span></h3>
-                                     <h3 th:if="${user.getTeam() != null}" class="text-white font-weight-500 mb-0">
-                                         Team Members: <span class="text-primary" th:text="${members.size()}"></span></h3>
-                                     <h3 th:if="${user.getTeam() == null}" class="text-white font-weight-500 mb-0">
-                                         No Team</h3>-->
                                 </div>
                                 <div class="col-4 background-icon">
                                 </div>
@@ -250,33 +240,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="row">
-                     <div class="col-md-12 grid-margin">
-                         <div class="row">
-                             <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                                 <div class="col-4 background-icon"></div>
-                                 &lt;!&ndash;  <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span
-                                           class="text-primary">3 unread alerts!</span></h6>&ndash;&gt;
-                             </div>
-                         </div>
-                     </div>
-                     <div class="row">
-                         <h2 class="font-weight-bolder" style="color: #FFFFFF">Welcome, <span
-                                 th:text="${user.getUsername()}"></span>!
-                         </h2>
-                     </div>
-                 </div>
-                 <div class="row">
-                     <h3 th:if="${user.getTeam() != null}" class="font-weight-normal mb-0">Your
-                         team:
-                         <span class="text-primary" th:text="${user.getTeam().getName()}">
-                                                 <a th:href="@{/team}"></a></span></h3>
-                     <h3 th:if="${user.getTeam() == null}" class="font-weight-normal mb-0">
-                         <span class="text-primary">No team at the moment</span>
-                     </h3>
-                 </div>-->
-                <!-- <h3 class="font-weight-bolder" style="color: #FFFFFF">Welcome, <span th:text="${user.getUsername()}"></span>!
-                 </h3>-->
 
                 <!-- dashboard -->
                 <div class="row">
@@ -284,15 +247,25 @@
                         <!--<div class="card tale-bg">-->
                         <div class="card-people mt-auto">
                             <div class="row">
-                                <a th:href="@{/team/all}">
+                                <a th:if="${user.getTeam() != null}" class="col-6" th:href="@{/team/all}">
                                     <button type="submit" class="btn btn-block btn-primary btn-lg"
                                             th:href="@{/team/all}">
                                         MY TEAM
                                     </button>
                                 </a>
-                                <a th:href="@{/work_item}">
+                                <a th:if="${user.getTeam() == null}" class="col-6">
+                                    <button type="button" class="btn btn-block btn-secondary btn-lg" disabled>
+                                        NO TEAM
+                                    </button>
+                                </a>
+                                <a th:if="${user.getTeam() != null}" class="col-6" th:href="@{/invitation}">
                                     <button type="submit" class="btn btn-block btn-primary btn-lg"
-                                            th:href="@{/work_item}">
+                                            th:href="@{/invitation}">
+                                        SEND INVITATION
+                                    </button>
+                                </a>
+                                <a th:if="${user.getTeam() == null}" class="col-6">
+                                    <button type="submit" class="btn btn-block btn-secondary btn-lg" disabled>
                                         SEND INVITATION
                                     </button>
                                 </a>
@@ -300,28 +273,7 @@
                             <div class="row">
                                 <img src="dashboard/images/team.jpg" alt="team">
                             </div>
-                            <!--<img src="dashboard/images/dashboard/people.svg" alt="team">-->
-                            <!--  <div class="weather-info">
-                                  <div class="d-flex">-->
-                            <!--<div>
-                                <h2 class="mb-0 font-weight-normal"><i
-                                        class="icon-sun mr-2"></i>31<sup>C</sup></h2>
-                            </div>-->
-                            <!--   <div class="ml-2">-->
-                            <!-- <h3 th:if="${user.getTeam() != null}" class="font-weight-normal mb-0">Your
-                                 team:
-                                 <span class="text-primary" th:text="${user.getTeam().getName()}">
-                                     <a th:href="@{/team}"></a></span></h3>
-                             <h3 th:if="${user.getTeam() == null}" class="font-weight-normal mb-0">
-                                 <span class="text-primary">No team at the moment</span>
-                             </h3>-->
-                            <!--<h6 class="font-weight-normal">Team</h6>-->
-                            <!--</div>
                         </div>
-                        &lt;!&ndash; </div>&ndash;&gt;
-                    </div>-->
-                        </div>
-                        <div class="vertical"></div>
                     </div>
 
 
@@ -332,16 +284,18 @@
                                     <div class="card-body">
                                         <p class="mb-4">My Work Items</p>
                                         <p class="fs-30 mb-2" th:text="${workItems.size()}"></p>
-                                        <!--<p>10.00% (30 days)</p>-->
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <div class="card card-dark-blue">
-                                    <div class="card-body">
+                                    <div th:if="${user.getTeam() != null}" class="card-body">
                                         <p class="mb-4">Work Items of My Team</p>
                                         <p class="fs-30 mb-2" th:text="${teamItems.size()}"></p>
-                                        <!--<p>22.00% (30 days)</p>-->
+                                    </div>
+                                    <div th:if="${user.getTeam() == null}" class="card-body">
+                                        <p class="mb-4">Work Items of My Team</p>
+                                        <p class="fs-30 mb-2">No Team</p>
                                     </div>
                                 </div>
                             </div>
@@ -352,7 +306,6 @@
                                     <div class="card-body">
                                         <p class="mb-4">Waiting for Review</p>
                                         <p class="fs-30 mb-2" th:text="${waitingForReview.size()}"></p>
-                                        <!-- <p>2.00% (30 days)</p>-->
                                     </div>
                                 </div>
                             </div>

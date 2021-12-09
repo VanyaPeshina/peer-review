@@ -52,16 +52,18 @@ public class UserMapper {
         doPhotoName(userDTO, user);
         doTeam(userDTO, user);
         doUserRole(userDTO, user);
-        /*if (userDTO.getPhoto() != null) {
-            byte[] imageInBytes = fileConverter.convertToBytes(userDTO.getPhoto());
-            user.setPhoto(imageInBytes);
-        }*/
+        if (userDTO.getId() == 0) {
+            user.setDelete(0);
+        }
     }
 
     public UserDTO toDto(User user) {
+        if (user.getTeam() != null) {
+            return new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(),
+                    user.getPhone(), user.getPhotoName(), user.getTeam().getId(), user.getRole().getId());
+        }
         return new UserDTO(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(),
-                user.getPhone(), user.getPhotoName(), user.getTeam().getId(), user.getRole().getId());
-        /*userDTO.setPhoto(user.getPhotoName());*/
+                user.getPhone(), user.getPhotoName(), user.getRole().getId());
     }
 
     private void doUserRole(UserDTO userDTO, User user) throws EntityNotFoundException {

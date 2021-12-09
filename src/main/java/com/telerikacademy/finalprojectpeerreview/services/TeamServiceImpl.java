@@ -1,14 +1,13 @@
 package com.telerikacademy.finalprojectpeerreview.services;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.TeamRepository;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
-import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.WorkItemService;
-import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +44,13 @@ public class TeamServiceImpl extends CRUDServiceImpl<Team> implements TeamServic
         }
         checkOwner(user);
         teamRepository.create(team);
+    }
+
+    @Override
+    public void delete(int id, User user) throws EntityNotFoundException {
+        Team teamToDelete = teamRepository.getById(id);
+        teamToDelete.setDelete(1);
+        teamRepository.update(teamToDelete);
     }
 
     private void checkOwner(User user) {

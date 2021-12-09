@@ -1,18 +1,15 @@
 package com.telerikacademy.finalprojectpeerreview.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.telerikacademy.finalprojectpeerreview.exceptions.MyFileNotFoundException;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.core.io.UrlResource;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.annotation.Resource;
 import javax.persistence.*;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
+import java.util.Collection;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +28,6 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
-  /*  @Lob
-    @Basic(fetch = FetchType.EAGER)
-    @Column(name = "photo")
-    private byte[] photo;
-*/
     @Column(name = "photo_name")
     private String photoName;
 
@@ -50,6 +42,9 @@ public class User {
 
     @Transient
     private String getPhotoForMVC;
+
+    @Column(name = "to_delete")
+    private int delete;
 
     public User() {
     }
@@ -66,8 +61,33 @@ public class User {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 
     public String getPassword() {
@@ -93,14 +113,6 @@ public class User {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
- /*   public byte[] getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
-    }*/
 
     public Team getTeam() {
         return team;
@@ -132,6 +144,14 @@ public class User {
 
     public void setGetPhotoForMVC(String getPhotoForMVC) {
         this.getPhotoForMVC = getPhotoForMVC;
+    }
+
+    public int getDelete() {
+        return delete;
+    }
+
+    public void setDelete(int delete) {
+        this.delete = delete;
     }
 }
 

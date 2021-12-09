@@ -33,8 +33,12 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
     @Override
     public List<WorkItem> getAllRequests(int id) {
        return userRepository.getAllRequests(id);
-     /*  if (requests.isEmpty()) {
-           throw new EntityNotFoundException("Request", "this", "user ID");
-       }*/
+    }
+
+    @Override
+    public void delete(int id, User user) throws EntityNotFoundException {
+        User userToDelete = userRepository.getById(id);
+        userToDelete.setDelete(1);
+        userRepository.update(userToDelete);
     }
 }

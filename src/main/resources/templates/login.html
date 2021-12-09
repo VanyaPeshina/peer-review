@@ -21,12 +21,6 @@
     <link rel="stylesheet" href="dashboard/vertical-layout-light/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="dashboard/images/favicon.png"/>
-
-    <style>
-        div {
-            background-image: url('hero_bg_1.jpg');
-        }
-    </style>
 </head>
 
 <body>
@@ -45,12 +39,12 @@
                         <form class="pt-3" th:action="@{/login}" th:object="${user}" method="post">
                             <div class="form-group">
                                 <input type="text" class="form-control form-control-lg" id="exampleInputEmail1"
-                                       placeholder="username" th:field="*{username}">
+                                       name="username" placeholder="username" th:field="*{username}">
                                 <label class="error" th:errors="*{username}">Email error placeholder</label>
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control form-control-lg"
-                                       id="exampleInputPassword1" placeholder="Password" th:field="*{password}">
+                                <input type="password" class="form-control form-control-lg" name="password"
+                                       id="password" placeholder="password" th:field="*{password}">
                                 <label class="error" th:errors="*{username}">Email error placeholder</label>
                             </div>
                             <div class="mt-3">
@@ -59,12 +53,12 @@
                                 </button>
                             </div>
                             <div class="text-center mt-4 font-weight-light">
-<!--                                <div class="form-check">-->
-<!--                                    <label class="form-check-label text-muted">-->
-<!--                                        <input type="checkbox" class="form-check-input">-->
-<!--                                        Keep me signed in-->
-<!--                                    </label>-->
-<!--                                </div>-->
+                                <div class="form-check">
+                                    <label class="form-check-label text-muted">
+                                        <input type="checkbox" class="form-check-input">
+                                        Remember me
+                                    </label>
+                                </div>
                                 <a href="#" class="auth-link text-black">Forgot password?</a>
                             </div>
                             <div class="mb-2">

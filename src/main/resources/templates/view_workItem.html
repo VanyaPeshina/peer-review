@@ -143,9 +143,27 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/team}" style="color: #FFFFFF">
+                    <a class="nav-link" data-toggle="collapse" href="#team" aria-expanded="false"
+                       aria-controls="team">
                         <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>
-                        <span class="menu-title">Your Team</span>
+                        <span class="menu-title" style="color: #FFFFFF">Team</span>
+                        <i class="menu-arrow" style="color: #FFFFFF"></i>
+                    </a>
+                    <div class="collapse" id="team">
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/team/all}">My Team</a></li>
+                        </ul>
+                        <ul class="nav flex-column sub-menu">
+                            <li class="nav-item"><a class="nav-link"
+                                                    th:href="@{/team}">Create team</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/invitation/all}" style="color: #FFFFFF">
+                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>
+                        <span class="menu-title">Invitations</span>
                     </a>
                 </li>
             </ul>

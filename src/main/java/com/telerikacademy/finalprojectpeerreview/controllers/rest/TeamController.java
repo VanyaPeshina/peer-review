@@ -97,7 +97,7 @@ public class TeamController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/delete/{id}")
     public void delete(@RequestHeader HttpHeaders headers,
                        @PathVariable int id) {
         try {

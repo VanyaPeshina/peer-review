@@ -90,6 +90,10 @@ public class WorkItemMapper {
             }
         }
         if (workItemDTO.getFileName() != null) {
+           /* if (workItemDTO.getMultipartFile() != null && !workItemDTO.getMultipartFile().isEmpty()) {
+                String fileName = fileStorageService.storeFile(workItemDTO.getMultipartFile());
+                workItem.setFileName(fileName);
+            }*/
             workItem.setFileName(workItemDTO.getFileName());
         }
     }

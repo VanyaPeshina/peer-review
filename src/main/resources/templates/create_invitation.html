@@ -5,21 +5,21 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Dashboard</title>
+    <title>Submit Work Item</title>
     <!-- plugins:css -->
-    <link rel="stylesheet" href="/dashboard/feather/feather.css">
-    <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
-    <link rel="stylesheet" href="/dashboard/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="dashboard/feather/feather.css">
+    <link rel="stylesheet" href="dashboard/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="dashboard/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="/dashboard/datatables.net-bs4/dataTables.bootstrap4.css">
-    <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
-    <link rel="stylesheet" type="text/css" href="/dashboard/js/select.dataTables.min.css">
+    <link rel="stylesheet" href="dashboard/datatables.net-bs4/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="dashboard/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" type="text/css" href="dashboard/js/select.dataTables.min.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
-    <link rel="stylesheet" href="/dashboard/css/style.css">
+    <link rel="stylesheet" href="dashboard/css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="/dashboard/images/favicon.png"/>
+    <link rel="shortcut icon" href="dashboard/images/favicon.png"/>
 </head>
 <body>
 <div class="container-scroller">
@@ -27,7 +27,7 @@
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
             <a class="navbar-brand brand-logo mr-5" href="dashboard.html" th:href="@{/}"><img
-                    src="/dashboard/images/PEER_REVIEW_2.png" class="mr-2" alt="logo"/></a>
+                    src="dashboard/images/PEER_REVIEW_2.png" class="mr-2" alt="logo"/></a>
             <!--            <a class="navbar-brand brand-logo-mini" href="dashboard.html" th:href="@{/}"><img-->
             <!--                    src="/dashboard/images/logo-mini.svg" alt="logo"/></a>-->
         </div>
@@ -110,12 +110,12 @@
         <!-- partial:partials/_settings-panel.html -->
         <!-- partial -->
         <!-- partial:partials/_sidebar.html -->
-        <nav class="sidebar sidebar-offcanvas" id="sidebar" style="background-image: url('/images/hero_bg_1.jpg');">
+        <nav class="sidebar sidebar-offcanvas" id="sidebar" style="background-image: url('images/hero_bg_1.jpg');">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/dashboard}" style="color: #FFFFFF">
+                    <a class="nav-link" th:href="@{/dashboard}">
                         <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>
-                        <span class="menu-title">Dashboard</span>
+                        <span class="menu-title" style="color: #FFFFFF">Dashboard</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -134,7 +134,7 @@
                             <li class="nav-item"><a class="nav-link"
                                                     th:href="@{/work_item/all}">Your work Items</a></li>
                         </ul>
-                        <ul class="nav flex-column sub-menu">
+                        <ul class="nav flex-column sub-menu" style="color: #FFFFFF">
                             <li class="nav-item"><a class="nav-link"
                                                     th:href="@{/work_item/for_review}">For Review</a></li>
                         </ul>
@@ -145,7 +145,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#team" aria-expanded="false"
+                    <a class="nav-link" data-toggle="collapse" href="#team"
                        aria-controls="team">
                         <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>
                         <span class="menu-title" style="color: #FFFFFF">Team</span>
@@ -170,97 +170,24 @@
                 </li>
             </ul>
         </nav>
-        <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper" style="background-color: #C4E613">
-                <div class="col-lg-12 grid-margin stretch-card">
+                <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Work Items for change</h4>
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                    <tr>
-<!--                                        <th class="text-center">Review</th>-->
-                                        <th class="text-left">Title</th>
-                                        <th class="text-center">Creator</th>
-                                        <th class="text-center">Reviewer</th>
-                                        <th class="text-center">Team</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">File</th>
-                                        <th class="text-center">Update</th>
-<!--                                        <th class="text-center">Delete</th>-->
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="workItem : ${workItemsForChange}">
-<!--                                        <td class="text-center"><a-->
-<!--                                                th:href="@{/work_item/view/{id}(id=${workItem.getId()})}">-->
-<!--                                            <button type="button" class="btn btn-primary btn-rounded btn-icon">-->
-<!--                                                <i class="ti-eye"></i>-->
-<!--                                            </button>-->
-<!--                                        </a>-->
-<!--                                        </td>-->
-                                        <td class="text-left" th:text="${workItem.title}"></td>
-                                        <td class="text-center"><img
-                                                th:src="${workItem.getCreator().getGetPhotoForMVC()}" alt="image"/>
-                                        </td>
-                                        <td class="text-center" th:if="${workItem.getReviewer() != null}">
-                                            <img th:src="${workItem.getReviewer().getGetPhotoForMVC()}" alt="image"/>
-                                        </td>
-                                        <td class="text-center" th:text="${workItem.team.name}"></td>
-                                        <td class="text-center">
-                                            <th:block th:switch="${workItem.status.status}">
-                                                <div th:case="'Pending'">
-                                                    <span class="badge bg-warning rounded-pill">Pending</span>
-                                                </div>
-                                                <div th:case="'Under Review'">
-                                                    <span class="badge bg-success rounded-pill">Under Review</span>
-                                                </div>
-                                                <div th:case="'Change Requested'">
-                                                    <span class="badge bg-warning rounded-pill">Change Requested</span>
-                                                </div>
-                                                <div th:case="'Accepted'">
-                                                    <span class="badge bg-danger rounded-pill">Accepted</span>
-                                                </div>
-                                                <div th:case="'Rejected'">
-                                                    <span class="badge bg-danger rounded-pill">Rejected</span>
-                                                </div>
-                                            </th:block>
-                                        </td>
-                                        <td class="text-center"
-                                            th:if="${workItem.getFileName() != null && workItem.getFileName().length() > 0}">
-                                            <a th:method="get" th:href="${workItem.getDownloadForMvc()}"
-                                               th:download="${workItem.getFileName()}">
-                                                <button type="button" class="btn btn-success btn-rounded btn-icon">
-                                                    <i class="ti-download"></i>
-                                                </button>
-                                            </a></td>
-                                        <td class="text-center"
-                                            th:if="${workItem.getFileName() == null || workItem.getFileName().length() == 0}">
-                                            <button type="button" class="btn btn-secondary btn-rounded btn-icon"
-                                                    disabled>
-                                                <i class="ti-download"></i>
-                                            </button>
-                                        </td>
-                                        <td class="text-center"><a th:href="@{/work_item/{id}(id=${workItem.getId()})}">
-                                            <button type="button" class="btn btn-warning btn-rounded btn-icon-text">
-                                                Update
-                                                <i class="ti-pencil btn-icon-append"></i>
-                                            </button>
-                                        </a>
-                                        </td>
-<!--                                        <td class="text-center"><a-->
-<!--                                                th:href="@{/work_item/delete/{id}(id=${workItem.getId()})}">-->
-<!--                                            <button type="button" class="btn btn-danger btn-rounded btn-icon">-->
-<!--                                                <i class="ti-close"></i>-->
-<!--                                            </button>-->
-<!--                                        </a>-->
-<!--                                        </td>-->
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <h4 class="card-title">Send Invitation</h4>
+                            <form class="forms-sample" th:object="${invitationDto}" method="post">
+                                <div class="form-group">
+                                    <label>User</label>
+                                    <select type="text" class="form-control" th:field="*{invitedId}">
+                                        <option th:each="user : ${users}"
+                                                th:value="${user.getId()}"
+                                                th:text="${user.getUsername()}">User
+                                        </option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary mr-2">Send</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -272,25 +199,25 @@
 <!-- container-scroller -->
 
 <!-- plugins:js -->
-<script src="/dashboard/js/vendor.bundle.base.js"></script>
+<script src="dashboard/js/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
-<script src="/dashboard/chart.js/Chart.min.js"></script>
-<script src="/dashboard/datatables.net/jquery.dataTables.js"></script>
-<script src="/dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
-<script src="/dashboard/js/dataTables.select.min.js"></script>
+<script src="dashboard/chart.js/Chart.min.js"></script>
+<script src="dashboard/datatables.net/jquery.dataTables.js"></script>
+<script src="dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<script src="dashboard/js/dataTables.select.min.js"></script>
 
 <!-- End plugin js for this page -->
 <!-- inject:js -->
-<script src="/dashboard/js/off-canvas.js"></script>
-<script src="/dashboard/js/hoverable-collapse.js"></script>
-<script src="/dashboard/js/template.js"></script>
-<script src="/dashboard/js/settings.js"></script>
-<script src="/dashboard/js/todolist.js"></script>
+<script src="dashboard/js/off-canvas.js"></script>
+<script src="dashboard/js/hoverable-collapse.js"></script>
+<script src="dashboard/js/template.js"></script>
+<script src="dashboard/js/settings.js"></script>
+<script src="dashboard/js/todolist.js"></script>
 <!-- endinject -->
 <!-- Custom js for this page-->
-<script src="/dashboard/js/dashboard.js"></script>
-<script src="/dashboard/js/Chart.roundedBarCharts.js"></script>
+<script src="dashboard/js/dashboard.js"></script>
+<script src="dashboard/js/Chart.roundedBarCharts.js"></script>
 <!-- End custom js for this page-->
 </body>
 

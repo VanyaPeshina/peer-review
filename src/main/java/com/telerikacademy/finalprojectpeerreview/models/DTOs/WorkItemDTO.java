@@ -1,10 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.models.DTOs;
 
-import com.telerikacademy.finalprojectpeerreview.exceptions.ChangeNotPossibleException;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Constraint;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 

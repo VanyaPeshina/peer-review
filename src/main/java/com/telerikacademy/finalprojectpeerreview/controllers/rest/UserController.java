@@ -98,7 +98,7 @@ public class UserController {
 
     @GetMapping("/{id}/requests")
     public List<WorkItem> getAllRequests(@RequestHeader HttpHeaders headers, @PathVariable int id) {
-        User userToAuthenticate = authenticationHelper.tryGetUser(headers);
+        authenticationHelper.tryGetUser(headers);
         return userService.getAllRequests(id);
     }
 
@@ -151,9 +151,8 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable int id,
-                           @RequestHeader HttpHeaders headers) {
+    @PutMapping("/delete/{id}")
+    public void deleteUser(@PathVariable int id, @RequestHeader HttpHeaders headers) {
         try {
             User userToAuthenticate = authenticationHelper.tryGetUser(headers);
             userService.delete(id, userToAuthenticate);

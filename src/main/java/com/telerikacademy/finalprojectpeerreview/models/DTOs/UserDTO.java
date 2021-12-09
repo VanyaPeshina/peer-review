@@ -35,15 +35,21 @@ public class UserDTO {
     }
 
     public UserDTO(int id, String username, String password, String email, String phone, String photoName,
-                   int teamId, int userRole) {
+                   int userRole) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.phone = phone;
         this.photoName = photoName;
-        this.teamId = teamId;
         this.userRole = userRole;
+        this.teamId = 0;
+    }
+
+    public UserDTO(int id, String username, String password, String email, String phone, String photoName,
+                   int teamId, int userRole) {
+        this(id, username, password, email, phone, photoName, userRole);
+        this.teamId = teamId;
     }
 
     public int getId() {
@@ -117,4 +123,5 @@ public class UserDTO {
     public void setUserRole(int userRole) {
         this.userRole = userRole;
     }
+
 }

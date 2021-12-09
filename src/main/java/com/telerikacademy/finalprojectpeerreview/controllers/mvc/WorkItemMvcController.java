@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ public class WorkItemMvcController {
         return session.getAttribute("currentUser") != null;
     }
 
-    @ModelAttribute("status")
+    @ModelAttribute("statuses")
     public List<ItemStatus> populateWarehouses() {
         return itemStatusService.getAll();
     }
@@ -75,15 +76,30 @@ public class WorkItemMvcController {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
-        model.addAttribute("workItems", workItemService.getAll()
-                .stream().filter(workItem -> workItem.getCreator().getId() == user.getId())
-                .collect(Collectors.toList()));
+
         model.addAttribute("workItemDto", new WorkItemDTO());
-        model.addAttribute("users", userService.getAll()
-                .stream()
-                .filter(user1 -> user1.getTeam().getId() == user.getTeam().getId())
-                .collect(Collectors.toList()));
+
+        if (user.getTeam() != null) {
+            model.addAttribute("users", userService.getAll()
+                    .stream()
+                    .filter(user1 -> user1.getDelete() == 0)
+                    .filter(user1 -> user1.getTeam() != null)
+                    .filter(user1 -> user1.getTeam().getId() == user.getTeam().getId())
+                    .collect(Collectors.toList()));
+        }
+
+        List<WorkItem> workItems = workItemService.getAll()
+                .stream().filter(workItem -> workItem.getCreator().getId() == user.getId())
+                .collect(Collectors.toList());
         model.addAttribute("statuses", itemStatusService.getAll());
+        model.addAttribute("workItems", workItems);
+        List<String> workItemsDownloadUris = new ArrayList<>();
+        for (WorkItem workItem : workItems) {
+            workItemsDownloadUris
+                    .add("/api/work_item/" + workItem.getId() + "/downloadFile/{" + workItem.getFileName() + ":.+}");
+        }
+        model.addAttribute("downloadUris", workItemsDownloadUris);
+
         return "workItems";
     }
 
@@ -96,10 +112,14 @@ public class WorkItemMvcController {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
-        model.addAttribute("workItemsForReview", workItemService.getAll().stream()
-                .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
-                .filter(workItem -> workItem.getReviewer().getId() == user.getId())
-                .collect(Collectors.toList()));
+
+        if (user.getTeam() != null) {
+            model.addAttribute("workItemsForReview", workItemService.getAll().stream()
+                    .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
+                    .filter(workItem -> workItem.getReviewer().getId() == user.getId())
+                    .collect(Collectors.toList()));
+        }
+
         return "for_review";
     }
 
@@ -112,10 +132,12 @@ public class WorkItemMvcController {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
-        model.addAttribute("workItemsForChange", workItemService.getAll().stream()
-                .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
-                .filter(workItem -> workItem.getStatus().getStatus().equals("Change Requested"))
-                .collect(Collectors.toList()));
+        if (user.getTeam() != null) {
+            model.addAttribute("workItemsForChange", workItemService.getAll().stream()
+                    .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
+                    .filter(workItem -> workItem.getStatus().getStatus().equals("Change Requested"))
+                    .collect(Collectors.toList()));
+        }
         return "change_request";
     }
 
@@ -185,7 +207,8 @@ public class WorkItemMvcController {
         }
         model.addAttribute("user", user);
         model.addAttribute("workItemDto", new WorkItemDTO());
-        model.addAttribute("members", teamService.getMembers(user.getTeam(), user));
+        model.addAttribute("members", teamService.getMembers(user.getTeam(), user)
+                .stream().filter(user1 -> !user1.getUsername().equals(user.getUsername())).collect(Collectors.toList()));
         return "submit_workItem";
     }
 
@@ -230,7 +253,13 @@ public class WorkItemMvcController {
             WorkItemDTO workItemDTO = workItemMapper.toDto(workItem);
             model.addAttribute("user", user);
             model.addAttribute("workItemDTO", workItemDTO);
-            model.addAttribute("members", teamService.getMembers(user.getTeam(), user));
+            model.addAttribute("members", teamService.getMembers(user.getTeam(), user)
+                    .stream().filter(user1 -> !user1.getUsername().equals(user.getUsername())).collect(Collectors.toList()));
+            model.addAttribute("comments", commentService.getAll()
+                    .stream()
+                    .filter(comment -> comment.getWorkItem().getId() == workItem.getId())
+                    .collect(Collectors.toList()));
+//            model.addAttribute("commentDto", new CommentDTO());
             return "single_workItem";
         } catch (EntityNotFoundException e) {
             model.addAttribute("error", e.getMessage());
@@ -255,7 +284,13 @@ public class WorkItemMvcController {
             }
         }
         if (errors.hasErrors()) {
-            return "single_workItem";
+            //TODO не показва грешката след redirect-ване
+            String redirect = "redirect:/work_item/" + id;
+            return redirect;
+        }
+        if (dto.getMultipartFile() != null && !dto.getMultipartFile().isEmpty()) {
+            String fileName = fileStorageService.storeFile(dto.getMultipartFile());
+            dto.setFileName(fileName);
         }
         try {
             WorkItem workItemToUpdate = workItemMapper.fromDto(dto);
@@ -306,7 +341,11 @@ public class WorkItemMvcController {
                 Optional.of(workItemDTO.getCreatorId()),
                 Optional.of(workItemDTO.getReviewerId()),
                 Optional.of(workItemDTO.getStatusId()));
-
+        if (!filteredWorkItems.isEmpty()){
+            filteredWorkItems = filteredWorkItems.stream()
+                    .filter(workItem -> workItem.getCreator().getId() == user.getId())
+                    .collect(Collectors.toList());
+        }
         model.addAttribute("filteredWorkItems", filteredWorkItems);
         model.addAttribute("user", user);
         return "filtered_work_items";

@@ -162,6 +162,12 @@
                         </ul>
                     </div>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/invitation/all}" style="color: #FFFFFF">
+                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>
+                        <span class="menu-title">Invitations</span>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- partial -->
@@ -170,32 +176,22 @@
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Work Items</h4>
+                            <h4 class="card-title">Work Items for Review</h4>
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th class="text-center">Review</th>
-                                        <th class="text-center">Title</th>
+                                        <th class="text-left">Title</th>
                                         <th class="text-center">Creator</th>
                                         <th class="text-center">Reviewer</th>
                                         <th class="text-center">Team</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">File</th>
-                                        <th class="text-center">Update</th>
-                                        <th class="text-center">Delete</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="workItem : ${workItemsForReview}">
-                                        <td class="text-center"><a
-                                                th:href="@{/work_item/view/{id}(id=${workItem.getId()})}">
-                                            <button type="button" class="btn btn-primary btn-rounded btn-icon">
-                                                <i class="ti-eye"></i>
-                                            </button>
-                                        </a>
-                                        </td>
-                                        <td class="text-center" th:text="${workItem.title}"></td>
+                                        <td class="text-left" th:text="${workItem.title}"></td>
                                         <td class="text-center"><img
                                                 th:src="${workItem.getCreator().getGetPhotoForMVC()}" alt="image"/>
                                         </td>
@@ -206,16 +202,16 @@
                                         <td class="text-center">
                                             <th:block th:switch="${workItem.status.status}">
                                                 <div th:case="'Pending'">
-                                                    <span class="badge bg-warning rounded-pill">Pending</span>
+                                                    <span class="badge bg-info rounded-pill">Pending</span>
                                                 </div>
                                                 <div th:case="'Under Review'">
-                                                    <span class="badge bg-success rounded-pill">Under Review</span>
+                                                    <span class="badge bg-primary rounded-pill">Under Review</span>
                                                 </div>
                                                 <div th:case="'Change Requested'">
-                                                    <span class="badge bg-danger rounded-pill">Change Requested</span>
+                                                    <span class="badge bg-warning rounded-pill">Change Requested</span>
                                                 </div>
                                                 <div th:case="'Accepted'">
-                                                    <span class="badge bg-danger rounded-pill">Accepted</span>
+                                                    <span class="badge bg-success rounded-pill">Accepted</span>
                                                 </div>
                                                 <div th:case="'Rejected'">
                                                     <span class="badge bg-danger rounded-pill">Rejected</span>
@@ -237,17 +233,22 @@
                                                 <i class="ti-download"></i>
                                             </button>
                                         </td>
-                                        <td class="text-center"><a th:href="@{/work_item/{id}(id=${workItem.getId()})}">
-                                            <button type="button" class="btn btn-warning btn-rounded btn-icon-text">
-                                                Update
-                                                <i class="ti-pencil btn-icon-append"></i>
+                                        <td  th:unless="${workItem.getStatus().getStatus() == 'Rejected'}
+                                        or ${workItem.getStatus().getStatus() == 'Accepted'}" class="text-center"><a
+                                                th:href="@{/work_item/{id}(id=${workItem.getId()})}">
+                                            <button type="button"
+                                                    class="btn btn-primary btn-rounded btn-icon-text">
+                                                Review
+                                                <i class="ti-eye btn-icon-append"></i>
                                             </button>
                                         </a>
                                         </td>
-                                        <td class="text-center"><a
-                                                th:href="@{/work_item/delete/{id}(id=${workItem.getId()})}">
-                                            <button type="button" class="btn btn-danger btn-rounded btn-icon">
-                                                <i class="ti-close"></i>
+                                        <td th:if="${workItem.getStatus().getStatus() == 'Rejected'}
+                                        or ${workItem.getStatus().getStatus() == 'Accepted'}" class="text-center"><a>
+                                            <button type="button"
+                                                    class="btn btn-secondary btn-rounded btn-icon-text" disabled>
+                                                Review
+                                                <i class="ti-eye btn-icon-append" disabled=""></i>
                                             </button>
                                         </a>
                                         </td>
