@@ -35,5 +35,15 @@ public class InvitationMapper {
         invitation.setTeam(teamRepository.getById(creator.getTeam().getId()));
         invitation.setInvited(userRepository.getById(invitationDTO.getInvitedId()));
         invitation.setDate(LocalDateTime.now());
+        invitation.setDelete(0);
+
+    }
+
+    public InvitationDTO toDto(Invitation invitation) {
+        InvitationDTO invitationDTO = new InvitationDTO();
+        invitationDTO.setCreatorId(invitation.getId());
+        invitationDTO.setInvitedId(invitation.getInvited().getId());
+        invitationDTO.setTeamId(invitation.getTeam().getId());
+        return invitationDTO;
     }
 }

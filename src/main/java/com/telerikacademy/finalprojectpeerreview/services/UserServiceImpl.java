@@ -6,13 +6,16 @@ import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl extends CRUDServiceImpl<User> implements UserService {
+public class UserServiceImpl extends CRUDServiceImpl<User> implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -40,5 +43,12 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
         User userToDelete = userRepository.getById(id);
         userToDelete.setDelete(1);
         userRepository.update(userToDelete);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository
+                .selectApplicationUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
     }
 }

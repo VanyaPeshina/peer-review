@@ -1,6 +1,5 @@
 package com.telerikacademy.finalprojectpeerreview.controllers.mvc;
 
-import com.telerikacademy.finalprojectpeerreview.exceptions.AuthenticationFailureException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
@@ -10,7 +9,8 @@ import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.InvitationMapper;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.InvitationService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
-import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
+import com.telerikacademy.finalprojectpeerreview.utils.UserHelper;
+import com.telerikacademy.finalprojectpeerreview.utils.WorkItemsHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,67 +18,61 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/invitation")
 public class InvitationController {
 
     private final UserService userService;
-    private final AuthenticationHelper authenticationHelper;
     private final InvitationMapper invitationMapper;
     private final InvitationService invitationService;
+    private final UserHelper userHelper;
+    private final WorkItemsHelper workItemsHelper;
 
-    public InvitationController(UserService userService, AuthenticationHelper authenticationHelper,
-                                InvitationMapper invitationMapper, InvitationService invitationService) {
+    public InvitationController(UserService userService,
+                                InvitationMapper invitationMapper,
+                                InvitationService invitationService,
+                                UserHelper userHelper,
+                                WorkItemsHelper workItemsHelper) {
         this.userService = userService;
-        this.authenticationHelper = authenticationHelper;
         this.invitationService = invitationService;
         this.invitationMapper = invitationMapper;
+        this.userHelper = userHelper;
+        this.workItemsHelper = workItemsHelper;
     }
 
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
-        return session.getAttribute("currentUser") != null;
+        return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
     }
 
     @GetMapping("/all")
-    public String workItemForReview(Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    public String getSentInvitations(Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
         model.addAttribute("user", user);
-        model.addAttribute("invitations", getUserInvitations(user));
+        model.addAttribute("sentInvitations", userHelper.getUserInvitations(user));
+
         return "invitations";
     }
 
     @GetMapping
-    private String newInvitation(Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    private String newInvitation(Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
         model.addAttribute("user", user);
         model.addAttribute("invitationDto", new InvitationDTO());
-        model.addAttribute("users", getUsers(user));
+        model.addAttribute("users", userHelper.getUsersToInvite(user));
+
         return "create_invitation";
     }
 
     @PostMapping
     public String createInvitation(@Valid @ModelAttribute("invitationDto") InvitationDTO invitationDTO,
-                             BindingResult errors, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+                                   BindingResult errors,
+                                   Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
         if (errors.hasErrors()) {
             return "dashboard";
         }
@@ -97,17 +91,46 @@ public class InvitationController {
         }
     }
 
-    @PutMapping("/all/{id}")
-    private String acceptInvitation(@PathVariable int id, BindingResult errors, HttpSession session) {
+    @GetMapping("/accept/{id}")
+    public String singleAcceptInvitationPage(@PathVariable int id,
+                                             Model model,
+                                             Principal principal) {
         User user;
         try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
+            user = userService.getByField("username", principal.getName());
+        } catch (EntityNotFoundException e) {
             return "redirect:/login";
         }
-        if (errors.hasErrors()) {
-            return "redirect:/invitation/all";
+        try {
+            Invitation invitation = invitationService.getById(id);
+            InvitationDTO invitationDTO = invitationMapper.toDto(invitation);
+            model.addAttribute("user", user);
+            model.addAttribute("invitationDTO", invitationDTO);
+            model.addAttribute("userInvitation", invitation.getCreator().getUsername());
+            model.addAttribute("teamInvitation", invitation.getTeam().getName());
+            return "single_invitation";
+        } catch (EntityNotFoundException e) {
+            return "error-404";
         }
+    }
+
+    @PostMapping("/accept/{id}")
+    private String acceptInvitation(@PathVariable int id,
+                                    @Valid @ModelAttribute("invitationDTO") InvitationDTO dto,
+                                    BindingResult errors,
+                                    Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
+        if(workItemsHelper.checkForUnfinishedWorkItems(user)){
+            errors.rejectValue("invitedId", "error.invitationDTO.invitedId",
+                    "User has unfinished items and can't go in a new team");
+        }
+        //TODO не показва ерора
+        if (errors.hasErrors()) {
+            String redirect = "/invitation/accept/" + id;
+            return redirect;
+        }
+
         try {
             Invitation invitation = invitationService.getById(id);
             invitationService.update(invitation, user);
@@ -117,26 +140,15 @@ public class InvitationController {
         }
     }
 
-    private List<User> getUsers(User user) {
-        List<User> users = userService.getAll();
-        if (users.isEmpty()) {
-            return users;
+    @GetMapping("/delete/{id}")
+    public String deleteWorkItem(@PathVariable int id, Model model, Principal principal) {
+        User userToAuthenticate = (User) userService.loadUserByUsername(principal.getName());
+        try {
+            invitationService.delete(id, userToAuthenticate);
+            return "redirect:/invitation/all";
+        } catch (EntityNotFoundException e) {
+            model.addAttribute("error", e.getMessage());
+            return "error-404";
         }
-        return users
-                .stream()
-                .filter(user1 -> user1.getTeam().getId() != user.getTeam().getId())
-                .filter(user1 -> user1.getId() != user.getId())
-                .collect(Collectors.toList());
-    }
-
-    public List<Invitation> getUserInvitations(User user) {
-        List<Invitation> invitations = invitationService.getAll();
-        if (invitations.isEmpty()) {
-            return invitations;
-        }
-        return invitations
-                .stream()
-                .filter(invitation -> invitation.getInvited().getId() == user.getId())
-                .collect(Collectors.toList());
     }
 }

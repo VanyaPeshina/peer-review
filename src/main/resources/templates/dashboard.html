@@ -29,19 +29,23 @@
             margin-left: 3px;
             top: 0;
         }
+       /* html * {
+            font-family: Nunito !important;
+        }*/
     </style>
 </head>
 <body>
 <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-            <a class="navbar-brand brand-logo mr-5" th:href="@{/}"><img src="dashboard/images/PEER_REVIEW_2.png"
-                                                                        class="mr-2" alt="logo"/></a>
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center" style="background-color: #314CA3">
+            <a class="text-center" style="color: #F8F9FD; font-weight: bold" th:href="@{/}">HOME
+                <!--<img src="dashboard/images/PEER_REVIEW_2.png"
+                                                                        class="mr-2" alt="logo"/></a> -->
             <!--  <a class="navbar-brand brand-logo-mini" th:href="@{/}"><img src="/dashboard/images/p-r-logo-2.png"
                                                                           alt="logo"/></a>-->
         </div>
-        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end" style="background-color: #314CA3">
             <!-- <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
                  <span class="icon-menu"></span>
              </button>-->
@@ -49,13 +53,14 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle" id="teamDropDown" href="#"
                        data-toggle="dropdown">
-                        <i class="ti-crown"></i>
+                        <i class="ti-crown" style="color: #FFFFFF"></i>
                         <span class="count"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="notificationDropdown">
                         <p class="mb-0 font-weight-normal float-left dropdown-header">Invitations</p>
-                        <a class="dropdown-item preview-item" th:each="invitation : ${invitations}">
+                        <a th:href="@{/invitation/accept/{id}(id=${invitation.getId()})}"
+                           class="dropdown-item preview-item" th:each="invitation : ${invitations}">
                             <div class="preview-thumbnail">
                                 <img class="image" th:src="${invitation.getCreator().getGetPhotoForMVC()}" alt="image"/>
                             </div>
@@ -65,18 +70,6 @@
                                     th:text="${invitation.getCreator().getUsername()} +
                                          ' invited you to join team: ' +
                                           ${invitation.getTeam().getName()}"></h6>
-                              <!--  <p class="font-weight-light small-text mb-0 text-muted"
-                                   th:if="${invitation.getDate() == today}"
-                                   th:text="JUST NOW">
-                                </p>
-                                <p class="font-weight-light small-text mb-0 text-muted"
-                                   th:if="${invitation.getDate().plusDays(1) == today}"
-                                   th:text="TODAY">
-                                </p>
-                                <p class="font-weight-light small-text mb-0 text-muted"
-                                   th:if="${invitation.getDate().plusDays(2) == today}"
-                                   th:text="YESTERDAY">
-                                </p>-->
                                 <p class="font-weight-light small-text mb-0 text-muted"
                                    th:text="${invitation.getDate().getDayOfMonth()} + '/' +
                                    ${invitation.getDate().getMonth().toString().toLowerCase()} + '/' +
@@ -89,7 +82,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
                        data-toggle="dropdown">
-                        <i class="icon-bell mx-0"></i>
+                        <i class="icon-bell mx-0" style="color: #FFFFFF"></i>
                         <span class="count"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
@@ -225,14 +218,14 @@
         </nav>
         <!-- partial -->
         <div class="main-panel">
-            <div class="content-wrapper" style="background-color: #C4E613">
+            <div class="content-wrapper" style="background-color: #F8F9FD">
                 <div class="col-md-12 stretch-card grid-margin grid-margin-md-0">
                     <div class="card data-icon-card-primary">
-                        <div class="card-body" style="background-color: #C4E613">
+                        <div class="card-body" style="background-color: #F8F9FD">
                             <p class="card-title text-white"></p>
                             <div class="row">
-                                <div class="col-8 text-white">
-                                    <h2>Welcome, <span th:text="${user.getUsername()}"></span></h2>
+                                <div class="col-8 text" style="color: #314CA3">
+                                    <h2 style="font-family: 'Agency FB',sans-serif; font-weight: bold">Welcome, <span th:text="${user.getUsername()}"></span>!</h2>
                                 </div>
                                 <div class="col-4 background-icon">
                                 </div>
@@ -271,7 +264,7 @@
                                 </a>
                             </div>
                             <div class="row">
-                                <img src="dashboard/images/team.jpg" alt="team">
+                                <img src="dashboard/images/main_visual.jpeg" alt="team">
                             </div>
                         </div>
                     </div>
@@ -293,7 +286,8 @@
                                         <p class="mb-4">Work Items of My Team</p>
                                         <p class="fs-30 mb-2" th:text="${teamItems.size()}"></p>
                                     </div>
-                                    <div th:if="${user.getTeam() == null}" class="card-body">
+                                    <div th:if="${user.getTeam() == null}" class="card-body"
+                                         style="background-color: midnightblue">
                                         <p class="mb-4">Work Items of My Team</p>
                                         <p class="fs-30 mb-2">No Team</p>
                                     </div>
@@ -310,7 +304,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6 stretch-card transparent">
-                                <div class="card card-light-orange" style="background-color: #FA9742">
+                                <div class="card card-light-orange" style="background-color: #C4E613">
                                     <div class="card-body">
                                         <p class="mb-4" style="color: #FFFFFF">Items Needing Change</p>
                                         <p class="fs-30 mb-2" style="color: #FFFFFF"

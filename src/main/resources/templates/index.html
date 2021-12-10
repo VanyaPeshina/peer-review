@@ -73,7 +73,7 @@
                               <li><a href="#blog-section" class="nav-link">Blog</a></li>-->
                             <li><a th:unless="${isAuthenticated}" th:href="@{/register}" class="nav-link">Register</a>
                             </li>
-                            <li><a th:if="${isAuthenticated}" th:href="@{/login/logout}" class="nav-link">Logout</a>
+                            <li><a th:if="${isAuthenticated}" th:href="@{/logout}" class="nav-link">Logout</a>
                             </li>
                         </ul>
                     </nav>

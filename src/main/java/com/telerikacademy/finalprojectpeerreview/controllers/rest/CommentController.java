@@ -27,7 +27,9 @@ public class CommentController {
     private final CommentMapper commentMapper;
 
     @Autowired
-    public CommentController(CommentService commentService, AuthenticationHelper authenticationHelper, CommentMapper commentMapper) {
+    public CommentController(CommentService commentService,
+                             AuthenticationHelper authenticationHelper,
+                             CommentMapper commentMapper) {
         this.commentService = commentService;
         this.authenticationHelper = authenticationHelper;
         this.commentMapper = commentMapper;
@@ -66,8 +68,8 @@ public class CommentController {
 
     @PutMapping("/{id}")
     public Comment updateComment(@RequestHeader HttpHeaders headers,
-                           @PathVariable int id,
-                           @Valid @RequestBody CommentDTO commentDTO) {
+                                 @PathVariable int id,
+                                 @Valid @RequestBody CommentDTO commentDTO) {
         try {
             User user = authenticationHelper.tryGetUser(headers);
             commentDTO.setId(id);

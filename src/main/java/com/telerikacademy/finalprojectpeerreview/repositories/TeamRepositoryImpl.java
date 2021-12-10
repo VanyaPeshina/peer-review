@@ -28,6 +28,7 @@ public class TeamRepositoryImpl extends CRUDRepositoryImpl<Team> implements Team
         return Team.class;
     }
 
+    //TODO left join team
     @Override
     public List<User> getMembers(Team team) {
         try(Session session = sessionFactory.openSession()) {

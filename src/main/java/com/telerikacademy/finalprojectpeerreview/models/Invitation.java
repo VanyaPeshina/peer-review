@@ -2,7 +2,6 @@ package com.telerikacademy.finalprojectpeerreview.models;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name="invitations")
@@ -25,8 +24,11 @@ public class Invitation {
     @JoinColumn(name = "invited_user_id")
     private User invited;
 
-    @Column
+    @Column(name = "date")
     private LocalDateTime date;
+
+    @Column(name = "to_delete")
+    private int delete;
 
     public Invitation() {
     }
@@ -69,5 +71,13 @@ public class Invitation {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public int getDelete() {
+        return delete;
+    }
+
+    public void setDelete(int delete) {
+        this.delete = delete;
     }
 }

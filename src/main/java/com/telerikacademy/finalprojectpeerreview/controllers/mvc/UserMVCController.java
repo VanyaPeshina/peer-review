@@ -17,31 +17,27 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/users")
 public class UserMVCController {
 
     private final UserService userService;
-    private final AuthenticationHelper authenticationHelper;
     private final UserMapper userMapper;
     private final FileStorageService fileStorageService;
 
-    public UserMVCController(UserService userService, AuthenticationHelper authenticationHelper, UserMapper userMapper, FileStorageService fileStorageService) {
+    public UserMVCController(UserService userService,
+                             UserMapper userMapper,
+                             FileStorageService fileStorageService) {
         this.userService = userService;
-        this.authenticationHelper = authenticationHelper;
         this.userMapper = userMapper;
         this.fileStorageService = fileStorageService;
     }
 
     @GetMapping()
-    public String showProfile(Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    public String showProfile(Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
         try {
             User userToUpdate = userService.getById(user.getId());
             UserDTO userDto = userMapper.toDto(userToUpdate);
@@ -55,13 +51,9 @@ public class UserMVCController {
 
     @PostMapping()
     public String updateProfile(@Valid @ModelAttribute("userDto") UserDTO dto,
-                                BindingResult errors, Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+                                BindingResult errors,
+                                Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
         if (errors.hasErrors()) {
             return "user";
         }

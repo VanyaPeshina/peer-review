@@ -1,12 +1,9 @@
 package com.telerikacademy.finalprojectpeerreview.controllers.mvc;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.*;
-import com.telerikacademy.finalprojectpeerreview.models.Comment;
+import com.telerikacademy.finalprojectpeerreview.models.*;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.CommentDTO;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.WorkItemDTO;
-import com.telerikacademy.finalprojectpeerreview.models.ItemStatus;
-import com.telerikacademy.finalprojectpeerreview.models.User;
-import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.CommentMapper;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.WorkItemMapper;
 import com.telerikacademy.finalprojectpeerreview.services.CommentService;
@@ -15,7 +12,8 @@ import com.telerikacademy.finalprojectpeerreview.services.contracts.ItemStatusSe
 import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.WorkItemService;
-import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
+import com.telerikacademy.finalprojectpeerreview.utils.UserHelper;
+import com.telerikacademy.finalprojectpeerreview.utils.WorkItemsHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,7 +30,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/work_item")
 public class WorkItemMvcController {
 
-    private final AuthenticationHelper authenticationHelper;
     private final WorkItemMapper workItemMapper;
     private final WorkItemService workItemService;
     private final FileStorageService fileStorageService;
@@ -41,12 +38,18 @@ public class WorkItemMvcController {
     private final UserService userService;
     private final CommentService commentService;
     private final CommentMapper commentMapper;
+    private final UserHelper userHelper;
+    private final WorkItemsHelper workItemsHelper;
 
-    public WorkItemMvcController(AuthenticationHelper authenticationHelper, WorkItemMapper workItemMapper,
-                                 WorkItemService workItemService, FileStorageService fileStorageService,
-                                 TeamService teamService, ItemStatusService itemStatusService, UserService userService,
-                                 CommentService commentService, CommentMapper commentMapper) {
-        this.authenticationHelper = authenticationHelper;
+    public WorkItemMvcController(WorkItemMapper workItemMapper,
+                                 WorkItemService workItemService,
+                                 FileStorageService fileStorageService,
+                                 TeamService teamService,
+                                 ItemStatusService itemStatusService,
+                                 UserService userService,
+                                 CommentService commentService,
+                                 CommentMapper commentMapper,
+                                 UserHelper userHelper, WorkItemsHelper workItemsHelper) {
         this.workItemMapper = workItemMapper;
         this.workItemService = workItemService;
         this.fileStorageService = fileStorageService;
@@ -55,11 +58,13 @@ public class WorkItemMvcController {
         this.userService = userService;
         this.commentService = commentService;
         this.commentMapper = commentMapper;
+        this.userHelper = userHelper;
+        this.workItemsHelper = workItemsHelper;
     }
 
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
-        return session.getAttribute("currentUser") != null;
+        return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
     }
 
     @ModelAttribute("statuses")
@@ -68,97 +73,54 @@ public class WorkItemMvcController {
     }
 
     @GetMapping("/all")
-    public String showWorkItemsPage(Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    public String showWorkItemsPage(Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
         model.addAttribute("user", user);
-
         model.addAttribute("workItemDto", new WorkItemDTO());
-
-        if (user.getTeam() != null) {
-            model.addAttribute("users", userService.getAll()
-                    .stream()
-                    .filter(user1 -> user1.getDelete() == 0)
-                    .filter(user1 -> user1.getTeam() != null)
-                    .filter(user1 -> user1.getTeam().getId() == user.getTeam().getId())
-                    .collect(Collectors.toList()));
-        }
-
-        List<WorkItem> workItems = workItemService.getAll()
-                .stream().filter(workItem -> workItem.getCreator().getId() == user.getId())
-                .collect(Collectors.toList());
+        model.addAttribute("users", userHelper.getTeamMembersWhenTeamIsUnknown(user));
         model.addAttribute("statuses", itemStatusService.getAll());
+
+        List<WorkItem> workItems = workItemsHelper.getWorkItemsCreatedByUser(user);
         model.addAttribute("workItems", workItems);
-        List<String> workItemsDownloadUris = new ArrayList<>();
-        for (WorkItem workItem : workItems) {
-            workItemsDownloadUris
-                    .add("/api/work_item/" + workItem.getId() + "/downloadFile/{" + workItem.getFileName() + ":.+}");
-        }
-        model.addAttribute("downloadUris", workItemsDownloadUris);
+        model.addAttribute("downloadUris", workItemsHelper.getDownloadUris(workItems));
 
         return "workItems";
     }
 
     @GetMapping("/for_review")
-    public String workItemForReview(Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", user);
+    public String workItemForReview(Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
 
-        if (user.getTeam() != null) {
-            model.addAttribute("workItemsForReview", workItemService.getAll().stream()
-                    .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
-                    .filter(workItem -> workItem.getReviewer().getId() == user.getId())
-                    .collect(Collectors.toList()));
-        }
+        model.addAttribute("user", user);
+        model.addAttribute("workItemsForReview", workItemsHelper.getWorkItemsForReview(user));
 
         return "for_review";
     }
 
     @GetMapping("/change_request")
-    public String workItemForChange(Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    public String workItemForChange(Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
         model.addAttribute("user", user);
-        if (user.getTeam() != null) {
-            model.addAttribute("workItemsForChange", workItemService.getAll().stream()
-                    .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
-                    .filter(workItem -> workItem.getStatus().getStatus().equals("Change Requested"))
-                    .collect(Collectors.toList()));
-        }
+        model.addAttribute("workItemsForChange", workItemsHelper.getItemsNeedingChange(user));
+
         return "change_request";
     }
 
     @GetMapping("/view/{id}")
-    public String viewWorkItemPage(@PathVariable int id, Model model,
-                                   HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    public String viewWorkItemPage(@PathVariable int id,
+                                   Model model,
+                                   Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
         try {
             model.addAttribute("user", user);
             WorkItem workItem = workItemService.getById(id);
             model.addAttribute("workItem", workItem);
-            model.addAttribute("comments", commentService.getAll()
-                    .stream()
-                    .filter(comment -> comment.getWorkItem().getId() == workItem.getId())
-                    .collect(Collectors.toList()));
+            model.addAttribute("comments", workItemsHelper.getComments(workItem));
             model.addAttribute("commentDto", new CommentDTO());
+
             return "view_workItem";
         } catch (EntityNotFoundException e) {
             return "error-404";
@@ -170,13 +132,10 @@ public class WorkItemMvcController {
     @PostMapping("/view/{id}")
     public String createComment(@PathVariable int id,
                                 @Valid @ModelAttribute("commentDto") CommentDTO commentDTO,
-                                BindingResult result, HttpSession session, Model model) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+                                BindingResult result,
+                                Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
         if (result.hasErrors()) {
             return "view_workItem";
         }
@@ -198,29 +157,22 @@ public class WorkItemMvcController {
     }
 
     @GetMapping
-    public String showNewWorkItemPage(Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    public String showNewWorkItemPage(Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
         model.addAttribute("user", user);
         model.addAttribute("workItemDto", new WorkItemDTO());
-        model.addAttribute("members", teamService.getMembers(user.getTeam(), user)
-                .stream().filter(user1 -> !user1.getUsername().equals(user.getUsername())).collect(Collectors.toList()));
+        model.addAttribute("members", userHelper.getTeamMembersWithoutTheUser(user));
+
         return "submit_workItem";
     }
 
     @PostMapping
     public String createWorkItem(@Valid @ModelAttribute("workItemDto") WorkItemDTO dto,
-                                 BindingResult result, HttpSession session, Model model) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+                                 BindingResult result,
+                                 Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
         if (result.hasErrors()) {
             return "submit_workItem";
         }
@@ -241,25 +193,16 @@ public class WorkItemMvcController {
     }
 
     @GetMapping("/{id}")
-    public String getSingleWorkItemPage(@PathVariable int id, Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    public String getSingleWorkItemPage(@PathVariable int id, Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
         try {
             WorkItem workItem = workItemService.getById(id);
             WorkItemDTO workItemDTO = workItemMapper.toDto(workItem);
             model.addAttribute("user", user);
             model.addAttribute("workItemDTO", workItemDTO);
-            model.addAttribute("members", teamService.getMembers(user.getTeam(), user)
-                    .stream().filter(user1 -> !user1.getUsername().equals(user.getUsername())).collect(Collectors.toList()));
-            model.addAttribute("comments", commentService.getAll()
-                    .stream()
-                    .filter(comment -> comment.getWorkItem().getId() == workItem.getId())
-                    .collect(Collectors.toList()));
-//            model.addAttribute("commentDto", new CommentDTO());
+            model.addAttribute("members", userHelper.getTeamMembersWithoutTheUser(user));
+            model.addAttribute("comments", workItemsHelper.getComments(workItem));
+
             return "single_workItem";
         } catch (EntityNotFoundException e) {
             model.addAttribute("error", e.getMessage());
@@ -270,14 +213,12 @@ public class WorkItemMvcController {
     }
 
     @PostMapping("/{id}")
-    public String updateWorkItem(@PathVariable int id, @Valid @ModelAttribute("workItemDTO") WorkItemDTO dto,
-                                 BindingResult errors, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    public String updateWorkItem(@PathVariable int id,
+                                 @Valid @ModelAttribute("workItemDTO") WorkItemDTO dto,
+                                 BindingResult errors,
+                                 Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+
         if (dto.getStatusId() == 3 || dto.getStatusId() == 5) {
             if (dto.getComment().isEmpty()) {
                 errors.rejectValue("comment", "error.workItemDTO.comment", "can't be empty");
@@ -312,13 +253,8 @@ public class WorkItemMvcController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteWorkItem(@PathVariable int id, Model model, HttpSession session) {
-        User userToAuthenticate;
-        try {
-            userToAuthenticate = authenticationHelper.tryGetUser(session);
-        } catch (UnauthorizedOperationException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+    public String deleteWorkItem(@PathVariable int id, Model model, Principal principal) {
+        User userToAuthenticate = (User) userService.loadUserByUsername(principal.getName());
         try {
             workItemService.delete(id, userToAuthenticate);
             return "redirect:/work_item/all";
@@ -329,25 +265,22 @@ public class WorkItemMvcController {
     }
 
     @PostMapping("/filter")
-    public String filter(@ModelAttribute WorkItemDTO workItemDTO, Model model, HttpSession session) {
-        User user;
-        try {
-            user = authenticationHelper.tryGetUser(session);
-        } catch (EntityNotFoundException e) {
-            e.printStackTrace();
-            return "redirect:/login";
-        }
+    public String filter(@ModelAttribute WorkItemDTO workItemDTO, Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
         List<WorkItem> filteredWorkItems = workItemService.filterMVC(
                 Optional.of(workItemDTO.getCreatorId()),
                 Optional.of(workItemDTO.getReviewerId()),
                 Optional.of(workItemDTO.getStatusId()));
-        if (!filteredWorkItems.isEmpty()){
+
+        if (!filteredWorkItems.isEmpty()) {
             filteredWorkItems = filteredWorkItems.stream()
                     .filter(workItem -> workItem.getCreator().getId() == user.getId())
                     .collect(Collectors.toList());
         }
+
         model.addAttribute("filteredWorkItems", filteredWorkItems);
         model.addAttribute("user", user);
+
         return "filtered_work_items";
     }
 }

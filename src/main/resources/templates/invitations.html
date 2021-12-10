@@ -176,35 +176,28 @@
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Invitations</h4>
+                            <h4 class="card-title">Sent Invitations</h4>
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <tbody>
-                                    <tr th:each="invitation : ${invitations}">
-                                        <td class="text-left"><img th:src="${invitation.creator.getGetPhotoForMVC()}"
-                                                                   alt="image"/>
-                                        </td>
+                                    <tr th:each="invitation : ${sentInvitations}">
                                         <td>
                                             <div class="text-left">
                                                 <h6 class="text-left"
                                                     th:value="${invitation.id}"
-                                                    th:text="${invitation.creator.username} +
-                                         ' invited you to join team: ' +
+                                                    th:text="
+                                         'You invited ' +
+                                         ${invitation.invited.username} +
+                                         ' to join your team: ' +
                                           ${invitation.team.name}"></h6>
                                             </div>
                                         </td>
-                                        <td class="text-right">
-                                            <!--<a th:href="@{__${#httpServletRequest.requestURI}__/{id}(id=${invitation.getId()})}" th:method="put">-->
-                                            <a th:method="put" th:href="${all/{id}(id=${invitation.getId()})}">
-                                                <button type="button" class="btn btn-success btn-rounded btn-icon">
-                                                    <i class="ti-check"></i>
-                                                </button>
-                                            </a>
+                                        <td class="text-center">
+                                            <a th:href="@{/invitation/delete/{id}(id=${invitation.getId()})}">
                                             <button type="button" class="btn btn-danger btn-rounded btn-icon">
                                                 <i class="ti-close"></i>
                                             </button>
-                                        </td>
-                                        <td class="text-right">
+                                            </a>
                                         </td>
                                     </tr>
                                     </tbody>

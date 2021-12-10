@@ -10,6 +10,7 @@ import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepo
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRoleRepository;
 import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -22,14 +23,16 @@ public class UserMapper {
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
     private final UserRoleRepository userRoleRepository;
+    private final PasswordEncoder passwordEncoder;
     private final FileStorageService fileStorageService;
 
     @Autowired
     public UserMapper(UserRepository userRepository, TeamRepository teamRepository,
-                      UserRoleRepository userRoleRepository, FileStorageService fileStorageService) {
+                      UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder, FileStorageService fileStorageService) {
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
         this.userRoleRepository = userRoleRepository;
+        this.passwordEncoder = passwordEncoder;
         this.fileStorageService = fileStorageService;
     }
 
@@ -137,7 +140,7 @@ public class UserMapper {
                 }
             }
             if (capitalLetter && specialSymbol) {
-                user.setPassword(userDTO.getPassword());
+                user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
             } else {
                 throw new IllegalArgumentException(PASSWORD_SHOULD_CONTAIN);
             }

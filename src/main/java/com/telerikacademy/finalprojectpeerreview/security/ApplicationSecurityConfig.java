@@ -1,6 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.security;
 
-import com.telerikacademy.finalprojectpeerreview.auth.ApplicationUserService;
+import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.telerikacademy.finalprojectpeerreview.security.enums.ApplicationUserRole.SIMPLE_USER;
 import static com.telerikacademy.finalprojectpeerreview.security.enums.ApplicationUserRole.ADMIN;
 
 @Configuration
@@ -22,12 +21,12 @@ import static com.telerikacademy.finalprojectpeerreview.security.enums.Applicati
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
-    private final ApplicationUserService applicationUserService;
+    private final UserService userService;
 
     @Autowired
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, ApplicationUserService applicationUserService) {
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, UserService userService) {
         this.passwordEncoder = passwordEncoder;
-        this.applicationUserService = applicationUserService;
+        this.userService = userService;
     }
 
     @Override
@@ -36,39 +35,42 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 //handle roles and authentication
                 .authorizeRequests()
-             /*   .anyRequest().permitAll()*/
-                .antMatchers("/fonts/**", "/css/**", "/dashboard/**", "/js/**", "/static/**", "/images/**").permitAll()
-                .antMatchers("/", "/login", "/register", "/dashboard").permitAll()
-                .antMatchers("/api").permitAll()   //hasAnyRole(ADMIN.name(), SIMPLE_USER.name())
-                .antMatchers("management/api/**", "/management/**").hasRole(ADMIN.name())
-                .anyRequest()
-                .authenticated()
+                   /*.anyRequest().permitAll()*/
+                    .antMatchers( "/fonts/**", "/css/**", "/dashboard/**", "/js/**", "/static/**", "/images/**").permitAll()
+                    .antMatchers("/", "/login", "/register", "/logout").permitAll()
+                    .antMatchers("/api/**").permitAll()   //hasAnyRole(ADMIN.name(), SIMPLE_USER.name())
+                    .antMatchers("management/api/**", "/management/**").hasRole(ADMIN.name())
+                    .anyRequest()
+                    .authenticated()
 
                 .and()
+
                 //handle login
                 .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/dashboard", true)
-                .passwordParameter("password")
-                .usernameParameter("username")
+                    .loginPage("/login")
+                    .loginProcessingUrl("/login")
+                    .defaultSuccessUrl("/dashboard", true)
+                    .passwordParameter("password")
+                    .usernameParameter("username")
 
                 .and()
+
                 //remember me
                 .rememberMe()
-                .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21))
-                .key("somethingverysecured")
-                .rememberMeParameter("remember-me")
+                    .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21)) //defaults to 2 weeks
+                    .key("somethingverysecured")
+                    .rememberMeParameter("remember-me")
 
                 .and()
+
                 //handle logout
                 .logout()
-                .logoutUrl("/logout")
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) //leave only if csrf is disabled
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
-                .deleteCookies("remember-me")
-                .logoutSuccessUrl("/"); //defaults to 2 weeks
+                    .logoutUrl("/logout")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) //leave only if csrf is disabled
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies("remember-me")
+                    .logoutSuccessUrl("/");
     }
 
     @Override
@@ -80,7 +82,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder); //for passwords to be decoded
-        provider.setUserDetailsService(applicationUserService);
+        provider.setUserDetailsService(userService);
         return provider;
     }
 }

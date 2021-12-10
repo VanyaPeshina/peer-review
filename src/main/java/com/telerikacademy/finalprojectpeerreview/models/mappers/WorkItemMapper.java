@@ -9,7 +9,6 @@ import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.ItemStatusRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.WorkItemRepository;
-import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.ItemStatusService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +22,18 @@ public class WorkItemMapper {
     private final ItemStatusService statusService;
     private final TeamService teamService;
     private final ItemStatusRepository itemStatusRepository;
-    private final FileStorageService fileStorageService;
 
     @Autowired
-    public WorkItemMapper(WorkItemRepository workItemRepository, UserRepository userRepository,
-                          ItemStatusService statusService, TeamService teamService,
-                          ItemStatusRepository itemStatusRepository, FileStorageService fileStorageService) {
+    public WorkItemMapper(WorkItemRepository workItemRepository,
+                          UserRepository userRepository,
+                          ItemStatusService statusService,
+                          TeamService teamService,
+                          ItemStatusRepository itemStatusRepository) {
         this.workItemRepository = workItemRepository;
         this.userRepository = userRepository;
         this.statusService = statusService;
         this.teamService = teamService;
         this.itemStatusRepository = itemStatusRepository;
-        this.fileStorageService = fileStorageService;
     }
 
     public WorkItem fromDto(WorkItemDTO workItemDTO) throws EntityNotFoundException {

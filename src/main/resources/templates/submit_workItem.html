@@ -20,18 +20,26 @@
     <link rel="stylesheet" href="dashboard/css/style.css">
     <!-- endinject -->
     <link rel="shortcut icon" href="dashboard/images/favicon.png"/>
+    <style>
+        img {
+            width: 50%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-            <a class="navbar-brand brand-logo mr-5" href="dashboard.html" th:href="@{/}"><img
-                    src="dashboard/images/PEER_REVIEW_2.png" class="mr-2" alt="logo"/></a>
-            <!--            <a class="navbar-brand brand-logo-mini" href="dashboard.html" th:href="@{/}"><img-->
-            <!--                    src="/dashboard/images/logo-mini.svg" alt="logo"/></a>-->
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center"
+             style="background-color: #314CA3">
+            <a class="text" style="font-weight: bold" href="dashboard.html" th:href="@{/}">HOME <!--<img
+                    src="dashboard/images/PEER_REVIEW_2.png" class="mr-2" alt="logo"/></a>-->
+                <!--            <a class="navbar-brand brand-logo-mini" href="dashboard.html" th:href="@{/}"><img-->
+                <!--                    src="/dashboard/images/logo-mini.svg" alt="logo"/></a>-->
         </div>
-        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end"
+             style="background-color: #314CA3">
             <ul class="navbar-nav navbar-nav-right">
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
@@ -98,11 +106,11 @@
                         </a>
                     </div>
                 </li>
-<!--                <li class="nav-item nav-settings d-none d-lg-flex">-->
-<!--                    <a class="nav-link" href="#">-->
-<!--                        <i class="icon-ellipsis"></i>-->
-<!--                    </a>-->
-<!--                </li>-->
+                <!--                <li class="nav-item nav-settings d-none d-lg-flex">-->
+                <!--                    <a class="nav-link" href="#">-->
+                <!--                        <i class="icon-ellipsis"></i>-->
+                <!--                    </a>-->
+                <!--                </li>-->
             </ul>
             <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
                     data-toggle="offcanvas">
@@ -177,9 +185,9 @@
         </nav>
         <!-- partial -->
         <div class="main-panel">
-            <div class="content-wrapper" style="background-color: #C4E613">
+            <div class="content-wrapper" style="background-color: #F8F9FD">
                 <div class="col-12 grid-margin stretch-card">
-                    <div class="card">
+                    <div class="card" style="background-color: #F8F9FD">
                         <div class="card-body">
                             <h4 class="card-title">Submit Work Item</h4>
                             <form class="forms-sample" th:object="${workItemDto}" method="post">
@@ -192,19 +200,19 @@
                                 <div class="row">
                                     <div class="col-md-2 pr-1">
                                         <label>Submit Reviewer</label>
-                                            <select type="text" class="form-control" th:field="*{reviewerId}">
-                                                <option th:each="user : ${members}"
-                                                        th:value="${user.getId()}"
-                                                        th:text="${user.getUsername()}">Delivery Type
-                                                </option>
-                                            </select>
+                                        <select type="text" class="form-control" th:field="*{reviewerId}">
+                                            <option th:each="user : ${members}"
+                                                    th:value="${user.getId()}"
+                                                    th:text="${user.getUsername()}">Delivery Type
+                                            </option>
+                                        </select>
                                     </div>
-                                    <div class="col-md-6 pr-1">
-                                        <label for="exampleTextarea1">Description</label>
-                                        <textarea class="form-control" id="exampleTextarea1" rows="4"
-                                                  th:field="*{description}"></textarea>
-                                        <label class="error" th:errors="*{description}">Email error placeholder</label>
-                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleTextarea1">Description</label>
+                                    <textarea class="form-control" id="exampleTextarea1" rows="4"
+                                              th:field="*{description}"></textarea>
+                                    <label class="error" th:errors="*{description}">Email error placeholder</label>
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                 <div class="text-right"> * If your work item needs an attachment,
@@ -214,6 +222,9 @@
                         </div>
                     </div>
                 </div>
+               <!-- <div style="float: right">
+                    <img src="dashboard/images/remote-collaboration-tools-1.jpg" alt="team">
+                </div>-->
             </div>
         </div>
     </div>

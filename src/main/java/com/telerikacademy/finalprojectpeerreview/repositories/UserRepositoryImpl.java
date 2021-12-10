@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl extends CRUDRepositoryImpl<User> implements UserRepository {
@@ -47,6 +48,14 @@ public class UserRepositoryImpl extends CRUDRepositoryImpl<User> implements User
             query.setParameter("id", id);
             return query.list();
         }
+    }
+
+    @Override
+    public Optional<User> selectApplicationUserByUsername(String username) {
+        return getAll()
+                .stream()
+                .filter(user -> username.equals(user.getUsername()))
+                .findFirst();
     }
 
     @Override

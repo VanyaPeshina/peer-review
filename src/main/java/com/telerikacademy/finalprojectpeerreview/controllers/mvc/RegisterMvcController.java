@@ -33,7 +33,7 @@ public class RegisterMvcController {
 
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
-        return session.getAttribute("currentUser") != null;
+        return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
     }
 
     @GetMapping
@@ -43,7 +43,7 @@ public class RegisterMvcController {
     }
 
     @PostMapping
-    public String createCustomerDto(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult errors) {
+    public String createCustomer(@Valid @ModelAttribute("user") UserDTO userDTO, BindingResult errors) {
         if (errors.hasErrors()) {
             return "register";
         }
