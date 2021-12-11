@@ -10,10 +10,7 @@ import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -23,12 +20,12 @@ import java.io.IOException;
 @RequestMapping("/register")
 public class RegisterMvcController {
 
-    private final UserMapper mapper;
-    private final UserService service;
+    private final UserMapper userMapper;
+    private final UserService userService;
 
-    public RegisterMvcController(UserMapper mapper, UserService service) {
-        this.mapper = mapper;
-        this.service = service;
+    public RegisterMvcController(UserMapper userMapper, UserService userService) {
+        this.userMapper = userMapper;
+        this.userService = userService;
     }
 
     @ModelAttribute("isAuthenticated")
@@ -53,9 +50,13 @@ public class RegisterMvcController {
 //            return "register";
 //        }
         try {
-            User creator = service.getById(1);
-            User newUser = mapper.fromDto(userDTO);
-            service.create(newUser, creator);
+            //TODO: Why we harcoded this???
+            User creator = userService.getById(1);
+            User newUser = userMapper.fromDto(userDTO);
+            userService.create(newUser, creator);
+
+            //sign up
+            userService.signUpUser(newUser);
             return "redirect:/";
         } catch (DuplicateEntityException e) {
             errors.rejectValue("email", "username_error", e.getMessage());
@@ -65,6 +66,11 @@ public class RegisterMvcController {
         } catch (IOException | EntityNotFoundException e) {
             return "error-404";
         }
+    }
+
+    @GetMapping("/confirm")
+    public String confirm(@RequestParam("token") String token) throws EntityNotFoundException {
+        return userService.confirmToken(token);
     }
 }
 

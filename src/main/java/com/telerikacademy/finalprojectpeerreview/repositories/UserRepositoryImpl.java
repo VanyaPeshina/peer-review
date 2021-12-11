@@ -7,7 +7,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +61,7 @@ public class UserRepositoryImpl extends CRUDRepositoryImpl<User> implements User
     }
 
     @Override
-   protected Class<User> getEntityClass() {
-       return User.class;
-   }
+    protected Class<User> getEntityClass() {
+        return User.class;
+    }
 }

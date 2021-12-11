@@ -2,13 +2,12 @@ package com.telerikacademy.finalprojectpeerreview.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.security.auth.Subject;
-import java.security.Principal;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 @Entity
 @Table(name = "users")
@@ -48,6 +47,12 @@ public class User implements UserDetails {
 
     @Column(name = "to_delete")
     private int delete;
+
+    @Transient
+    private boolean locked;
+
+    @Column(name = "enabled")
+    private boolean enabled;
 
     public User() {
     }
@@ -139,7 +144,8 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+       /* return !locked;*/
+       return true;
     }
 
     @Override
@@ -149,12 +155,27 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+       /* return enabled;*/
         return true;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(role);
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getRole());
+        return Collections.singletonList(authority);
+       /* return List.of(role);*/
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }
 

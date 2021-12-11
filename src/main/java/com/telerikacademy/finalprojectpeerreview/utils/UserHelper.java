@@ -66,4 +66,16 @@ public class UserHelper {
         return  teamService.getMembers(user.getTeam(), user)
                 .stream().filter(user1 -> !user1.getUsername().equals(user.getUsername())).collect(Collectors.toList());
     }
+
+    public List<Invitation> invitationsForYou(User user) {
+        List<Invitation> invitations = invitationService.getAll();
+        if (invitations.isEmpty()) {
+            return invitations;
+        }
+        return invitations
+                .stream()
+                .filter(invitation -> invitation.getDelete() == 0)
+                .filter(invitation -> invitation.getInvited().getId() == user.getId())
+                .collect(Collectors.toList());
+    }
 }

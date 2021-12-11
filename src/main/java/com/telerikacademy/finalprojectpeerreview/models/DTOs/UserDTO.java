@@ -15,9 +15,11 @@ public class UserDTO {
     private String username;
 
     @Size(min = 8, message = PASSWORD_SHOULD_BE_AT_LEAST)
+    //TODO: Regex to validate password
     private String password;
 
     @Email(message = EMAIL_SHOULD_BE_VALID)
+    //TODO: Regex to validate email
     private String email;
 
     @Size(min = 10, max = 10, message = PHONE_SHOULD_BE_EXACTLY)

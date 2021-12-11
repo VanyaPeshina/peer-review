@@ -18,4 +18,8 @@ public interface UserService extends CRUDService<User>, UserDetailsService {
 
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+
+    String signUpUser(User user) throws EntityNotFoundException;
+
+    String confirmToken(String token) throws EntityNotFoundException;
 }

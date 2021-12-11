@@ -1,4 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.services.contracts;
 
-public interface CommentService {
+import com.telerikacademy.finalprojectpeerreview.models.Comment;
+
+public interface CommentService extends CRUDService<Comment> {
 }

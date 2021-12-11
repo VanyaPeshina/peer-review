@@ -55,6 +55,7 @@ public class DashboardMvcController {
         model.addAttribute("needingChange", workItemsHelper.getItemsNeedingChange(user));
         model.addAttribute("members", teamService.getMembers(user.getTeam(), user));
         model.addAttribute("invitations", userHelper.getUserInvitations(user));
+        model.addAttribute("invitationsForYou", userHelper.invitationsForYou(user));
         model.addAttribute("today", LocalDateTime.now());
         model.addAttribute("photo", "/api/users/" + user.getId() + "/photo");
 

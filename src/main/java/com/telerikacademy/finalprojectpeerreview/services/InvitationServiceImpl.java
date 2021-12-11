@@ -4,7 +4,6 @@ import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityExcep
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.Invitation;
 import com.telerikacademy.finalprojectpeerreview.models.User;
-import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.CRUDRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.InvitationRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
@@ -12,9 +11,6 @@ import com.telerikacademy.finalprojectpeerreview.services.contracts.InvitationSe
 import com.telerikacademy.finalprojectpeerreview.utils.WorkItemsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class InvitationServiceImpl extends CRUDServiceImpl<Invitation> implements InvitationService {
