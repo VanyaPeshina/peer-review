@@ -1,6 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.services.contracts;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.models.ConfirmationToken;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +20,7 @@ public interface UserService extends CRUDService<User>, UserDetailsService {
     @Override
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
-    String signUpUser(User user) throws EntityNotFoundException;
+    void signUpUser(User user, ConfirmationToken confirmationToken) throws EntityNotFoundException;
 
     String confirmToken(String token) throws EntityNotFoundException;
 }

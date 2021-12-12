@@ -4,20 +4,21 @@ import com.telerikacademy.finalprojectpeerreview.exceptions.AuthenticationFailur
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.UserDTO;
+import com.telerikacademy.finalprojectpeerreview.models.Invitation;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.UserMapper;
 import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
-import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
+import com.telerikacademy.finalprojectpeerreview.utils.UserHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/users")
@@ -26,13 +27,20 @@ public class UserMVCController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final FileStorageService fileStorageService;
+    private final UserHelper userHelper;
 
     public UserMVCController(UserService userService,
                              UserMapper userMapper,
-                             FileStorageService fileStorageService) {
+                             FileStorageService fileStorageService, UserHelper userHelper) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.fileStorageService = fileStorageService;
+        this.userHelper = userHelper;
+    }
+
+    @ModelAttribute("invitationsForYou")
+    public List<Invitation> populateIs(Principal principal) {
+        return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));
     }
 
     @GetMapping()

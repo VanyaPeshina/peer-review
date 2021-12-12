@@ -1,0 +1,248 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.6.4-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             11.3.0.6295
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+-- Dumping database structure for peerreview
+DROP DATABASE IF EXISTS `peerreview`;
+CREATE DATABASE IF NOT EXISTS `peerreview` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `peerreview`;
+
+-- Dumping structure for table peerreview.attachments
+DROP TABLE IF EXISTS `attachments`;
+CREATE TABLE IF NOT EXISTS `attachments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `attachment` blob NOT NULL,
+  `creator_id` int(11) NOT NULL,
+  `work_item_fk` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `attachments_creator_fk` (`creator_id`),
+  KEY `attachments_work_item_fk` (`work_item_fk`),
+  CONSTRAINT `attachments_creator_fk` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `attachments_work_item_fk` FOREIGN KEY (`work_item_fk`) REFERENCES `work_items` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.attachments: ~0 rows (approximately)
+/*!40000 ALTER TABLE `attachments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `attachments` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.comments
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `comment` varchar(2000) NOT NULL,
+  `creator_id` int(11) NOT NULL,
+  `work_item_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `comments_user_fk` (`creator_id`),
+  KEY `comments_work_item_fk` (`work_item_id`),
+  CONSTRAINT `comments_user_fk` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `comments_work_item_fk` FOREIGN KEY (`work_item_id`) REFERENCES `work_items` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.comments: ~11 rows (approximately)
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+INSERT INTO `comments` (`id`, `comment`, `creator_id`, `work_item_id`) VALUES
+	(1, 'test comment', 1, 1),
+	(2, 'test comment 2', 5, 1),
+	(3, 'test comment 3 test comment 3 test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3test comment 3', 1, 1),
+	(4, 'test test', 1, 1),
+	(5, 'test test1', 1, 1),
+	(6, 'test test1', 1, 1),
+	(7, 'test test3', 1, 1),
+	(8, 'test test', 1, 1),
+	(9, 'test test test test test test', 1, 1),
+	(10, '', 1, 1),
+	(11, '', 1, 1),
+	(12, 'lkjlkjlk', 1, 1),
+	(13, 'kjdgkljdlkgtr', 1, 4),
+	(14, 'rtyhtjtyjuy', 1, 4);
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.invitations
+DROP TABLE IF EXISTS `invitations`;
+CREATE TABLE IF NOT EXISTS `invitations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invitation_creator_id` int(11) NOT NULL,
+  `team_id` int(11) NOT NULL,
+  `invited_user_id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `to_delete` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `invitations_creator_fk` (`invitation_creator_id`),
+  KEY `invitations_invited_user_fk` (`invited_user_id`),
+  KEY `invitations_team_fk` (`team_id`),
+  CONSTRAINT `invitations_creator_fk` FOREIGN KEY (`invitation_creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `invitations_invited_user_fk` FOREIGN KEY (`invited_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `invitations_team_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.invitations: ~3 rows (approximately)
+/*!40000 ALTER TABLE `invitations` DISABLE KEYS */;
+INSERT INTO `invitations` (`id`, `invitation_creator_id`, `team_id`, `invited_user_id`, `date`, `to_delete`) VALUES
+	(1, 1, 1, 4, '2021-12-06 15:01:00', 1),
+	(2, 3, 2, 1, '2021-12-07 15:01:05', 0),
+	(3, 4, 2, 1, '2021-12-07 15:01:07', 0),
+	(4, 1, 1, 4, '2021-12-02 15:01:10', 0),
+	(5, 1, 1, 7, '2021-12-10 17:51:47', 1);
+/*!40000 ALTER TABLE `invitations` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.statuses
+DROP TABLE IF EXISTS `statuses`;
+CREATE TABLE IF NOT EXISTS `statuses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `statuses_status_uindex` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.statuses: ~4 rows (approximately)
+/*!40000 ALTER TABLE `statuses` DISABLE KEYS */;
+INSERT INTO `statuses` (`id`, `status`) VALUES
+	(4, 'Accepted'),
+	(3, 'Change Requested'),
+	(1, 'Pending'),
+	(5, 'Rejected'),
+	(2, 'Under Review');
+/*!40000 ALTER TABLE `statuses` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.teams
+DROP TABLE IF EXISTS `teams`;
+CREATE TABLE IF NOT EXISTS `teams` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `to_delete` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `teams_name_uindex` (`name`),
+  KEY `teams_owners_fk` (`owner_id`),
+  CONSTRAINT `teams_owners_fk` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.teams: ~1 rows (approximately)
+/*!40000 ALTER TABLE `teams` DISABLE KEYS */;
+INSERT INTO `teams` (`id`, `name`, `owner_id`, `to_delete`) VALUES
+	(1, 'TestTeam', 1, 0),
+	(2, 'Test Team 2', 3, 0);
+/*!40000 ALTER TABLE `teams` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.tokens
+DROP TABLE IF EXISTS `tokens`;
+CREATE TABLE IF NOT EXISTS `tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(250) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `confirmed_at` datetime DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tokens_user_id_fk` (`user_id`),
+  CONSTRAINT `tokens_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.tokens: ~1 rows (approximately)
+/*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
+INSERT INTO `tokens` (`id`, `token`, `created_at`, `expires_at`, `confirmed_at`, `user_id`) VALUES
+	(10, '57f0b28e-6b9d-4a6e-b68c-fe6ada7c9aac', '2021-12-12 13:24:46', '2021-12-12 13:39:46', '2021-12-12 13:24:59', 18);
+/*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.users
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(20) NOT NULL,
+  `password` varchar(350) NOT NULL,
+  `email` varchar(350) NOT NULL,
+  `phone` varchar(10) NOT NULL,
+  `team_id` int(11) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `photo_name` varchar(255) DEFAULT NULL,
+  `to_delete` int(11) NOT NULL,
+  `enabled` tinyint(1) DEFAULT NULL,
+  `locked` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_uindex` (`email`),
+  UNIQUE KEY `users_phone_uindex` (`phone`),
+  UNIQUE KEY `users_username_uindex` (`username`),
+  KEY `users_role_fk` (`role_id`),
+  KEY `users_team_fk` (`team_id`),
+  CONSTRAINT `users_role_fk` FOREIGN KEY (`role_id`) REFERENCES `user_roles` (`id`),
+  CONSTRAINT `users_team_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.users: ~8 rows (approximately)
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `phone`, `team_id`, `role_id`, `photo_name`, `to_delete`, `enabled`, `locked`) VALUES
+	(1, 'vanya.peshina', '$2a$10$RiP99I59iAdUgt37dRuO/.K46EDDCLBOiee0JbOyJokYg26tXJ2QS', 'vanya.peshina@gmail.com', '0886345242', 1, 2, 'vanya.jpg', 0, 0, 0),
+	(3, 'mihail.paskov', '$2a$10$RiP99I59iAdUgt37dRuO/.K46EDDCLBOiee0JbOyJokYg26tXJ2QS', 'mihail.paskov@gmail.com', '0888787272', 1, 2, 'misho.jpg', 0, 0, 0),
+	(4, 'test.user', '$2a$10$RiP99I59iAdUgt37dRuO/.K46EDDCLBOiee0JbOyJokYg26tXJ2QS', 'vania_peshina@abv.bg', '0888888888', 2, 2, 'avatardefault.png', 0, 0, 0),
+	(5, 'test.user.2', '$2a$10$RiP99I59iAdUgt37dRuO/.K46EDDCLBOiee0JbOyJokYg26tXJ2QS', 'peshina_vania@abv.bg', '0888888887', 1, 1, 'avatardefault.png', 0, 0, 0),
+	(6, 'test.user.to.delete', '$2a$10$RiP99I59iAdUgt37dRuO/.K46EDDCLBOiee0JbOyJokYg26tXJ2QS', 'test.user@peerreview.com', '0888888881', NULL, 2, 'avatardefault.png', 1, 0, 0),
+	(7, 'vanya_p', '$2a$10$RiP99I59iAdUgt37dRuO/.K46EDDCLBOiee0JbOyJokYg26tXJ2QS', 'vania_peshinaa@abv.bg', '0886062241', NULL, 2, 'avatardefault.png', 0, 0, 0),
+	(8, 'vanya_peshina', '$2a$10$RiP99I59iAdUgt37dRuO/.K46EDDCLBOiee0JbOyJokYg26tXJ2QS', 'vania_peshinaaa@abv.bg', '0886062242', NULL, 2, 'avatardefault.png', 0, 0, 0),
+	(18, 'h.kostadinov', '$2a$10$6egvqUOigPijz7wIwN5nlOEKHbdmnOgygNNDPajqpcydppsPlFE5i', 'h.kostadinov@abv.bg', '0885727873', NULL, 2, 'avatardefault.png', 0, 1, 0);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.user_roles
+DROP TABLE IF EXISTS `user_roles`;
+CREATE TABLE IF NOT EXISTS `user_roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_roles_role_uindex` (`role`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.user_roles: ~0 rows (approximately)
+/*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
+INSERT INTO `user_roles` (`id`, `role`) VALUES
+	(1, 'Admin'),
+	(2, 'User');
+/*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.work_items
+DROP TABLE IF EXISTS `work_items`;
+CREATE TABLE IF NOT EXISTS `work_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(80) NOT NULL,
+  `description` text NOT NULL,
+  `reviewer_id` int(11) DEFAULT NULL,
+  `status_id` int(11) DEFAULT NULL,
+  `creator_id` int(11) NOT NULL,
+  `team_id` int(11) NOT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_download_uri` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `work_items_creator_fk` (`creator_id`),
+  KEY `work_items_reviewer_fk` (`reviewer_id`),
+  KEY `work_items_status_fk` (`status_id`),
+  KEY `work_items_team_fk` (`team_id`),
+  CONSTRAINT `work_items_creator_fk` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `work_items_reviewer_fk` FOREIGN KEY (`reviewer_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `work_items_status_fk` FOREIGN KEY (`status_id`) REFERENCES `statuses` (`id`),
+  CONSTRAINT `work_items_team_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.work_items: ~5 rows (approximately)
+/*!40000 ALTER TABLE `work_items` DISABLE KEYS */;
+INSERT INTO `work_items` (`id`, `title`, `description`, `reviewer_id`, `status_id`, `creator_id`, `team_id`, `file_name`, `file_download_uri`) VALUES
+	(1, 'Test Work Item', 'Testing if it is possible to create a Work Item', 1, 4, 3, 1, 'DuP34l7XgAApQmq.jpg', NULL),
+	(3, 'Test Work Item 3', 'Testing if it is possible to create a Work Item3', 1, 5, 1, 1, NULL, NULL),
+	(4, 'New Work Item', 'Something sjkahrkjwehrjkhdksjfh dshfkjsd hjh weiurh dshfkjh sdjkfhwh', 5, 1, 1, 1, '', NULL),
+	(6, 'Test Update Button', 'Test Test Update Button if Disabled', 3, 4, 5, 1, NULL, NULL),
+	(8, 'Test After Spring Security', 'khjgklrthlkyrjtlkyjrtkljyrl', 3, 1, 1, 1, NULL, NULL);
+/*!40000 ALTER TABLE `work_items` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

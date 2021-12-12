@@ -1,5 +1,6 @@
 package com.telerikacademy.finalprojectpeerreview.controllers.mvc;
 
+import com.telerikacademy.finalprojectpeerreview.models.Invitation;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -37,6 +39,11 @@ public class DashboardMvcController {
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
         return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
+    }
+
+    @ModelAttribute("invitationsForYou")
+    public List<Invitation> populateInvitations(Principal principal) {
+        return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));
     }
 
     @GetMapping

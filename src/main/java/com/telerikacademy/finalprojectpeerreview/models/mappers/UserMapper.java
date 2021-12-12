@@ -8,16 +8,11 @@ import com.telerikacademy.finalprojectpeerreview.models.UserRole;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.TeamRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRoleRepository;
-import com.telerikacademy.finalprojectpeerreview.services.contracts.ConfirmationTokenService;
-import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
-import com.telerikacademy.finalprojectpeerreview.models.ConfirmationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 import static com.telerikacademy.finalprojectpeerreview.utils.constants.*;
 
@@ -25,24 +20,19 @@ import static com.telerikacademy.finalprojectpeerreview.utils.constants.*;
 public class UserMapper {
 
     private final UserRepository userRepository;
-    private final UserService userService;
     private final TeamRepository teamRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ConfirmationTokenService confirmationTokenService;
 
     @Autowired
     public UserMapper(UserRepository userRepository,
-                      UserService userService, TeamRepository teamRepository,
+                      TeamRepository teamRepository,
                       UserRoleRepository userRoleRepository,
-                      PasswordEncoder passwordEncoder,
-                      ConfirmationTokenService confirmationTokenService) {
+                      PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.userService = userService;
         this.teamRepository = teamRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.confirmationTokenService = confirmationTokenService;
     }
 
     public User fromDto(UserDTO userDTO) throws IOException, EntityNotFoundException {
@@ -53,21 +43,6 @@ public class UserMapper {
             user = userRepository.getById(userDTO.getId());
         }
         DTOtoObject(userDTO, user);
-
-        if (user.getId() == 0) { //if the user is new
-
-            //pass token
-            String token = UUID.randomUUID().toString();
-            ConfirmationToken confirmationToken = new ConfirmationToken(
-                    token,
-                    LocalDateTime.now(),
-                    LocalDateTime.now().plusMinutes(15),
-                    user);
-            confirmationTokenService.create(confirmationToken, user);
-
-            //TODO: SEND EMAIL
-        }
-
         return user;
     }
 
@@ -82,7 +57,7 @@ public class UserMapper {
         if (userDTO.getId() == 0) {
             user.setDelete(0);
             user.setEnabled(false);
-            //TODO: user.setLocked?
+            user.setLocked(false);
         }
     }
 

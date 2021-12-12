@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/invitation")
@@ -45,6 +46,11 @@ public class InvitationController {
     @ModelAttribute("isAuthenticated")
     public boolean populateIsAuthenticated(HttpSession session) {
         return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
+    }
+
+    @ModelAttribute("invitationsForYou")
+    public List<Invitation> populateIs(Principal principal) {
+        return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));
     }
 
     @GetMapping("/all")
@@ -80,8 +86,7 @@ public class InvitationController {
             invitationDTO.setCreatorId(user.getId());
             Invitation invitation = invitationMapper.fromDto(invitationDTO);
             invitationService.create(invitation, user);
-            //TODO redirect:/invitations_sent
-            return "redirect:/dashboard";
+            return "redirect:/invitation/all";
         } catch (DuplicateEntityException e) {
             return "create_team";
         } catch (UnauthorizedOperationException e) {
@@ -117,20 +122,14 @@ public class InvitationController {
     @PostMapping("/accept/{id}")
     private String acceptInvitation(@PathVariable int id,
                                     @Valid @ModelAttribute("invitationDTO") InvitationDTO dto,
-                                    BindingResult errors,
                                     Principal principal) {
         User user = (User) userService.loadUserByUsername(principal.getName());
 
-        if(workItemsHelper.checkForUnfinishedWorkItems(user)){
-            errors.rejectValue("invitedId", "error.invitationDTO.invitedId",
-                    "User has unfinished items and can't go in a new team");
+        if (user.getTeam() != null) {
+            if (workItemsHelper.checkForUnfinishedWorkItems(user)) {
+                return "error_leave_team";
+            }
         }
-        //TODO не показва ерора
-        if (errors.hasErrors()) {
-            String redirect = "/invitation/accept/" + id;
-            return redirect;
-        }
-
         try {
             Invitation invitation = invitationService.getById(id);
             invitationService.update(invitation, user);

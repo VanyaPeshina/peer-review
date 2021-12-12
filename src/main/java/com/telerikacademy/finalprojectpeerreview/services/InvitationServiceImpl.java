@@ -35,7 +35,7 @@ public class InvitationServiceImpl extends CRUDServiceImpl<Invitation> implement
         if (user.getTeam() != null && user.getTeam().getName().equals(invitation.getTeam().getName())) {
             throw new DuplicateEntityException("user", "this", "team");
         }
-        workItemsHelper.checkForUnfinishedWorkItems(user);
+        //workItemsHelper.checkForUnfinishedWorkItems(user);
         user.setTeam(invitation.getTeam());
         userRepository.update(user);
         invitationRepository.delete(invitation);

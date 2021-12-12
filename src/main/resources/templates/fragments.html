@@ -25,11 +25,11 @@
                 <div class="collapse" id="charts">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"><a class="nav-link"
-                                                th:href="@{/work_item}">Submit Work Item</a></li>
+                                                th:href="@{/work_item/submit}">Submit Work Item</a></li>
                     </ul>
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"><a class="nav-link"
-                                                th:href="@{/work_item/all}">Your work Items</a></li>
+                                                th:href="@{/work_item}">My work Items</a></li>
                     </ul>
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"><a class="nav-link"
@@ -51,19 +51,31 @@
                 <div class="collapse" id="team">
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"><a class="nav-link"
-                                                th:href="@{/team/all}">My Team</a></li>
+                                                th:href="@{/team}">My Team</a></li>
                     </ul>
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"><a class="nav-link"
-                                                th:href="@{/team}">Create team</a></li>
+                                                th:href="@{/team/create}">Create team</a></li>
                     </ul>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/invitation/all}" style="color: #FFFFFF">
-                    <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>
-                    <span class="menu-title">Invitations</span>
+                <a class="nav-link" data-toggle="collapse" href="#invitations"
+                   aria-controls="invitations">
+                    <i class="ti-comments-smiley menu-icon" style="color: #FFFFFF"></i>
+                    <span class="menu-title" style="color: #FFFFFF">Invitations</span>
+                    <i class="menu-arrow" style="color: #FFFFFF"></i>
                 </a>
+                <div class="collapse" id="invitations">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"><a class="nav-link"
+                                                th:href="@{/invitation}">New Invitation</a></li>
+                    </ul>
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"><a class="nav-link"
+                                                th:href="@{/invitation/all}">Sent Invitations</a></li>
+                    </ul>
+                </div>
             </li>
         </ul>
     </div>
@@ -78,6 +90,7 @@
                                                                         class="mr-2" alt="logo"/></a> -->
                 <!--  <a class="navbar-brand brand-logo-mini" th:href="@{/}"><img src="/dashboard/images/p-r-logo-2.png"
                                                                               alt="logo"/></a>-->
+            </a>
         </div>
         <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end" style="background-color: #314CA3">
             <!-- <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -87,7 +100,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle" id="teamDropDown" href="#"
                        data-toggle="dropdown">
-                        <i class="ti-crown" style="color: #FFFFFF"></i>
+                        <i class="ti-comments-smiley" style="color: #FFFFFF"></i>
                         <span class="count"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"

@@ -64,11 +64,9 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
     }
 
     @Override
-    public String signUpUser(User user) {
-        String token = user.toString();
-        String link = "http://loocalhost:8080/register/confirm?token=" + token;
+    public void signUpUser(User user, ConfirmationToken confirmationToken) {
+        String link = "http://localhost:8080/register/confirm?token=" + confirmationToken.getToken();
         emailSender.send(user.getEmail(), buildEmail(user.getUsername(), link));
-        return token;
     }
 
     @Transactional

@@ -247,14 +247,14 @@
                         <!--<div class="card tale-bg">-->
                         <div class="card-people mt-auto">
                             <div class="row">
-                                <a th:if="${user.getTeam() != null}" class="col-6" th:href="@{/team/all}">
+                                <a th:if="${user.getTeam() != null}" class="col-6" th:href="@{/team}">
                                     <button type="submit" class="btn btn-block btn-primary btn-lg"
-                                            th:href="@{/team/all}">
+                                            th:href="@{/team}">
                                         MY TEAM
                                     </button>
                                 </a>
                                 <a th:if="${user.getTeam() == null}" class="col-6">
-                                    <button type="button" class="btn btn-block btn-secondary btn-lg" disabled>
+                                    <button type="submit" class="btn btn-block btn-secondary btn-lg" disabled>
                                         NO TEAM
                                     </button>
                                 </a>
@@ -282,7 +282,7 @@
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <div class="card card-tale">
                                     <div class="card-body">
-                                        <a style="color: #F8F9FD;" th:href="@{/work_item/all}">
+                                        <a style="color: #F8F9FD;" th:href="@{/work_item}">
                                             <h3 class="mb-4">My Work Items</h3>
                                         </a>
                                         <p class="fs-30 mb-2" th:text="${workItems.size()}"></p>
@@ -292,7 +292,7 @@
                             <div class="col-md-6 mb-4 stretch-card transparent">
                                 <div class="card card-dark-blue">
                                     <div th:if="${user.getTeam() != null}" class="card-body">
-                                        <a style="color: #F8F9FD;" th:href="@{/team/all}">
+                                        <a style="color: #F8F9FD;" th:href="@{/team}">
                                             <h3 class="mb-4">Team's Items</h3>
                                         </a>
                                         <p class="fs-30 mb-2" th:text="${teamItems.size()}"></p>
@@ -332,9 +332,9 @@
                         <div class="row">
                             <div class="col-md-12 stretch-card transparent">
                                 <div class="card-body">
-                                    <a th:href="@{/work_item}">
+                                    <a th:href="@{/work_item/submit}">
                                         <button type="submit" class="btn btn-block btn-primary btn-lg"
-                                                th:href="@{/work_item}">
+                                                th:href="@{/work_item/submit}">
                                             CREATE NEW WORK ITEM
                                         </button>
                                     </a>
@@ -344,7 +344,7 @@
                         <div class="row">
                             <div class="col-md-12 stretch-card transparent">
                                 <div class="card-body">
-                                    <a th:href="@{/team}">
+                                    <a th:href="@{/team/create}">
                                         <button type="submit" class="btn btn-block btn-primary btn-lg"
                                                 th:href="@{/team}">
                                             CREATE NEW TEAM

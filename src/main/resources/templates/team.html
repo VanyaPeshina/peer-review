@@ -15,7 +15,7 @@
         <div th:replace="fragments::rightNav"></div>
         <!-- partial -->
         <div class="main-panel">
-            <div class="content-wrapper" style="background-color: #C4E613">
+            <div class="content-wrapper" style="background-color: #C9E3F6">
                 <div class="row">
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
@@ -24,6 +24,11 @@
                                 <h4 class="card-title" th:if="${user.getTeam() != null}"><span
                                         th:text="${user.team.name}"></span></h4>
                                 <div class="table-responsive">
+                                    <td>
+                                        <a th:href="@{/team/leave}">
+                                            <button class="btn btn-light">Leave team</button>
+                                        </a>
+                                    </td>
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
@@ -59,10 +64,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
             <!--<div class="main-panel">-->
-            <div class="content-wrapper" style="background-color: #C4E613">
+<!--            <div class="content-wrapper" style="background-color: #C9E3F6">-->
                 <form th:if="${workItems != null } and ${workItems.size() > 0}" action="#"
                       th:action="@{/work_item/filter}" th:object="${workItemDto}" method="post">
                     <div class="d-flex mb-4 justify-content-center">

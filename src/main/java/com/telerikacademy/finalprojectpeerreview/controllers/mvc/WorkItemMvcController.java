@@ -67,12 +67,22 @@ public class WorkItemMvcController {
         return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
     }
 
+    @ModelAttribute("invitationsForYou")
+    public List<Invitation> populateIs(Principal principal) {
+        return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));
+    }
+
+//    @ModelAttribute("user")
+//    public User userPhoto(Principal principal) {
+//        return (User) userService.loadUserByUsername(principal.getName());
+//    }
+
     @ModelAttribute("statuses")
     public List<ItemStatus> populateWarehouses() {
         return itemStatusService.getAll();
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public String showWorkItemsPage(Model model, Principal principal) {
         User user = (User) userService.loadUserByUsername(principal.getName());
 
@@ -156,7 +166,7 @@ public class WorkItemMvcController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/submit")
     public String showNewWorkItemPage(Model model, Principal principal) {
         User user = (User) userService.loadUserByUsername(principal.getName());
 
@@ -167,7 +177,7 @@ public class WorkItemMvcController {
         return "submit_workItem";
     }
 
-    @PostMapping
+    @PostMapping("/submit")
     public String createWorkItem(@Valid @ModelAttribute("workItemDto") WorkItemDTO dto,
                                  BindingResult result,
                                  Principal principal) {
@@ -226,8 +236,8 @@ public class WorkItemMvcController {
         }
         if (errors.hasErrors()) {
             //TODO не показва грешката след redirect-ване
-            String redirect = "redirect:/work_item/" + id;
-            return redirect;
+//            String redirect = "redirect:/work_item/" + id;
+            return "single_workItem";
         }
         if (dto.getMultipartFile() != null && !dto.getMultipartFile().isEmpty()) {
             String fileName = fileStorageService.storeFile(dto.getMultipartFile());
@@ -240,7 +250,7 @@ public class WorkItemMvcController {
                 commentService.create(commentMapper.fromDto(commentDTO), user);
             }
             workItemService.update(workItemToUpdate, user);
-            return "redirect:/work_item/all";
+            return "redirect:/work_item";
         } catch (DuplicateEntityException | IllegalArgumentException e) {
             return "conflict_409";
         } catch (UnauthorizedOperationException e) {

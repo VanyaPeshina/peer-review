@@ -7,19 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Submit Work Item</title>
     <!-- plugins:css -->
-    <link rel="stylesheet" href="dashboard/feather/feather.css">
-    <link rel="stylesheet" href="dashboard/ti-icons/css/themify-icons.css">
-    <link rel="stylesheet" href="dashboard/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/dashboard/feather/feather.css">
+    <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/dashboard/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- Plugin css for this page -->
-    <link rel="stylesheet" href="dashboard/datatables.net-bs4/dataTables.bootstrap4.css">
-    <link rel="stylesheet" href="dashboard/ti-icons/css/themify-icons.css">
-    <link rel="stylesheet" type="text/css" href="dashboard/js/select.dataTables.min.css">
+    <link rel="stylesheet" href="/dashboard/datatables.net-bs4/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" type="text/css" href="/dashboard/js/select.dataTables.min.css">
     <!-- End plugin css for this page -->
     <!-- inject:css -->
-    <link rel="stylesheet" href="dashboard/css/style.css">
+    <link rel="stylesheet" href="/dashboard/css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="dashboard/images/favicon.png"/>
+    <link rel="shortcut icon" href="/dashboard/images/favicon.png"/>
     <style>
         img {
             width: 50%;
@@ -33,93 +33,93 @@
     <div th:replace="fragments::topNav"></div>
 
     <!--    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">-->
-<!--        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center"-->
-<!--             style="background-color: #314CA3">-->
-<!--            <a class="text" style="font-weight: bold" href="dashboard.html" th:href="@{/}">HOME &lt;!&ndash;<img-->
-<!--                    src="dashboard/images/PEER_REVIEW_2.png" class="mr-2" alt="logo"/></a>&ndash;&gt;-->
-<!--                &lt;!&ndash;            <a class="navbar-brand brand-logo-mini" href="dashboard.html" th:href="@{/}"><img&ndash;&gt;-->
-<!--                &lt;!&ndash;                    src="/dashboard/images/logo-mini.svg" alt="logo"/></a>&ndash;&gt;-->
-<!--        </div>-->
-<!--        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end"-->
-<!--             style="background-color: #314CA3">-->
-<!--            <ul class="navbar-nav navbar-nav-right">-->
-<!--                <li class="nav-item dropdown">-->
-<!--                    <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"-->
-<!--                       data-toggle="dropdown">-->
-<!--                        <i class="icon-bell mx-0"></i>-->
-<!--                        <span class="count"></span>-->
-<!--                    </a>-->
-<!--                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"-->
-<!--                         aria-labelledby="notificationDropdown">-->
-<!--                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>-->
-<!--                        <a class="dropdown-item preview-item">-->
-<!--                            <div class="preview-thumbnail">-->
-<!--                                <div class="preview-icon bg-success">-->
-<!--                                    <i class="ti-info-alt mx-0"></i>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="preview-item-content">-->
-<!--                                <h6 class="preview-subject font-weight-normal">Application Error</h6>-->
-<!--                                <p class="font-weight-light small-text mb-0 text-muted">-->
-<!--                                    Just now-->
-<!--                                </p>-->
-<!--                            </div>-->
-<!--                        </a>-->
-<!--                        <a class="dropdown-item preview-item">-->
-<!--                            <div class="preview-thumbnail">-->
-<!--                                <div class="preview-icon bg-warning">-->
-<!--                                    <i class="ti-settings mx-0"></i>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="preview-item-content">-->
-<!--                                <h6 class="preview-subject font-weight-normal">Settings</h6>-->
-<!--                                <p class="font-weight-light small-text mb-0 text-muted">-->
-<!--                                    Private message-->
-<!--                                </p>-->
-<!--                            </div>-->
-<!--                        </a>-->
-<!--                        <a class="dropdown-item preview-item">-->
-<!--                            <div class="preview-thumbnail">-->
-<!--                                <div class="preview-icon bg-info">-->
-<!--                                    <i class="ti-user mx-0"></i>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="preview-item-content">-->
-<!--                                <h6 class="preview-subject font-weight-normal">New user registration</h6>-->
-<!--                                <p class="font-weight-light small-text mb-0 text-muted">-->
-<!--                                    2 days ago-->
-<!--                                </p>-->
-<!--                            </div>-->
-<!--                        </a>-->
-<!--                    </div>-->
-<!--                </li>-->
-<!--                <li class="nav-item nav-profile dropdown">-->
-<!--                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">-->
-<!--                        <img th:src="${user.getGetPhotoForMVC()}" alt="profile"/>-->
-<!--                    </a>-->
-<!--                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">-->
-<!--                        <a class="dropdown-item" th:href="@{/users}">-->
-<!--                            <i class="ti-settings text-primary"></i>-->
-<!--                            Settings-->
-<!--                        </a>-->
-<!--                        <a class="dropdown-item" th:href="@{/login/logout}">-->
-<!--                            <i class="ti-power-off text-primary"></i>-->
-<!--                            Logout-->
-<!--                        </a>-->
-<!--                    </div>-->
-<!--                </li>-->
-<!--                &lt;!&ndash;                <li class="nav-item nav-settings d-none d-lg-flex">&ndash;&gt;-->
-<!--                &lt;!&ndash;                    <a class="nav-link" href="#">&ndash;&gt;-->
-<!--                &lt;!&ndash;                        <i class="icon-ellipsis"></i>&ndash;&gt;-->
-<!--                &lt;!&ndash;                    </a>&ndash;&gt;-->
-<!--                &lt;!&ndash;                </li>&ndash;&gt;-->
-<!--            </ul>-->
-<!--            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"-->
-<!--                    data-toggle="offcanvas">-->
-<!--                <span class="icon-menu"></span>-->
-<!--            </button>-->
-<!--        </div>-->
-<!--    </nav>-->
+    <!--        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center"-->
+    <!--             style="background-color: #314CA3">-->
+    <!--            <a class="text" style="font-weight: bold" href="dashboard.html" th:href="@{/}">HOME &lt;!&ndash;<img-->
+    <!--                    src="dashboard/images/PEER_REVIEW_2.png" class="mr-2" alt="logo"/></a>&ndash;&gt;-->
+    <!--                &lt;!&ndash;            <a class="navbar-brand brand-logo-mini" href="dashboard.html" th:href="@{/}"><img&ndash;&gt;-->
+    <!--                &lt;!&ndash;                    src="/dashboard/images/logo-mini.svg" alt="logo"/></a>&ndash;&gt;-->
+    <!--        </div>-->
+    <!--        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end"-->
+    <!--             style="background-color: #314CA3">-->
+    <!--            <ul class="navbar-nav navbar-nav-right">-->
+    <!--                <li class="nav-item dropdown">-->
+    <!--                    <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"-->
+    <!--                       data-toggle="dropdown">-->
+    <!--                        <i class="icon-bell mx-0"></i>-->
+    <!--                        <span class="count"></span>-->
+    <!--                    </a>-->
+    <!--                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"-->
+    <!--                         aria-labelledby="notificationDropdown">-->
+    <!--                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>-->
+    <!--                        <a class="dropdown-item preview-item">-->
+    <!--                            <div class="preview-thumbnail">-->
+    <!--                                <div class="preview-icon bg-success">-->
+    <!--                                    <i class="ti-info-alt mx-0"></i>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                            <div class="preview-item-content">-->
+    <!--                                <h6 class="preview-subject font-weight-normal">Application Error</h6>-->
+    <!--                                <p class="font-weight-light small-text mb-0 text-muted">-->
+    <!--                                    Just now-->
+    <!--                                </p>-->
+    <!--                            </div>-->
+    <!--                        </a>-->
+    <!--                        <a class="dropdown-item preview-item">-->
+    <!--                            <div class="preview-thumbnail">-->
+    <!--                                <div class="preview-icon bg-warning">-->
+    <!--                                    <i class="ti-settings mx-0"></i>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                            <div class="preview-item-content">-->
+    <!--                                <h6 class="preview-subject font-weight-normal">Settings</h6>-->
+    <!--                                <p class="font-weight-light small-text mb-0 text-muted">-->
+    <!--                                    Private message-->
+    <!--                                </p>-->
+    <!--                            </div>-->
+    <!--                        </a>-->
+    <!--                        <a class="dropdown-item preview-item">-->
+    <!--                            <div class="preview-thumbnail">-->
+    <!--                                <div class="preview-icon bg-info">-->
+    <!--                                    <i class="ti-user mx-0"></i>-->
+    <!--                                </div>-->
+    <!--                            </div>-->
+    <!--                            <div class="preview-item-content">-->
+    <!--                                <h6 class="preview-subject font-weight-normal">New user registration</h6>-->
+    <!--                                <p class="font-weight-light small-text mb-0 text-muted">-->
+    <!--                                    2 days ago-->
+    <!--                                </p>-->
+    <!--                            </div>-->
+    <!--                        </a>-->
+    <!--                    </div>-->
+    <!--                </li>-->
+    <!--                <li class="nav-item nav-profile dropdown">-->
+    <!--                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">-->
+    <!--                        <img th:src="${user.getGetPhotoForMVC()}" alt="profile"/>-->
+    <!--                    </a>-->
+    <!--                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">-->
+    <!--                        <a class="dropdown-item" th:href="@{/users}">-->
+    <!--                            <i class="ti-settings text-primary"></i>-->
+    <!--                            Settings-->
+    <!--                        </a>-->
+    <!--                        <a class="dropdown-item" th:href="@{/login/logout}">-->
+    <!--                            <i class="ti-power-off text-primary"></i>-->
+    <!--                            Logout-->
+    <!--                        </a>-->
+    <!--                    </div>-->
+    <!--                </li>-->
+    <!--                &lt;!&ndash;                <li class="nav-item nav-settings d-none d-lg-flex">&ndash;&gt;-->
+    <!--                &lt;!&ndash;                    <a class="nav-link" href="#">&ndash;&gt;-->
+    <!--                &lt;!&ndash;                        <i class="icon-ellipsis"></i>&ndash;&gt;-->
+    <!--                &lt;!&ndash;                    </a>&ndash;&gt;-->
+    <!--                &lt;!&ndash;                </li>&ndash;&gt;-->
+    <!--            </ul>-->
+    <!--            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"-->
+    <!--                    data-toggle="offcanvas">-->
+    <!--                <span class="icon-menu"></span>-->
+    <!--            </button>-->
+    <!--        </div>-->
+    <!--    </nav>-->
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_settings-panel.html -->
@@ -128,82 +128,82 @@
         <div th:replace="fragments::rightNav"></div>
 
         <!--        <nav class="sidebar sidebar-offcanvas" id="sidebar" style="background-image: url('images/hero_bg_1.jpg');">-->
-<!--            <ul class="nav">-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" th:href="@{/dashboard}">-->
-<!--                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>-->
-<!--                        <span class="menu-title" style="color: #FFFFFF">Dashboard</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false"-->
-<!--                       aria-controls="charts">-->
-<!--                        <i class="icon-bar-graph menu-icon" style="color: #FFFFFF"></i>-->
-<!--                        <span class="menu-title" style="color: #FFFFFF">Work items</span>-->
-<!--                        <i class="menu-arrow" style="color: #FFFFFF"></i>-->
-<!--                    </a>-->
-<!--                    <div class="collapse" id="charts">-->
-<!--                        <ul class="nav flex-column sub-menu">-->
-<!--                            <li class="nav-item"><a class="nav-link"-->
-<!--                                                    th:href="@{/work_item}">Submit Work Item</a></li>-->
-<!--                        </ul>-->
-<!--                        <ul class="nav flex-column sub-menu">-->
-<!--                            <li class="nav-item"><a class="nav-link"-->
-<!--                                                    th:href="@{/work_item/all}">Your work Items</a></li>-->
-<!--                        </ul>-->
-<!--                        <ul class="nav flex-column sub-menu">-->
-<!--                            <li class="nav-item"><a class="nav-link"-->
-<!--                                                    th:href="@{/work_item/for_review}">For Review</a></li>-->
-<!--                        </ul>-->
-<!--                        <ul class="nav flex-column sub-menu">-->
-<!--                            <li class="nav-item"><a class="nav-link"-->
-<!--                                                    th:href="@{/work_item/change_request}">Change Requested</a></li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" data-toggle="collapse" href="#team" aria-expanded="false"-->
-<!--                       aria-controls="team">-->
-<!--                        <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>-->
-<!--                        <span class="menu-title" style="color: #FFFFFF">Team</span>-->
-<!--                        <i class="menu-arrow" style="color: #FFFFFF"></i>-->
-<!--                    </a>-->
-<!--                    <div class="collapse" id="team">-->
-<!--                        <ul class="nav flex-column sub-menu">-->
-<!--                            <li class="nav-item"><a class="nav-link"-->
-<!--                                                    th:href="@{/team/all}">My Team</a></li>-->
-<!--                        </ul>-->
-<!--                        <ul class="nav flex-column sub-menu">-->
-<!--                            <li class="nav-item"><a class="nav-link"-->
-<!--                                                    th:href="@{/team}">Create team</a></li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
-<!--                </li>-->
-<!--                <li class="nav-item">-->
-<!--                    <a class="nav-link" th:href="@{/invitation/all}" style="color: #FFFFFF">-->
-<!--                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>-->
-<!--                        <span class="menu-title">Invitations</span>-->
-<!--                    </a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </nav>-->
+        <!--            <ul class="nav">-->
+        <!--                <li class="nav-item">-->
+        <!--                    <a class="nav-link" th:href="@{/dashboard}">-->
+        <!--                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>-->
+        <!--                        <span class="menu-title" style="color: #FFFFFF">Dashboard</span>-->
+        <!--                    </a>-->
+        <!--                </li>-->
+        <!--                <li class="nav-item">-->
+        <!--                    <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false"-->
+        <!--                       aria-controls="charts">-->
+        <!--                        <i class="icon-bar-graph menu-icon" style="color: #FFFFFF"></i>-->
+        <!--                        <span class="menu-title" style="color: #FFFFFF">Work items</span>-->
+        <!--                        <i class="menu-arrow" style="color: #FFFFFF"></i>-->
+        <!--                    </a>-->
+        <!--                    <div class="collapse" id="charts">-->
+        <!--                        <ul class="nav flex-column sub-menu">-->
+        <!--                            <li class="nav-item"><a class="nav-link"-->
+        <!--                                                    th:href="@{/work_item}">Submit Work Item</a></li>-->
+        <!--                        </ul>-->
+        <!--                        <ul class="nav flex-column sub-menu">-->
+        <!--                            <li class="nav-item"><a class="nav-link"-->
+        <!--                                                    th:href="@{/work_item/all}">Your work Items</a></li>-->
+        <!--                        </ul>-->
+        <!--                        <ul class="nav flex-column sub-menu">-->
+        <!--                            <li class="nav-item"><a class="nav-link"-->
+        <!--                                                    th:href="@{/work_item/for_review}">For Review</a></li>-->
+        <!--                        </ul>-->
+        <!--                        <ul class="nav flex-column sub-menu">-->
+        <!--                            <li class="nav-item"><a class="nav-link"-->
+        <!--                                                    th:href="@{/work_item/change_request}">Change Requested</a></li>-->
+        <!--                        </ul>-->
+        <!--                    </div>-->
+        <!--                </li>-->
+        <!--                <li class="nav-item">-->
+        <!--                    <a class="nav-link" data-toggle="collapse" href="#team" aria-expanded="false"-->
+        <!--                       aria-controls="team">-->
+        <!--                        <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>-->
+        <!--                        <span class="menu-title" style="color: #FFFFFF">Team</span>-->
+        <!--                        <i class="menu-arrow" style="color: #FFFFFF"></i>-->
+        <!--                    </a>-->
+        <!--                    <div class="collapse" id="team">-->
+        <!--                        <ul class="nav flex-column sub-menu">-->
+        <!--                            <li class="nav-item"><a class="nav-link"-->
+        <!--                                                    th:href="@{/team/all}">My Team</a></li>-->
+        <!--                        </ul>-->
+        <!--                        <ul class="nav flex-column sub-menu">-->
+        <!--                            <li class="nav-item"><a class="nav-link"-->
+        <!--                                                    th:href="@{/team}">Create team</a></li>-->
+        <!--                        </ul>-->
+        <!--                    </div>-->
+        <!--                </li>-->
+        <!--                <li class="nav-item">-->
+        <!--                    <a class="nav-link" th:href="@{/invitation/all}" style="color: #FFFFFF">-->
+        <!--                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>-->
+        <!--                        <span class="menu-title">Invitations</span>-->
+        <!--                    </a>-->
+        <!--                </li>-->
+        <!--            </ul>-->
+        <!--        </nav>-->
         <!-- partial -->
         <div class="main-panel">
-            <div class="content-wrapper" style="background-color: #F8F9FD">
+            <div class="content-wrapper" style="background-color: #C9E3F6">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card" style="background-color: #F8F9FD">
                         <div class="card-body">
-                            <h4 class="card-title">Submit Work Item</h4>
+                            <h2 class="card-title" style="color: #314CA3; font-weight: bold">Submit Work Item</h2>
                             <form class="forms-sample" th:object="${workItemDto}" method="post">
                                 <div class="form-group">
-                                    <label for="exampleInputName1">Title</label>
+                                    <label for="exampleInputName1" style="color: #314CA3; font-weight: bold">Title</label>
                                     <input type="text" class="form-control" id="exampleInputName1" placeholder="Title"
                                            th:field="*{title}">
                                     <label class="error" th:errors="*{title}">Email error placeholder</label>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-2 pr-1">
-                                        <label>Submit Reviewer</label>
+                                        <label style="color: #314CA3; font-weight: bold">Submit Reviewer</label>
                                         <select type="text" class="form-control" th:field="*{reviewerId}">
                                             <option th:each="user : ${members}"
                                                     th:value="${user.getId()}"
@@ -213,22 +213,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleTextarea1">Description</label>
+                                    <label for="exampleTextarea1" style="color: #314CA3; font-weight: bold">Description</label>
                                     <textarea class="form-control" id="exampleTextarea1" rows="4"
                                               th:field="*{description}"></textarea>
                                     <label class="error" th:errors="*{description}">Email error placeholder</label>
                                 </div>
-                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                <div class="text-right"> * If your work item needs an attachment,
+                                <button type="submit" class="btn btn-primary mr-2">SUBMIT</button>
+                                <div class="text-right" style="color: #314CA3"> * If your work item needs an attachment,
                                     you can upload it after the creation
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-               <!-- <div style="float: right">
-                    <img src="dashboard/images/remote-collaboration-tools-1.jpg" alt="team">
-                </div>-->
+                <!-- <div style="float: right">
+                     <img src="dashboard/images/remote-collaboration-tools-1.jpg" alt="team">
+                 </div>-->
             </div>
         </div>
     </div>
@@ -237,25 +237,25 @@
 <!-- container-scroller -->
 
 <!-- plugins:js -->
-<script src="dashboard/js/vendor.bundle.base.js"></script>
+<script src="/dashboard/js/vendor.bundle.base.js"></script>
 <!-- endinject -->
 <!-- Plugin js for this page -->
-<script src="dashboard/chart.js/Chart.min.js"></script>
-<script src="dashboard/datatables.net/jquery.dataTables.js"></script>
-<script src="dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
-<script src="dashboard/js/dataTables.select.min.js"></script>
+<script src="/dashboard/chart.js/Chart.min.js"></script>
+<script src="/dashboard/datatables.net/jquery.dataTables.js"></script>
+<script src="/dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<script src="/dashboard/js/dataTables.select.min.js"></script>
 
 <!-- End plugin js for this page -->
 <!-- inject:js -->
-<script src="dashboard/js/off-canvas.js"></script>
-<script src="dashboard/js/hoverable-collapse.js"></script>
-<script src="dashboard/js/template.js"></script>
-<script src="dashboard/js/settings.js"></script>
-<script src="dashboard/js/todolist.js"></script>
+<script src="/dashboard/js/off-canvas.js"></script>
+<script src="/dashboard/js/hoverable-collapse.js"></script>
+<script src="/dashboard/js/template.js"></script>
+<script src="/dashboard/js/settings.js"></script>
+<script src="/dashboard/js/todolist.js"></script>
 <!-- endinject -->
 <!-- Custom js for this page-->
-<script src="dashboard/js/dashboard.js"></script>
-<script src="dashboard/js/Chart.roundedBarCharts.js"></script>
+<script src="/dashboard/js/dashboard.js"></script>
+<script src="/dashboard/js/Chart.roundedBarCharts.js"></script>
 <!-- End custom js for this page-->
 </body>
 
