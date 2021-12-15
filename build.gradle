@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.webjars:bootstrap:4.0.0-2'
     implementation 'commons-validator:commons-validator:1.6'
     implementation 'org.postgresql:postgresql:9.4.1208'
+    implementation 'com.github.jsimone:webapp-runner:8.5.11.3'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.6'
 
