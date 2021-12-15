@@ -1,1 +1,2 @@
 web: java -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/final-project-peer-review-0.0.1-SNAPSHOT.jar
+Dspring.datasource.url=jdbc:postgresql://ec2-34-250-16-127.eu-west-1.compute.amazonaws.com/ddc23re6p9ocj1?sslmode=require
