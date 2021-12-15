@@ -50,8 +50,9 @@ public class ConnectionPool {
 
         String username = "ypjvnrwbrfxwqe";
         String password = "6381eeaaa66f83bfa2bd8c858f9a467c8b71f7dabf2f5c1e73c515c5317df995";
-        String dbUrl = "jdbc:postgresql://" + "ec2-34-250-16-127.eu-west-1.compute.amazonaws.com"
-                + "/ddc23re6p9ocj1?sslmode=require";
+        String dbUrl = "postgres://ypjvnrwbrfxwqe:6381eeaaa66f83bfa2bd8c858f9a467c8b71f7dabf2f5c1e73c515c5317df995@ec2-34-250-16-127.eu-west-1.compute.amazonaws.com:5432/ddc23re6p9ocj1";
+/*        String dbUrl = "jdbc:postgresql://" + "ec2-34-250-16-127.eu-west-1.compute.amazonaws.com"
+                + "/ddc23re6p9ocj1?sslmode=require";*/
         try {
             return DriverManager.getConnection(dbUrl, username, password);
         } catch (SQLException e) {
