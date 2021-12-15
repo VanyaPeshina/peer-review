@@ -2,6 +2,7 @@ package com.telerikacademy.finalprojectpeerreview.services;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.CRUDRepository;
@@ -72,11 +73,9 @@ public class crudServiceImplTests<E> {
     }
 
     @Test
-    public void create_should_callRepository() {
+    public void create_should_callRepository() throws DuplicateEntityException {
         //Arrange
         User user = createMockStandardUser();
-
-        Mockito.when(repository.getAll()).thenThrow(EntityNotFoundException.class);
 
         //Act
         service.create((E) user, user);
@@ -97,11 +96,9 @@ public class crudServiceImplTests<E> {
     }
 
     @Test
-    public void update_should_callRepository() {
+    public void update_should_callRepository() throws DuplicateEntityException, UnauthorizedOperationException {
         //Arrange
         User user = createMockStandardUser();
-
-        Mockito.when(repository.getAll()).thenThrow(EntityNotFoundException.class);
 
         //Act
         service.update((E) user, user);

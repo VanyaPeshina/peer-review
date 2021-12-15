@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Skydash Admin</title>
+    <title>Login</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="dashboard/feather/feather.css">
     <link rel="stylesheet" href="dashboard/ti-icons/css/themify-icons.css">
@@ -34,7 +34,7 @@
                         <!--                        <div class="brand-logo">-->
                         <!--                            <img src="dashboard/images/logo.svg" alt="logo">-->
                         <!--                        </div>-->
-                        <h2>Hello! let's get started</h2>
+                        <h2>Hello! Let's get started!</h2>
                         <h4 class="font-weight-light">Sign in to continue.</h4>
                         <form class="pt-3" th:action="@{/login}" th:object="${user}" method="post">
                             <div class="form-group">
@@ -43,7 +43,6 @@
                                 <div th:if="${param.error}" class="alert alert-error">
                                     Invalid username or password
                                 </div>
-                               <!-- <label class="error" th:errors="*{username}">Email error placeholder</label>-->
                             </div>
                             <div class="form-group">
                                 <input type="password" class="form-control form-control-lg" name="password"
@@ -55,11 +54,11 @@
                                         type="submit">Sign in
                                 </button>
                             </div>
-                            <div class="text-center mt-4 font-weight-light">
+                            <div class="my-2 d-flex justify-content-between align-items-center">
                                 <div class="form-check">
                                     <label class="form-check-label text-muted">
                                         <input type="checkbox" class="form-check-input">
-                                        Remember me
+                                        Keep me signed in
                                     </label>
                                 </div>
                                 <a href="#" class="auth-link text-black">Forgot password?</a>

@@ -2,13 +2,13 @@ package com.telerikacademy.finalprojectpeerreview.controllers.rest;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.FileStorageException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.WorkItemDTO;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.WorkItemMapper;
-import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
-import com.telerikacademy.finalprojectpeerreview.services.UserServiceImpl;
+import com.telerikacademy.finalprojectpeerreview.filestorage.FileStorageService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.WorkItemService;
 import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
 import org.slf4j.Logger;
@@ -80,10 +80,10 @@ public class WorkItemController {
             WorkItem workItem = workItemMapper.fromDto(workItemDTO);
             workItemService.create(workItem, userToAuthenticate);
             return workItem;
-        } catch (DuplicateEntityException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (DuplicateEntityException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
     }
 
@@ -97,10 +97,12 @@ public class WorkItemController {
             WorkItem workItem = workItemMapper.fromDto(workItemDTO);
             workItemService.update(workItem, userToAuthenticate);
             return workItemService.getById(id);
-        } catch (DuplicateEntityException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (DuplicateEntityException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
@@ -121,6 +123,12 @@ public class WorkItemController {
             workItemService.update(workItem, userToAuthenticate);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (FileStorageException e) {
+            throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, e.getMessage());
+        } catch (DuplicateEntityException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
@@ -158,8 +166,6 @@ public class WorkItemController {
             workItemService.delete(id, userToAuthenticate);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedOperationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 

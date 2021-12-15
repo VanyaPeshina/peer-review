@@ -23,11 +23,6 @@ public class TeamRepositoryImpl extends CRUDRepositoryImpl<Team> implements Team
         this.sessionFactory = sessionFactory;
     }
 
-    @Override
-    protected Class<Team> getEntityClass() {
-        return Team.class;
-    }
-
     //TODO left join team
     @Override
     public List<User> getMembers(Team team) {
@@ -37,7 +32,6 @@ public class TeamRepositoryImpl extends CRUDRepositoryImpl<Team> implements Team
             return query.list();
         }
     }
-
     @Override
     public List<WorkItem> getTeamWorkItems(Team team) {
         try(Session session = sessionFactory.openSession()) {
@@ -45,5 +39,10 @@ public class TeamRepositoryImpl extends CRUDRepositoryImpl<Team> implements Team
             query.setParameter("team", team);
             return query.list();
         }
+    }
+
+    @Override
+    protected Class<Team> getEntityClass() {
+        return Team.class;
     }
 }

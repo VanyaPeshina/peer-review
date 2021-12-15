@@ -8,13 +8,13 @@ import static com.telerikacademy.finalprojectpeerreview.utils.constants.*;
 
 public class AuthorizationCheck {
 
-    public static void checkForAdmin(User user) {
+    public static void checkForAdmin(User user) throws UnauthorizedOperationException {
         if (!user.getRole().getRole().equals("Admin")) {
             throw new UnauthorizedOperationException(MODIFY_ADMIN_ERROR_MESSAGE);
         }
     }
 
-    public static void checkForInvolved(WorkItem workItem, User userToAuthenticate) {
+    public static void checkForInvolved(WorkItem workItem, User userToAuthenticate) throws UnauthorizedOperationException {
         if (!userToAuthenticate.getRole().getRole().equals("Admin")
                 && !workItem.getCreator().getUsername().equals(userToAuthenticate.getUsername())
                 && !workItem.getReviewer().getUsername().equals(userToAuthenticate.getUsername())) {

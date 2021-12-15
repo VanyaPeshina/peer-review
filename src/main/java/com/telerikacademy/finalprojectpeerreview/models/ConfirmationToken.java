@@ -85,4 +85,13 @@ public class ConfirmationToken {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConfirmationToken confirmationToken = (ConfirmationToken) o;
+        return confirmationToken.token.equals(this.token)
+                && confirmationToken.confirmedAt == this.confirmedAt;
+    }
 }

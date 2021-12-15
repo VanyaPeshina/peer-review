@@ -1,4 +1,4 @@
-package com.telerikacademy.finalprojectpeerreview.services;
+package com.telerikacademy.finalprojectpeerreview.email;
 
 import com.telerikacademy.finalprojectpeerreview.services.contracts.EmailSender;
 import org.slf4j.Logger;

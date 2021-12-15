@@ -1,6 +1,8 @@
 package com.telerikacademy.finalprojectpeerreview.services;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
@@ -61,7 +63,7 @@ public class WorkItemServiceImplTests {
     }
 
     @Test
-    public void create_should_callRepository() {
+    public void create_should_callRepository() throws DuplicateEntityException {
         //Arrange
         WorkItem workItem = createMockWorkItem();
         Team team = createMockTeam();
@@ -80,7 +82,7 @@ public class WorkItemServiceImplTests {
     }
 
     @Test
-    public void update_should_callRepository() {
+    public void update_should_callRepository() throws DuplicateEntityException, UnauthorizedOperationException {
         //Arrange
         WorkItem workItem = createMockWorkItem();
         Team team = createMockTeam();

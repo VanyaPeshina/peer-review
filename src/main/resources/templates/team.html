@@ -3,7 +3,7 @@
 
 <head>
     <div th:replace="fragments::css"></div>
-    <title>Team</title>
+    <title>My Team</title>
 </head>
 <body>
 <div class="container-scroller">
@@ -20,40 +20,42 @@
                     <div class="col-lg-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title" th:if="${user.getTeam() == null}"><span>No Team</span></h4>
-                                <h4 class="card-title" th:if="${user.getTeam() != null}"><span
+                                <h4 class="card-title" style="color: #314CA3" th:if="${user.getTeam() == null}"><span>No Team</span></h4>
+                                <h4 class="card-title" th:if="${user.getTeam() != null}" style="color: #314CA3"><span
                                         th:text="${user.team.name}"></span></h4>
+                                <p align="right"><a th:href="@{/team/leave}">
+                                    <button class="btn btn-danger btn-rounded">
+                                        Leave Team
+                                        <i class="ti-shift-right btn-icon-append"></i>
+                                    </button>
+                                </a>
+                                </p>
                                 <div class="table-responsive">
-                                    <td>
-                                        <a th:href="@{/team/leave}">
-                                            <button class="btn btn-light">Leave team</button>
-                                        </a>
-                                    </td>
                                     <table class="table table-striped">
                                         <thead>
                                         <tr>
-                                            <th>User</th>
-                                            <th>Id</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Phone number</th>
-                                            <th>Role</th>
+                                            <th style="color: #314CA3">User</th>
+                                            <th style="color: #314CA3">Id</th>
+                                            <th style="color: #314CA3">Username</th>
+                                            <th style="color: #314CA3">Email</th>
+                                            <th style="color: #314CA3">Phone number</th>
+                                            <th style="color: #314CA3">Role</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr th:each="user : ${teamMembers}">
                                             <td class="py-1"><img th:src="${user.getGetPhotoForMVC()}" alt="image"
                                                                   src=""/></td>
-                                            <td th:text="${user.id}"></td>
-                                            <td th:text="${user.username}"></td>
-                                            <td th:text="${user.email}"></td>
-                                            <td th:text="${user.phone}"></td>
+                                            <td th:text="${user.id}" style="color: #314CA3"></td>
+                                            <td th:text="${user.username}" style="color: #314CA3"></td>
+                                            <td th:text="${user.email}" style="color: #314CA3"></td>
+                                            <td th:text="${user.phone}" style="color: #314CA3"></td>
                                             <td>
                                                 <div th:unless="${user.id == user.team.owner.id}">
-                                                    <span class="badge bg-success rounded-pill">Member</span>
+                                                    <span class="badge bg-success rounded-pill" style="color: #FFFFFF">Member</span>
                                                 </div>
                                                 <div th:if="${user.id == user.team.owner.id}">
-                                                    <span class="badge bg-primary rounded-pill">Owner</span>
+                                                    <span class="badge bg-primary rounded-pill" style="color: #FFFFFF">Owner</span>
                                                 </div>
                                             </td>
                                         </tr>
@@ -64,8 +66,8 @@
                         </div>
                     </div>
                 </div>
-            <!--<div class="main-panel">-->
-<!--            <div class="content-wrapper" style="background-color: #C9E3F6">-->
+                <!--<div class="main-panel">-->
+                <!--            <div class="content-wrapper" style="background-color: #C9E3F6">-->
                 <form th:if="${workItems != null } and ${workItems.size() > 0}" action="#"
                       th:action="@{/work_item/filter}" th:object="${workItemDto}" method="post">
                     <div class="d-flex mb-4 justify-content-center">
@@ -73,9 +75,9 @@
                         <!-- Creator filter -->
                         <select th:field="*{creatorId}" name="user"
                                 class="btn btn-black btn-outline-black small rounded-0"
-                                style="background-color: #FFFFFF">
-                            <option name="user" th:value="-1" value="default">Select creator</option>
-                            <option name="user" th:each="user : ${teamMembers}"
+                                style="background-color: #FFFFFF; color:#314CA3">
+                            <option style="color: #314CA3" name="user" th:value="-1" value="default">Select creator</option>
+                            <option style="color: #314CA3" name="user" th:each="user : ${teamMembers}"
                                     th:value="${user.id}"
                                     th:text="${user.getUsername()}"></option>
                         </select>
@@ -83,9 +85,9 @@
                         <!-- Reviewer filter -->
                         <select th:field="*{reviewerId}" name="user"
                                 class="btn btn-black btn-outline-black small rounded-0"
-                                style="background-color: #FFFFFF">
-                            <option name="user" th:value="-1" value="default">Select reviewer</option>
-                            <option name="user" th:each="user : ${teamMembers}"
+                                style="background-color: #FFFFFF; color:#314CA3">
+                            <option style="color: #314CA3" name="user" th:value="-1" value="default">Select reviewer</option>
+                            <option style="color: #314CA3" name="user" th:each="user : ${teamMembers}"
                                     th:value="${user.id}"
                                     th:text="${user.getUsername()}"></option>
                         </select>
@@ -93,38 +95,38 @@
                         <!--Status filter-->
                         <select th:field="*{statusId}" name="category"
                                 class="btn btn-black btn-outline-black small rounded-0"
-                                style="background-color: #FFFFFF">
-                            <option name="category" th:value="-1" value="default">Select Status
+                                style="background-color: #FFFFFF; color:#314CA3">
+                            <option style="color: #314CA3" name="category" th:value="-1" value="default">Select Status
                             </option>
-                            <option name="category" th:each="status : ${statuses}"
+                            <option style="color: #314CA3" name="category" th:each="status : ${statuses}"
                                     th:value="${status.id}"
                                     th:text="${status.getStatus()}"></option>
                         </select>
 
                         <!--Filter button-->
                         <input type="submit" class="btn btn-black btn-outline-black small rounded-0"
-                               style="background-color: #3B83CD" value="Filter"/>
+                               style="background-color: #3B83CD; color: #FFFFFF" value="Filter"/>
                     </div>
                 </form>
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Work Items</h4>
+                            <h3 style="color: #314CA3" class="card-title">Work Items</h3>
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th class="text-left">Title</th>
-                                        <th class="text-center">Creator</th>
-                                        <th class="text-center">Reviewer</th>
-                                        <th class="text-center">Team</th>
-                                        <th class="text-center">Status</th>
-                                        <th class="text-center">File</th>
+                                        <th class="text-left" style="color: #314CA3">Title</th>
+                                        <th class="text-center" style="color: #314CA3">Creator</th>
+                                        <th class="text-center" style="color: #314CA3">Reviewer</th>
+                                        <th class="text-center" style="color: #314CA3">Team</th>
+                                        <th class="text-center" style="color: #314CA3">Status</th>
+                                        <th class="text-center" style="color: #314CA3">File</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr th:each="workItem : ${workItems}">
-                                        <td class="text-left" style="white-space: pre-line"
+                                        <td class="text-left" style="white-space: pre-line; color: #314CA3"
                                             th:text="${workItem.title}"></td>
                                         <td class="text-center"><img
                                                 th:src="${workItem.getCreator().getGetPhotoForMVC()}"
@@ -134,8 +136,9 @@
                                             <img th:src="${workItem.getReviewer().getGetPhotoForMVC()}"
                                                  alt="image"/>
                                         </td>
-                                        <td class="text-center" th:text="${workItem.team.name}"></td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="color: #314CA3"
+                                            th:text="${workItem.team.name}"></td>
+                                        <td class="text-center" style="color: #FFFFFF">
                                             <th:block th:switch="${workItem.status.status}">
                                                 <div th:case="'Pending'">
                                                     <span class="badge bg-info rounded-pill">Pending</span>
@@ -170,22 +173,12 @@
                                                 <i class="ti-download"></i>
                                             </button>
                                         </td>
-                                        <td th:unless="${workItem.getStatus().getStatus() == 'Rejected'}
-                                        or ${workItem.getStatus().getStatus() == 'Accepted'}" class="text-center"><a
+                                        <td class="text-center"><a
                                                 th:href="@{/work_item/{id}(id=${workItem.getId()})}">
                                             <button type="button"
                                                     class="btn btn-primary btn-rounded btn-icon-text">
                                                 Review
                                                 <i class="ti-eye btn-icon-append"></i>
-                                            </button>
-                                        </a>
-                                        </td>
-                                        <td th:if="${workItem.getStatus().getStatus() == 'Rejected'}
-                                        or ${workItem.getStatus().getStatus() == 'Accepted'}" class="text-center"><a>
-                                            <button type="button"
-                                                    class="btn btn-secondary btn-rounded btn-icon-text" disabled>
-                                                Review
-                                                <i class="ti-eye btn-icon-append" disabled=""></i>
                                             </button>
                                         </a>
                                         </td>
@@ -197,7 +190,6 @@
                     </div>
                 </div>
             </div>
-            <!-- </div>-->
         </div>
     </div>
 </div>

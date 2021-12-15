@@ -3,7 +3,6 @@ package com.telerikacademy.finalprojectpeerreview.controllers.mvc;
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
-import com.telerikacademy.finalprojectpeerreview.models.DTOs.InvitationDTO;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.TeamDTO;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.WorkItemDTO;
 import com.telerikacademy.finalprojectpeerreview.models.Invitation;
@@ -20,7 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.Binding;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
@@ -93,10 +91,15 @@ public class TeamMvcController {
                 return "error_leave_team";
             }
         }
-
         user.setTeam(null);
-        userService.update(user, user);
-        return "redirect:/dashboard";
+        try {
+            userService.update(user, user);
+        } catch (DuplicateEntityException | UnauthorizedOperationException e) {
+            //TODO
+            e.printStackTrace();
+            return "team";
+        }
+        return "redirect:/my_dashboard";
     }
 
     @GetMapping("/create")
@@ -113,8 +116,9 @@ public class TeamMvcController {
                              BindingResult errors,
                              Principal principal) {
         User user = (User) userService.loadUserByUsername(principal.getName());
+
         if (errors.hasErrors()) {
-            return "dashboard";
+            return "create_team";
         }
         try {
             teamDTO.setOwnerId(user.getId());
@@ -122,11 +126,10 @@ public class TeamMvcController {
             teamService.create(team, user);
             user.setTeam(team);
             userService.update(user, user);
-            return "redirect:/team/all";
-        } catch (DuplicateEntityException e) {
+            return "redirect:/team";
+        } catch (DuplicateEntityException | UnauthorizedOperationException e) {
+            errors.rejectValue("name", "name_error", e.getMessage());
             return "create_team";
-        } catch (UnauthorizedOperationException e) {
-            return "forbidden_403";
         } catch (EntityNotFoundException e) {
             return "error-404";
         }

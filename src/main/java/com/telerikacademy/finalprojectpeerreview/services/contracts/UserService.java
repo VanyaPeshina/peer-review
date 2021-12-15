@@ -1,6 +1,8 @@
 package com.telerikacademy.finalprojectpeerreview.services.contracts;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.ConfirmationToken;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
@@ -22,5 +24,5 @@ public interface UserService extends CRUDService<User>, UserDetailsService {
 
     void signUpUser(User user, ConfirmationToken confirmationToken) throws EntityNotFoundException;
 
-    String confirmToken(String token) throws EntityNotFoundException;
+    void confirmToken(String token) throws EntityNotFoundException, DuplicateEntityException, UnauthorizedOperationException;
 }

@@ -1,13 +1,11 @@
 package com.telerikacademy.finalprojectpeerreview.controllers.mvc;
 
-import com.telerikacademy.finalprojectpeerreview.exceptions.AuthenticationFailureException;
-import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
-import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.*;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.UserDTO;
 import com.telerikacademy.finalprojectpeerreview.models.Invitation;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.UserMapper;
-import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
+import com.telerikacademy.finalprojectpeerreview.filestorage.FileStorageService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import com.telerikacademy.finalprojectpeerreview.utils.UserHelper;
 import org.springframework.stereotype.Controller;
@@ -43,21 +41,22 @@ public class UserMVCController {
         return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));
     }
 
-    @GetMapping()
-    public String showProfile(Model model, Principal principal) {
+    @ModelAttribute("user")
+    public User populateUser(Principal principal) {
         User user = (User) userService.loadUserByUsername(principal.getName());
-        try {
-            User userToUpdate = userService.getById(user.getId());
-            UserDTO userDto = userMapper.toDto(userToUpdate);
-            model.addAttribute("userDto", userDto);
-            model.addAttribute("user", user);
-            return "user";
-        } catch (AuthenticationFailureException | EntityNotFoundException e) {
-            return "redirect:/login";
-        }
+        return user;
     }
 
-    @PostMapping()
+    @GetMapping("/profile")
+    public String showProfile(Model model, Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        UserDTO userDto = userMapper.toDto(user);
+        model.addAttribute("userDto", userDto);
+        model.addAttribute("user", user);
+        return "user";
+    }
+
+    @PostMapping("/profile")
     public String updateProfile(@Valid @ModelAttribute("userDto") UserDTO dto,
                                 BindingResult errors,
                                 Principal principal) {
@@ -73,15 +72,17 @@ public class UserMVCController {
             }
             User userToUpdate = userMapper.fromDto(dto);
             userService.update(userToUpdate, user);
-            return "redirect:/users";
-        } catch (DuplicateEntityException e) {
-            return "error-404";
+            return "redirect:/users/profile";
         } catch (IOException e) {
             e.printStackTrace();
             return "error-404";
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
             return "redirect:/login";
+        } catch (FileStorageException | DuplicateEntityException | UnauthorizedOperationException e) {
+            //TODO
+            e.printStackTrace();
+            return "user";
         }
     }
 }

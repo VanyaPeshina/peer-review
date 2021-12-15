@@ -1,29 +1,30 @@
+<!--
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <!-- Required meta tags -->
+    &lt;!&ndash; Required meta tags &ndash;&gt;
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Submit Work Item</title>
-    <!-- plugins:css -->
+    &lt;!&ndash; plugins:css &ndash;&gt;
     <link rel="stylesheet" href="/dashboard/feather/feather.css">
     <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
     <link rel="stylesheet" href="/dashboard/css/vendor.bundle.base.css">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
+    &lt;!&ndash; endinject &ndash;&gt;
+    &lt;!&ndash; Plugin css for this page &ndash;&gt;
     <link rel="stylesheet" href="/dashboard/datatables.net-bs4/dataTables.bootstrap4.css">
     <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
     <link rel="stylesheet" type="text/css" href="/dashboard/js/select.dataTables.min.css">
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
+    &lt;!&ndash; End plugin css for this page &ndash;&gt;
+    &lt;!&ndash; inject:css &ndash;&gt;
     <link rel="stylesheet" href="/dashboard/css/style.css">
-    <!-- endinject -->
+    &lt;!&ndash; endinject &ndash;&gt;
     <link rel="shortcut icon" href="/dashboard/images/favicon.png"/>
 </head>
 <body>
 <div class="container-scroller">
-    <!-- partial:partials/_navbar.html -->
+    &lt;!&ndash; partial:partials/_navbar.html &ndash;&gt;
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
             <a class="navbar-brand brand-logo mr-5" href="dashboard.html" th:href="@{/}"><img
@@ -103,11 +104,11 @@
             </button>
         </div>
     </nav>
-    <!-- partial -->
+    &lt;!&ndash; partial &ndash;&gt;
     <div class="container-fluid page-body-wrapper">
-        <!-- partial:partials/_settings-panel.html -->
-        <!-- partial -->
-        <!-- partial:partials/_sidebar.html -->
+        &lt;!&ndash; partial:partials/_settings-panel.html &ndash;&gt;
+        &lt;!&ndash; partial &ndash;&gt;
+        &lt;!&ndash; partial:partials/_sidebar.html &ndash;&gt;
         <nav class="sidebar sidebar-offcanvas" id="sidebar" style="background-image: url('/images/hero_bg_1.jpg');">
             <ul class="nav">
                 <li class="nav-item">
@@ -168,7 +169,7 @@
                 </li>
             </ul>
         </nav>
-        <!-- partial -->
+        &lt;!&ndash; partial &ndash;&gt;
         <div class="main-panel">
             <div class="content-wrapper" style="background-color: #C4E613">
                 <div class="col-12 grid-margin stretch-card">
@@ -226,12 +227,12 @@
                                         <td class="text-left"><img th:src="${comment.getCreator().getGetPhotoForMVC()}" alt="image"/>
                                         </td>
                                         <td class="text-left" style="white-space: pre-line" th:text="${comment.getComment().toString()}"></td>
-                                        <td th:if="${comment.getCreator().getId() == user.getId()}" class="text-center"><!--<a
-                                                th:href="@{/work_item/view/{id}(id=${workItem.getId()})}">-->
+                                        <td th:if="${comment.getCreator().getId() == user.getId()}" class="text-center">&lt;!&ndash;<a
+                                                th:href="@{/work_item/view/{id}(id=${workItem.getId()})}">&ndash;&gt;
                                             <button type="button" class="btn btn-primary btn-rounded btn-icon">
                                                 <i class="ti-pencil"></i>
                                             </button>
-                                            <!-- </a>-->
+                                            &lt;!&ndash; </a>&ndash;&gt;
                                         </td>
                                         <td th:if="${comment.getCreator().getId() != user.getId()}" class="text-center">
                                             <button type="button" class="btn btn-secondary btn-rounded btn-icon" disabled>
@@ -246,7 +247,7 @@
                                         <input type="text" class="form-control" id="exampleInputName1" placeholder="New Comment"
                                                th:field="*{comment}">
                                         <label class="error" th:errors="*{comment}"></label>
-                                       <!-- <input class="text" th:field="*{workItemId}" th:value="${workItem.getId()}" disabled>-->
+                                       &lt;!&ndash; <input class="text" th:field="*{workItemId}" th:value="${workItem.getId()}" disabled>&ndash;&gt;
                                     <button type="submit" class="btn btn-primary mr-2">Comment</button>
                                 </form>
                             </div>
@@ -256,35 +257,36 @@
             </div>
         </div>
     </div>
-    <!-- page-body-wrapper ends -->
+    &lt;!&ndash; page-body-wrapper ends &ndash;&gt;
 </div>
-<!-- container-scroller -->
+&lt;!&ndash; container-scroller &ndash;&gt;
 
-<!-- plugins:js -->
-<!--   Core JS Files   -->
-<!-- container-scroller -->
-<!-- plugins:js -->
+&lt;!&ndash; plugins:js &ndash;&gt;
+&lt;!&ndash;   Core JS Files   &ndash;&gt;
+&lt;!&ndash; container-scroller &ndash;&gt;
+&lt;!&ndash; plugins:js &ndash;&gt;
 <script src="/dashboard/js/vendor.bundle.base.js"></script>
-<!-- endinject -->
-<!-- Plugin js for this page -->
+&lt;!&ndash; endinject &ndash;&gt;
+&lt;!&ndash; Plugin js for this page &ndash;&gt;
 <script src="/dashboard/typeahead.js/typeahead.bundle.min.js"></script>
 <script src="/dashboard/select2/select2.min.js"></script>
-<!-- End plugin js for this page -->
-<!-- inject:js -->
+&lt;!&ndash; End plugin js for this page &ndash;&gt;
+&lt;!&ndash; inject:js &ndash;&gt;
 <script src="/dashboard/js/off-canvas.js"></script>
 <script src="/dashboard/js/hoverable-collapse.js"></script>
 <script src="/dashboard/js/template.js"></script>
 <script src="/dashboard/js/settings.js"></script>
 <script src="/dashboard/js/todolist.js"></script>
-<!-- endinject -->
-<!-- Custom js for this page-->
+&lt;!&ndash; endinject &ndash;&gt;
+&lt;!&ndash; Custom js for this page&ndash;&gt;
 <script src="/dashboard/js/file-upload.js"></script>
 <script src="/dashboard/js/typeahead.js"></script>
 <script src="/dashboard/js/select2.js"></script>
-<!-- End custom js for this page-->
+&lt;!&ndash; End custom js for this page&ndash;&gt;
 
-<!-- file upload/download -->
+&lt;!&ndash; file upload/download &ndash;&gt;
 <script>
     </body>
     </html>
 
+-->

@@ -2,12 +2,12 @@ package com.telerikacademy.finalprojectpeerreview.services;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.WorkItemRepository;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.WorkItemService;
 import com.telerikacademy.finalprojectpeerreview.utils.AuthorizationCheck;
-import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,9 +36,9 @@ public class WorkItemServiceImpl extends CRUDServiceImpl<WorkItem> implements Wo
     }
 
     @Override
-    public void create(WorkItem workItem, User user) {
+    public void create(WorkItem workItem, User user) throws DuplicateEntityException {
         //TODO -> трябва ли да проверяваме за reviewer при създаването? Той не е задължителен.
-//        checkForTeam(workItem);
+        checkForTeam(workItem);
         if (checkForDuplicates(workItem)) {
             throw new DuplicateEntityException(workItem.getClass().getSimpleName(), "these", "parameters");
         }
@@ -46,7 +46,7 @@ public class WorkItemServiceImpl extends CRUDServiceImpl<WorkItem> implements Wo
     }
 
     @Override
-    public void update(WorkItem workItem, User user) {
+    public void update(WorkItem workItem, User user) throws DuplicateEntityException, UnauthorizedOperationException {
         AuthorizationCheck.checkForInvolved(workItem, user);
         checkForTeam(workItem);
         if (checkForDuplicates(workItem)) {

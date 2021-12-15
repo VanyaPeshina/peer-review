@@ -7,9 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +22,15 @@ public class UserRepositoryImpl extends CRUDRepositoryImpl<User> implements User
         super(sessionFactory);
         this.sessionFactory = sessionFactory;
     }
+
+  /*  @Override
+    public List<User> getAll() {
+        try (Session session = sessionFactory.openSession()) {
+            String queryString = " from User where delete = 0";
+            Query<User> query = session.createQuery(queryString, User.class);
+            return query.list();
+        }
+    }*/
 
     //LEFT JOIN NEEDED BECAUSE OF THE POSSIBLE NULL VALUES FOR TEAM IN THE DB
     @Override

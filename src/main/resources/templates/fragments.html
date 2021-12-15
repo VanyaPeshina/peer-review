@@ -10,7 +10,7 @@
 <!--    <div class="sidebar sidebar-offcanvas" id="sidebar" style="background-image: url('/images/hero_bg_1.jpg');">-->
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/dashboard}" style="color: #FFFFFF">
+                <a class="nav-link" th:href="@{/my_dashboard}" style="color: #FFFFFF">
                     <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>
                     <span class="menu-title">Dashboard</span>
                 </a>
@@ -101,11 +101,12 @@
                     <a class="nav-link count-indicator dropdown-toggle" id="teamDropDown" href="#"
                        data-toggle="dropdown">
                         <i class="ti-comments-smiley" style="color: #FFFFFF"></i>
-                        <span class="count"></span>
+                        <span th:if="${invitationsForYou.size() > 0}" class="count"></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                          aria-labelledby="notificationDropdown">
-                        <p class="mb-0 font-weight-normal float-left dropdown-header">Invitations</p>
+                        <p th:if="${invitationsForYou.size() == 0}" class="mb-0 font-weight-normal float-left dropdown-header">No Invitations</p>
+                        <p th:if="${invitationsForYou.size() > 0}" class="mb-0 font-weight-normal float-left dropdown-header">Invitations</p>
                         <a th:href="@{/invitation/accept/{id}(id=${invitation.getId()})}"
                            class="dropdown-item preview-item" th:each="invitation : ${invitationsForYou}">
                             <div class="preview-thumbnail">
@@ -182,11 +183,11 @@
                         <img th:src="${user.getGetPhotoForMVC()}" alt="image" class="img-fluid">
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-                        <a class="dropdown-item" th:href="@{/users}">
+                        <a class="dropdown-item" th:href="@{/users/profile}">
                             <i class="ti-settings text-primary"></i>
                             Settings
                         </a>
-                        <a class="dropdown-item" th:href="@{/login/logout}">
+                        <a class="dropdown-item" th:href="@{/logout}">
                             <i class="ti-power-off text-primary"></i>
                             Logout
                         </a>

@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Submit Work Item</title>
+    <title>Work Item</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="/dashboard/feather/feather.css">
     <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
@@ -37,46 +37,55 @@
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-<!--                            <h4 class="card-title">Update work item</h4>-->
+                            <!--                            <h4 class="card-title">Update work item</h4>-->
                             <form class="forms-sample" th:action="@{__${#httpServletRequest.requestURI}__}"
                                   th:object="${workItemDTO}" method="post" enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <label for="exampleInputName1">Title</label>
-                                    <input th:if="${workItemDTO.reviewerId != user.id}" type="text"
-                                           class="form-control" id="exampleInputName1" placeholder="Title"
-                                           th:field="*{title}">
-                                    <input th:unless="${workItemDTO.reviewerId != user.id}" type="text"
+                                <div th:if="${workItemDTO.creatorId != user.id} or ${workItemDTO.getStatusId() == 4} or
+                                      ${workItemDTO.getStatusId() == 5}" class="form-group">
+                                    <label style="color: #314CA3; font-weight: bold" for="exampleInputName2">Title</label>
+                                    <input type="text"
                                            class="form-control" id="exampleInputName2" placeholder="Title"
                                            th:field="*{title}" disabled>
                                 </div>
-                                <div class="form-group">
-                                    <label>Submit Reviewer
-                                        <select  th:if="${workItemDTO.reviewerId != user.id}" type="text"
-                                                 class="form-control" th:field="*{reviewerId}">
-                                            <option th:each="user : ${members}"
-                                                    th:value="${user.getId()}"
-                                                    th:text="${user.getUsername()}">Reviewer
-                                            </option>
-                                        </select>
-                                        <select  th:unless="${workItemDTO.reviewerId != user.id}" type="text"
-                                                 class="form-control" th:field="*{reviewerId}" disabled>
-                                            <option th:each="user : ${members}"
-                                                    th:value="${user.getId()}"
-                                                    th:text="${user.getUsername()}">Reviewer
-                                            </option>
-                                        </select>
-                                    </label>
+                                <div th:if="${workItemDTO.creatorId == user.id} and ${workItemDTO.getStatusId() != 4} and
+                                      ${workItemDTO.getStatusId() != 5}" class="form-group">
+                                    <label style="color: #314CA3; font-weight: bold" for="exampleInputName1">Title</label>
+                                    <input style="color: #314CA3" type="text"
+                                           class="form-control" id="exampleInputName1" placeholder="Title"
+                                           th:field="*{title}">
+                                </div>
+                                <div th:if="${workItemDTO.creatorId == user.id} and ${workItemDTO.getStatusId() != 4} and
+                                      ${workItemDTO.getStatusId() != 5}" class="form-group">
+                                    <label style="color: #314CA3; font-weight: bold">Choose Reviewer</label>
+                                    <select style="color: #314CA3" type="text" class="form-control" th:field="*{reviewerId}">
+                                        <option th:each="user : ${members}"
+                                                th:value="${user.getId()}"
+                                                th:text="${user.getUsername()}">Reviewer
+                                        </option>
+                                    </select>
+                                </div>
+                                <div th:if="${workItemDTO.creatorId != user.id} or ${workItemDTO.getStatusId() == 4} or
+                                      ${workItemDTO.getStatusId() == 5}" class="form-group">
+                                    <label style="color: #314CA3; font-weight: bold">Reviewer</label>
+                                    <select type="text" class="form-control" th:field="*{reviewerId}" disabled>
+                                        <option th:each="user : ${members}"
+                                                th:value="${user.getId()}"
+                                                th:text="${user.getUsername()}">Reviewer
+                                        </option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Status</label>
-                                    <select th:if="${workItemDTO.reviewerId == user.id}"
-                                            type="text" class="form-control" th:field="*{statusId}">
-                                        <option th:each="status : ${statuses}"
+                                    <label style="color: #314CA3; font-weight: bold">Status</label>
+                                    <select th:if="${workItemDTO.reviewerId == user.id} and ${workItemDTO.getStatusId() != 4} and
+                                      ${workItemDTO.getStatusId() != 5}" type="text" class="form-control"
+                                            th:field="*{statusId}">
+                                        <option style="color: #314CA3" th:each="status : ${statuses}"
                                                 th:value="${status.getId()}"
                                                 th:text="${status.getStatus()}">Status
                                         </option>
                                     </select>
-                                    <select th:if="${workItemDTO.reviewerId != user.id}"
+                                    <select th:if="${workItemDTO.reviewerId != user.id} or ${workItemDTO.getStatusId() == 4} or
+                                      ${workItemDTO.getStatusId() == 5}"
                                             type="text" class="form-control" th:field="*{statusId}" disabled>
                                         <option th:each="status : ${statuses}"
                                                 th:value="${status.getId()}"
@@ -84,43 +93,63 @@
                                         </option>
                                     </select>
                                 </div>
-                               <div th:if="${workItemDTO.creatorId == user.id}" class="form-group">
-                                    <label>File upload</label>
-                                    <input type="file" name="img[]" class="file-upload-default" th:field="*{multipartFile}">
+                                <div th:if="${workItemDTO.creatorId == user.id} and ${workItemDTO.getStatusId() != 4} and
+                                      ${workItemDTO.getStatusId() != 5}" class="form-group">
+                                    <label style="color: #314CA3; font-weight: bold">File upload</label>
+                                    <input type="file" name="img[]" class="file-upload-default"
+                                           th:field="*{multipartFile}">
                                     <div class="input-group col-xs-12">
-                                        <input type="text" class="form-control file-upload-info"
+                                        <input style="color: #314CA3" type="text" class="form-control file-upload-info"
                                                placeholder="Upload Image" th:field="*{fileName}">
                                         <span class="input-group-append">
                           <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
                         </span>
-                                   </div>
+                                    </div>
+                                </div>
+                                <div th:if="${workItemDTO.creatorId != user.id} or ${workItemDTO.getStatusId() == 4} or
+                                      ${workItemDTO.getStatusId() == 5}" class="form-group">
+                                    <label style="color: #314CA3; font-weight: bold">File upload</label>
+                                    <input type="file" name="img[]" class="file-upload-default"
+                                           th:field="*{multipartFile}">
+                                    <div class="input-group col-xs-12">
+                                        <input type="text" class="form-control file-upload-info"
+                                               placeholder="Upload Image" th:field="*{fileName}" disabled>
+                                        <span class="input-group-append">
+                          <button class="file-upload-browse btn btn-secondary" type="button" disabled>Upload</button>
+                        </span>
+                                    </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleTextarea1">Description</label>
-                                    <textarea th:if="${workItemDTO.reviewerId != user.id}" class="form-control"
-                                              id="exampleTextarea1" rows="4"
+                                    <label style="color: #314CA3; font-weight: bold" for="exampleTextarea1">Description</label>
+                                    <textarea style="color: #314CA3" th:if="${workItemDTO.creatorId == user.id} and ${workItemDTO.getStatusId() != 4} and
+                                      ${workItemDTO.getStatusId() != 5}" class="form-control" id="exampleTextarea1" rows="4"
                                               th:field="*{description}"></textarea>
-                                    <textarea th:unless="${workItemDTO.reviewerId != user.id}" class="form-control"
+                                    <textarea th:if="${workItemDTO.creatorId != user.id} or ${workItemDTO.getStatusId() == 4} or
+                                      ${workItemDTO.getStatusId() == 5}" class="form-control"
                                               id="exampleTextarea2" rows="4"
                                               th:field="*{description}" disabled></textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="commentTextArea">Comment</label>
-                                    <textarea class="form-control" id="commentTextArea" rows="4"
+                                    <label style="color: #314CA3; font-weight: bold" for="commentTextArea">Comment</label>
+                                    <textarea style="color: #314CA3" class="form-control" id="commentTextArea" rows="4"
                                               th:field="*{comment}"></textarea>
                                     <label class="error" th:errors="*{comment}"></label>
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                 <button class="btn btn-light">Cancel</button>
-                                <div class="text-right">*If the status changes to 'Change Requested' or 'Rejected'- a comment should be added</div>
+                                <div style="color: #314CA3" class="text-right">
+                                    *If the status changes to 'Change Requested' or 'Rejected'- a comment should be added
+                                </div>
                             </form>
                         </div>
                         <table class="table table-hover">
                             <tbody>
                             <tr th:each="comment : ${comments}">
-                                <td class="text-left"><img th:src="${comment.getCreator().getGetPhotoForMVC()}" alt="image"/>
+                                <td class="text-left"><img th:src="${comment.getCreator().getGetPhotoForMVC()}"
+                                                           alt="image"/>
                                 </td>
-                                <td class="text-left" style="white-space: pre-line" th:text="${comment.getComment().toString()}"></td>
+                                <td class="text-left" style="white-space: pre-line; color: #314CA3"
+                                    th:text="${comment.getComment().toString()}"></td>
                             </tr>
                             </tbody>
                         </table>

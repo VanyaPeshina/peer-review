@@ -1,4 +1,4 @@
-package com.telerikacademy.finalprojectpeerreview.services;
+package com.telerikacademy.finalprojectpeerreview.filestorage;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.FileStorageException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.MyFileNotFoundException;
@@ -22,7 +22,7 @@ public class FileStorageService {
     private final Path fileStorageLocation;
 
     @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties) {
+    public FileStorageService(FileStorageProperties fileStorageProperties) throws FileStorageException {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
                 .toAbsolutePath().normalize();
         try {
@@ -32,7 +32,7 @@ public class FileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file) {
+    public String storeFile(MultipartFile file) throws FileStorageException {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         try {
@@ -51,7 +51,7 @@ public class FileStorageService {
         }
     }
 
-    public Resource loadFileAsResource(String fileName) {
+    public Resource loadFileAsResource(String fileName) throws MyFileNotFoundException {
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());

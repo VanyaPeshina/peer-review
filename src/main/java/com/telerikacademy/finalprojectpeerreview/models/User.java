@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -145,7 +146,6 @@ public class User implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         return !locked;
-       /*return true;*/
     }
 
     @Override
@@ -156,14 +156,12 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
-/*        return true;*/
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.getRole());
         return Collections.singletonList(authority);
-       /* return List.of(role);*/
     }
 
     public boolean isLocked() {
@@ -176,6 +174,21 @@ public class User implements UserDetails {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(username, user.username)
+                && Objects.equals(email, user.email)
+                && Objects.equals(password, user.password)
+                && Objects.equals(phone, user.phone)
+                && Objects.equals(photoName, user.photoName)
+                && Objects.equals(role, user.role)
+                && delete == user.delete
+                && locked != user.locked
+                && enabled != user.enabled;
     }
 }
 

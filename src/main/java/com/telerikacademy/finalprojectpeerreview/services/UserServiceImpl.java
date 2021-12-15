@@ -1,6 +1,8 @@
 package com.telerikacademy.finalprojectpeerreview.services;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
@@ -38,7 +40,7 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 
     @Override
     public List<User> search(Optional<String> search) {
-        if (search.get().length() == 0) {
+        if (search.isEmpty() || search.get().length() == 0) {
             return userRepository.getAll();
         }
         return userRepository.search(search.get());
@@ -58,8 +60,8 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository
-                .selectApplicationUserByUsername(username)
+        return userRepository.
+                selectApplicationUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
     }
 
@@ -70,7 +72,8 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
     }
 
     @Transactional
-    public String confirmToken(String token) throws EntityNotFoundException {
+    public void confirmToken(String token)
+            throws EntityNotFoundException, DuplicateEntityException, UnauthorizedOperationException {
         ConfirmationToken confirmationToken = confirmationTokenService.getByField("token", token);
 
         if (confirmationToken.getConfirmedAt() != null) {
@@ -82,17 +85,20 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("token expired");
         }
+        updateToken(confirmationToken);
+        updateUser(confirmationToken);
+    }
 
-        //update token
-        confirmationToken.setConfirmedAt(LocalDateTime.now());
-        confirmationTokenService.update(confirmationToken, confirmationToken.getUser());
-
-        //update user
+    protected void updateUser(ConfirmationToken confirmationToken) {
         User user = confirmationToken.getUser();
         user.setEnabled(true);
         userRepository.update(user);
+    }
 
-        return "confirmed";
+    protected void updateToken(ConfirmationToken confirmationToken)
+            throws DuplicateEntityException, UnauthorizedOperationException {
+        confirmationToken.setConfirmedAt(LocalDateTime.now());
+        confirmationTokenService.update(confirmationToken, confirmationToken.getUser());
     }
 
     private String buildEmail(String name, String link) {

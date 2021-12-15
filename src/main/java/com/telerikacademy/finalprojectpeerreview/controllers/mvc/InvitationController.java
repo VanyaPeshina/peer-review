@@ -89,8 +89,6 @@ public class InvitationController {
             return "redirect:/invitation/all";
         } catch (DuplicateEntityException e) {
             return "create_team";
-        } catch (UnauthorizedOperationException e) {
-            return "forbidden_403";
         } catch (EntityNotFoundException e) {
             return "error-404";
         }
@@ -136,11 +134,15 @@ public class InvitationController {
             return "redirect:/invitation/all";
         } catch (EntityNotFoundException e) {
             return "error-404";
+        } catch (DuplicateEntityException | UnauthorizedOperationException e) {
+            //TODO
+            e.printStackTrace();
+            return "single_invitation";
         }
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteWorkItem(@PathVariable int id, Model model, Principal principal) {
+    @GetMapping("/accept/{id}/delete")
+    public String deleteInvitation(@PathVariable int id, Model model, Principal principal) {
         User userToAuthenticate = (User) userService.loadUserByUsername(principal.getName());
         try {
             invitationService.delete(id, userToAuthenticate);

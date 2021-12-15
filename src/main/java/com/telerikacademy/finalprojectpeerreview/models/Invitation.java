@@ -80,4 +80,15 @@ public class Invitation {
     public void setDelete(int delete) {
         this.delete = delete;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Invitation incomingInvitation = (Invitation) o;
+        return incomingInvitation.invited.equals(invited)
+                && incomingInvitation.creator.equals(creator)
+                && incomingInvitation.team.equals(team);
+
+    }
 }

@@ -38,7 +38,7 @@ public class TeamServiceImpl extends CRUDServiceImpl<Team> implements TeamServic
     }
 
     @Override
-    public void create(Team team, User user) {
+    public void create(Team team, User user) throws DuplicateEntityException {
         if (checkForDuplicates(team)) {
             throw new DuplicateEntityException(team.getClass().getSimpleName(), "these", "parameters");
         }

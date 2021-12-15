@@ -2,6 +2,8 @@ package com.telerikacademy.finalprojectpeerreview;
 
 import com.telerikacademy.finalprojectpeerreview.models.*;
 
+import java.time.LocalDateTime;
+
 public class TestHelpers {
 
     //user
@@ -21,6 +23,9 @@ public class TestHelpers {
         mockUser.setPassword("Passw0rd#");
         mockUser.setPhone("0888888888");
         mockUser.setRole(createMockUserRole(role));
+        mockUser.setDelete(0);
+        mockUser.setLocked(false);
+        mockUser.setEnabled(true);
         return mockUser;
     }
 
@@ -38,6 +43,7 @@ public class TestHelpers {
         mockTeam.setId(1);
         mockTeam.setName("MockTeam");
         mockTeam.setOwner(createMockStandardUser());
+        mockTeam.setDelete(0);
         return mockTeam;
     }
 
@@ -68,5 +74,41 @@ public class TestHelpers {
         mockComment.setCreator(createMockStandardUser());
         mockComment.setWorkItem(createMockWorkItem());
         return mockComment;
+    }
+
+    //invitation
+    public static Invitation createMockInvitation() {
+        var mockInvitation = new Invitation();
+        User admin = TestHelpers.createMockAdmin();
+        admin.setId(2);
+        mockInvitation.setId(1);
+        mockInvitation.setCreator(createMockStandardUser());
+        mockInvitation.setTeam(createMockTeam());
+        mockInvitation.setInvited(admin);
+        mockInvitation.setDelete(0);
+        return mockInvitation;
+    }
+
+    //Token
+    public static ConfirmationToken ConfirmationToken() {
+        var mockConfirmationToken = new ConfirmationToken();
+        mockConfirmationToken.setId(1);
+        mockConfirmationToken.setToken("token");
+        mockConfirmationToken.setCreatedAt(LocalDateTime.now());
+        mockConfirmationToken.setExpiresAt(mockConfirmationToken.getCreatedAt().plusMinutes(15));
+        mockConfirmationToken.setConfirmedAt(null);
+        mockConfirmationToken.setUser(createMockStandardUser());
+        return mockConfirmationToken;
+    }
+
+    public static ConfirmationToken ConfirmationTokenExpired() {
+        var mockConfirmationToken = new ConfirmationToken();
+        mockConfirmationToken.setId(1);
+        mockConfirmationToken.setToken("token");
+        mockConfirmationToken.setCreatedAt(LocalDateTime.now());
+        mockConfirmationToken.setExpiresAt(LocalDateTime.now().minusMinutes(20));
+        mockConfirmationToken.setConfirmedAt(null);
+        mockConfirmationToken.setUser(createMockStandardUser());
+        return mockConfirmationToken;
     }
 }

@@ -1,6 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.models;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "work_items")
@@ -122,5 +123,18 @@ public class WorkItem {
 
     public void setDownloadForMvc(String downloadForMvc) {
         this.downloadForMvc = downloadForMvc;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WorkItem workItem = (WorkItem) o;
+        return Objects.equals(title, workItem.title)
+                && Objects.equals(description, workItem.description)
+                && Objects.equals(reviewer, workItem.reviewer)
+                && Objects.equals(status.getStatus(), workItem.getStatus().getStatus())
+                && Objects.equals(creator, workItem.getCreator())
+                && Objects.equals(fileName, workItem.getFileName())
+                && Objects.equals(team, workItem.team);
     }
 }

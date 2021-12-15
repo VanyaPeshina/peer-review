@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,42 +36,52 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 //handle roles and authentication
                 .authorizeRequests()
-                   /*.anyRequest().permitAll()*/
-                    .antMatchers( "/fonts/**", "/css/**", "/dashboard/**", "/js/**", "/static/**", "/images/**").permitAll()
-                    .antMatchers("/", "/login/**", "/register/**", "**/logout").permitAll()
-                    .antMatchers("/api/**").permitAll()   //hasAnyRole(ADMIN.name(), SIMPLE_USER.name())
-                    .antMatchers("management/api/**", "/management/**").hasRole(ADMIN.name())
-                    .anyRequest()
-                    .authenticated()
+                /*.anyRequest().permitAll()*/
+                .antMatchers("/fonts/**", "/css/**", "/dashboard/**", "/js/**", "/static/**", "/images/**").permitAll()
+                .antMatchers("/", "/login/**", "/register/**", "**/logout", "/swagger-ui/**").permitAll()
+                .antMatchers("/api/**").permitAll()   //hasAnyRole(ADMIN.name(), SIMPLE_USER.name())
+                .antMatchers("management/api/**", "/management/**").hasRole(ADMIN.name())
+                .anyRequest()
+                .authenticated()
 
                 .and()
 
                 //handle login
                 .formLogin()
-                    .loginPage("/login")
-                    .loginProcessingUrl("/login")
-                    .defaultSuccessUrl("/dashboard", true)
-                    .passwordParameter("password")
-                    .usernameParameter("username")
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/my_dashboard", true)
+                .passwordParameter("password")
+                .usernameParameter("username")
 
                 .and()
 
                 //remember me
                 .rememberMe()
-                    .tokenValiditySeconds((int)TimeUnit.DAYS.toSeconds(21)) //defaults to 2 weeks
-                    .key("somethingverysecured")
-                    .rememberMeParameter("remember-me")
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21)) //defaults to 2 weeks
+                .key("somethingverysecured")
+                .rememberMeParameter("remember-me")
 
                 .and()
 
                 //handle logout
                 .logout()
-                    .logoutUrl("/logout")
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) //leave only if csrf is disabled
-                    .clearAuthentication(true)
-                    .invalidateHttpSession(true)
-                    .deleteCookies("remember-me")
-                    .logoutSuccessUrl("/");
+                .logoutUrl("/logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) //leave only if csrf is disabled
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .deleteCookies("remember-me")
+                .logoutSuccessUrl("/");
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 
     @Override

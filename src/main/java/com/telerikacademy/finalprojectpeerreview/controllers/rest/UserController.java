@@ -1,13 +1,11 @@
 package com.telerikacademy.finalprojectpeerreview.controllers.rest;
 
-import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
-import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
-import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.*;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.UserDTO;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.WorkItem;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.UserMapper;
-import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
+import com.telerikacademy.finalprojectpeerreview.filestorage.FileStorageService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import com.telerikacademy.finalprojectpeerreview.utils.AuthenticationHelper;
 import org.springframework.core.io.Resource;
@@ -40,7 +38,9 @@ public class UserController {
     private final FileStorageService fileStorageService;
 
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper, AuthenticationHelper authenticationHelper,
+    public UserController(UserService userService,
+                          UserMapper userMapper,
+                          AuthenticationHelper authenticationHelper,
                           FileStorageService fileStorageService) {
         this.userService = userService;
         this.userMapper = userMapper;
@@ -76,7 +76,8 @@ public class UserController {
             // Load file as Resource
             User user = userService.getById(id);
             resource = fileStorageService.loadFileAsResource(user.getPhotoName());
-        } catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException | MyFileNotFoundException e) {
+            //TODO
             e.printStackTrace();
         }
         // Try to determine file's content type
@@ -109,7 +110,7 @@ public class UserController {
             User user = userMapper.fromDto(userDTO);
             userService.create(user, userToAuthenticate);
             return user;
-        } catch (IOException e) {
+        } catch (IOException | DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -128,10 +129,10 @@ public class UserController {
             return user;
         } catch (IOException | DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (UnauthorizedOperationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
@@ -146,8 +147,12 @@ public class UserController {
             userService.update(user, userToAuthenticate);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (DuplicateEntityException e) {
+        } catch (FileStorageException | DuplicateEntityException e) {
+            //TODO
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (UnauthorizedOperationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
@@ -158,8 +163,6 @@ public class UserController {
             userService.delete(id, userToAuthenticate);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedOperationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 }

@@ -54,4 +54,13 @@ public class Team {
     public void setDelete(int delete) {
         this.delete = delete;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Team team = (Team) o;
+        return team.name.equals(this.name)
+                && team.owner.equals(this.owner);
+    }
 }

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
-@RequestMapping("/dashboard")
+@RequestMapping("/my_dashboard")
 public class DashboardMvcController {
 
     private final UserService userService;
@@ -50,7 +50,7 @@ public class DashboardMvcController {
     public String showDashboardPage(Model model, Principal principal) {
         User user;
         try {
-           user = (User) userService.loadUserByUsername(principal.getName());
+            user = (User) userService.loadUserByUsername(principal.getName());
         } catch (NullPointerException e) {
             return "redirect:/login";
         }

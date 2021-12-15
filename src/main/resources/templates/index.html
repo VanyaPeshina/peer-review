@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Services Free Template by Colorlib</title>
+    <title>Peer Review</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -58,28 +58,19 @@
 
         <div class="container">
             <div class="row align-items-right justify-content-end">
-
-                <!-- <div class="col-4">
-                   <h1 class="m-0 site-logo"><a href="index.html">Register</a></h1>
-                 </div>-->
-
                 <div class="col-8">
                     <nav class="site-navigation position-relative text-right" role="navigation">
                         <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
-                            <!--  <li><a href="#home-section" class="nav-link">Home</a></li>
-                              <li><a href="#about-section" class="nav-link">About</a></li>
-                              <li><a href="#services-section" class="nav-link">Services</a></li>
-                              <li><a href="#projects-section" class="nav-link">Projects</a></li>
-                              <li><a href="#blog-section" class="nav-link">Blog</a></li>-->
+                            <li><a th:if="${isAuthenticated}" th:href="@{/work_item}" class="nav-link">My Work Items</a>
+                            </li>
+                            <li><a th:if="${isAuthenticated}" th:href="@{/team}" class="nav-link">My Team</a>
+                            </li>
                             <li><a th:unless="${isAuthenticated}" th:href="@{/register}" class="nav-link">Register</a>
                             </li>
                             <li><a th:if="${isAuthenticated}" th:href="@{/logout}" class="nav-link">Logout</a>
                             </li>
                         </ul>
                     </nav>
-
-                    <!--    <a href="#" class="d-inline-block d-lg-none site-menu-toggle js-menu-toggle float-right"><span class="icon-menu h3"></span></a>-->
-
                 </div>
 
             </div>
@@ -112,7 +103,7 @@
                         <div class="col-lg-8">
                             <h1 class="text-white" data-aos="fade-up" data-aos-delay="">WELCOME</h1>
                             <p class="lead text-white" data-aos="fade-up" data-aos-delay="100"></p>
-                            <p data-aos="fade-up" data-aos-delay="200"><a th:href="@{/dashboard}"
+                            <p data-aos="fade-up" data-aos-delay="200"><a th:href="@{/my_dashboard}"
                                                                           class="btn smoothscroll btn-primary">Dashboard</a>
                             </p>
 

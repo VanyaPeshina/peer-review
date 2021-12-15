@@ -3,7 +3,6 @@ package com.telerikacademy.finalprojectpeerreview.controllers.rest;
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
-import com.telerikacademy.finalprojectpeerreview.models.ItemStatus;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.UserRole;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserRoleService;
@@ -53,8 +52,6 @@ public class UserRoleController {
             return userRole;
         } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (UnauthorizedOperationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
@@ -81,8 +78,6 @@ public class UserRoleController {
             userRoleService.delete(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedOperationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 }

@@ -2,6 +2,7 @@ package com.telerikacademy.finalprojectpeerreview.services;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.CRUDService;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.CRUDRepository;
@@ -27,7 +28,7 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
     }
 
     @Override
-    public void create(E entity, User user) {
+    public void create(E entity, User user) throws DuplicateEntityException {
         if (checkForDuplicates(entity)) {
             throw new DuplicateEntityException(entity.getClass().getSimpleName(), "these", "parameters");
         }
@@ -35,7 +36,7 @@ public class CRUDServiceImpl<E> implements CRUDService<E> {
     }
 
     @Override
-    public void update(E entity, User user) {
+    public void update(E entity, User user) throws DuplicateEntityException, UnauthorizedOperationException {
         if (checkForDuplicates(entity)) {
             throw new DuplicateEntityException(entity.getClass().getSimpleName(), "these", "parameters");
         }

@@ -32,4 +32,12 @@ public class ItemStatus {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemStatus itemStatus = (ItemStatus) o;
+        return itemStatus.status.equals(this.status);
+    }
 }

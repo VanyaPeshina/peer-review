@@ -1,5 +1,8 @@
 package com.telerikacademy.finalprojectpeerreview.models.DTOs;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import static com.telerikacademy.finalprojectpeerreview.utils.constants.*;

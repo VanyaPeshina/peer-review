@@ -7,9 +7,8 @@ import com.telerikacademy.finalprojectpeerreview.models.DTOs.WorkItemDTO;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.CommentMapper;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.WorkItemMapper;
 import com.telerikacademy.finalprojectpeerreview.services.CommentService;
-import com.telerikacademy.finalprojectpeerreview.services.FileStorageService;
+import com.telerikacademy.finalprojectpeerreview.filestorage.FileStorageService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.ItemStatusService;
-import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.UserService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.WorkItemService;
 import com.telerikacademy.finalprojectpeerreview.utils.UserHelper;
@@ -33,7 +32,6 @@ public class WorkItemMvcController {
     private final WorkItemMapper workItemMapper;
     private final WorkItemService workItemService;
     private final FileStorageService fileStorageService;
-    private final TeamService teamService;
     private final ItemStatusService itemStatusService;
     private final UserService userService;
     private final CommentService commentService;
@@ -44,7 +42,6 @@ public class WorkItemMvcController {
     public WorkItemMvcController(WorkItemMapper workItemMapper,
                                  WorkItemService workItemService,
                                  FileStorageService fileStorageService,
-                                 TeamService teamService,
                                  ItemStatusService itemStatusService,
                                  UserService userService,
                                  CommentService commentService,
@@ -53,7 +50,6 @@ public class WorkItemMvcController {
         this.workItemMapper = workItemMapper;
         this.workItemService = workItemService;
         this.fileStorageService = fileStorageService;
-        this.teamService = teamService;
         this.itemStatusService = itemStatusService;
         this.userService = userService;
         this.commentService = commentService;
@@ -72,14 +68,20 @@ public class WorkItemMvcController {
         return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));
     }
 
-//    @ModelAttribute("user")
-//    public User userPhoto(Principal principal) {
-//        return (User) userService.loadUserByUsername(principal.getName());
-//    }
+    @ModelAttribute("user")
+    public User userPhoto(Principal principal) {
+        return (User) userService.loadUserByUsername(principal.getName());
+    }
 
     @ModelAttribute("statuses")
-    public List<ItemStatus> populateWarehouses() {
+    public List<ItemStatus> populateStatuses() {
         return itemStatusService.getAll();
+    }
+
+    @ModelAttribute("members")
+    public List<User> populateMembers(Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        return userHelper.getTeamMembersWithoutTheUser(user);
     }
 
     @GetMapping
@@ -122,20 +124,16 @@ public class WorkItemMvcController {
     public String viewWorkItemPage(@PathVariable int id,
                                    Model model,
                                    Principal principal) {
-        User user = (User) userService.loadUserByUsername(principal.getName());
-
         try {
+            User user = (User) userService.loadUserByUsername(principal.getName());
             model.addAttribute("user", user);
             WorkItem workItem = workItemService.getById(id);
             model.addAttribute("workItem", workItem);
             model.addAttribute("comments", workItemsHelper.getComments(workItem));
             model.addAttribute("commentDto", new CommentDTO());
-
             return "view_workItem";
         } catch (EntityNotFoundException e) {
             return "error-404";
-        } catch (AuthenticationFailureException e) {
-            return "redirect:/login";
         }
     }
 
@@ -156,13 +154,15 @@ public class WorkItemMvcController {
             commentService.create(comment, user);
             String redirect = "redirect:/work_item/view/" + id;
             return redirect;
-        } catch (DuplicateEntityException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return "conflict_409";
-        } catch (UnauthorizedOperationException e) {
-            return "new_workItem";
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
             return "redirect:/login";
+        } catch (DuplicateEntityException e) {
+            //TODO
+            e.printStackTrace();
+            return "view_workItem";
         }
     }
 
@@ -191,34 +191,33 @@ public class WorkItemMvcController {
             workItem.setCreator(user);
             workItem.setTeam(user.getTeam());
             workItemService.create(workItem, user);
-            return "redirect:/work_item/all";
-        } catch (DuplicateEntityException | IllegalArgumentException e) {
+            return "redirect:/work_item";
+        } catch (IllegalArgumentException e) {
             return "conflict_409";
-        } catch (UnauthorizedOperationException e) {
-            return "new_workItem";
-        } catch (EntityNotFoundException e) {
+        /*} catch (EntityNotFoundException e) {
             e.printStackTrace();
-            return "redirect:/login";
+            return "redirect:/login";*/
+        } catch (DuplicateEntityException | EntityNotFoundException e) {
+            //TODO
+            e.printStackTrace();
+            return "submit_workItem";
         }
     }
 
     @GetMapping("/{id}")
     public String getSingleWorkItemPage(@PathVariable int id, Model model, Principal principal) {
-        User user = (User) userService.loadUserByUsername(principal.getName());
         try {
+            User user = (User) userService.loadUserByUsername(principal.getName());
             WorkItem workItem = workItemService.getById(id);
             WorkItemDTO workItemDTO = workItemMapper.toDto(workItem);
             model.addAttribute("user", user);
             model.addAttribute("workItemDTO", workItemDTO);
             model.addAttribute("members", userHelper.getTeamMembersWithoutTheUser(user));
             model.addAttribute("comments", workItemsHelper.getComments(workItem));
-
             return "single_workItem";
         } catch (EntityNotFoundException e) {
             model.addAttribute("error", e.getMessage());
             return "error-404";
-        } catch (AuthenticationFailureException e) {
-            return "redirect:/login";
         }
     }
 
@@ -239,11 +238,11 @@ public class WorkItemMvcController {
 //            String redirect = "redirect:/work_item/" + id;
             return "single_workItem";
         }
-        if (dto.getMultipartFile() != null && !dto.getMultipartFile().isEmpty()) {
-            String fileName = fileStorageService.storeFile(dto.getMultipartFile());
-            dto.setFileName(fileName);
-        }
         try {
+            if (dto.getMultipartFile() != null && !dto.getMultipartFile().isEmpty()) {
+                String fileName = fileStorageService.storeFile(dto.getMultipartFile());
+                dto.setFileName(fileName);
+            }
             WorkItem workItemToUpdate = workItemMapper.fromDto(dto);
             if (!dto.getComment().isEmpty()) {
                 CommentDTO commentDTO = commentMapper.toDTO(dto.getComment(), user, workItemToUpdate);
@@ -251,14 +250,14 @@ public class WorkItemMvcController {
             }
             workItemService.update(workItemToUpdate, user);
             return "redirect:/work_item";
-        } catch (DuplicateEntityException | IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return "conflict_409";
-        } catch (UnauthorizedOperationException e) {
-            return "unauthorized_error";
-        } catch (ChangeNotPossibleException e) {
-            return "parcel_forbidden_403";
         } catch (EntityNotFoundException e) {
             return "redirect:/login";
+        } catch (FileStorageException | DuplicateEntityException | UnauthorizedOperationException e) {
+            //TODO
+            e.printStackTrace();
+            return "single_workItem";
         }
     }
 
@@ -267,7 +266,7 @@ public class WorkItemMvcController {
         User userToAuthenticate = (User) userService.loadUserByUsername(principal.getName());
         try {
             workItemService.delete(id, userToAuthenticate);
-            return "redirect:/work_item/all";
+            return "redirect:/work_item";
         } catch (EntityNotFoundException e) {
             model.addAttribute("error", e.getMessage());
             return "error-404";

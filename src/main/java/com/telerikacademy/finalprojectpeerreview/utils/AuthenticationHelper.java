@@ -34,7 +34,7 @@ public class AuthenticationHelper {
         }
     }
 
-    public User tryGetUser(HttpSession session) throws EntityNotFoundException {
+    public User tryGetUser(HttpSession session) throws EntityNotFoundException, AuthenticationFailureException {
         String currentUser = (String) session.getAttribute("currentUser");
 
         if (currentUser == null) {
@@ -44,7 +44,7 @@ public class AuthenticationHelper {
         return userService.getByField("username", currentUser);
     }
 
-    public User verifyAuthentication(String username, String password) {
+    public User verifyAuthentication(String username, String password) throws AuthenticationFailureException {
         try {
             User user = userService.getByField("username", username);
             if (!user.getPassword().equals(password) || user.getDelete() == 1) {

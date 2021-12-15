@@ -74,12 +74,10 @@ public class RegisterMvcController {
 
             //sign up
             userService.signUpUser(newUser, confirmationToken);
-            return "redirect:/";
-        } catch (DuplicateEntityException e) {
-            errors.rejectValue("email", "username_error", e.getMessage());
+            return "verify_email";
+        } catch (DuplicateEntityException | IllegalArgumentException e) {
+            errors.rejectValue("password", "email_error", e.getMessage());
             return "register";
-        } catch (UnauthorizedOperationException e) {
-            return "forbidden_403";
         } catch (IOException | EntityNotFoundException e) {
             return "error-404";
         }
@@ -87,8 +85,14 @@ public class RegisterMvcController {
 
     @GetMapping("/confirm")
     public String confirm(@RequestParam("token") String token) throws EntityNotFoundException {
-        userService.confirmToken(token);
-        return "redirect:/login";
+        try {
+            userService.confirmToken(token);
+            return "redirect:/login";
+        } catch (DuplicateEntityException | UnauthorizedOperationException e) {
+            //TODO
+            e.printStackTrace();
+            return "redirect:/register/confirm";
+        }
     }
 }
 

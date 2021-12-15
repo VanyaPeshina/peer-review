@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Dashboard</title>
+    <title>My Work Items</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="/dashboard/feather/feather.css">
     <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
@@ -43,9 +43,9 @@
                         <!-- Reviewer filter -->
                         <select th:field="*{reviewerId}" name="user"
                                 class="btn btn-black btn-outline-black small rounded-0"
-                                style="background-color: #FFFFFF">
-                            <option name="user" th:value="-1" value="default">Select reviewer</option>
-                            <option name="user" th:each="user : ${users}"
+                                style="background-color: #FFFFFF; color: #314CA3">
+                            <option  style="color: #314CA3" name="user" th:value="-1" value="default">Select reviewer</option>
+                            <option  style="color: #314CA3" name="user" th:each="user : ${users}"
                                     th:value="${user.id}"
                                     th:text="${user.getUsername()}"></option>
                         </select>
@@ -53,17 +53,17 @@
                         <!--Status filter-->
                         <select th:field="*{statusId}" name="category"
                                 class="btn btn-black btn-outline-black small rounded-0"
-                                style="background-color: #FFFFFF">
-                            <option name="category" th:value="-1" value="default">Select Status
+                                style="background-color: #FFFFFF; color: #314CA3">
+                            <option  style="color: #314CA3"  name="category" th:value="-1" value="default">Select Status
                             </option>
-                            <option name="category" th:each="status : ${statuses}"
+                            <option  style="color: #314CA3"  name="category" th:each="status : ${statuses}"
                                     th:value="${status.id}"
                                     th:text="${status.getStatus()}"></option>
                         </select>
 
                         <!--Filter button-->
                         <input type="submit" class="btn btn-black btn-outline-black small rounded-0"
-                               style="background-color: #3B83CD" value="Filter"/>
+                               style="background-color: #3B83CD; color: #FFFFFF" value="Filter"/>
                     </div>
                 </form>
                 <div class="col-lg-12 grid-margin stretch-card">
@@ -129,26 +129,13 @@
                                                 <i class="ti-download"></i>
                                             </button>
                                         </td>
-                                        <td th:unless="${workItem.getCreator().getId() != user.getId()}
-                                        or ${workItem.getStatus().getStatus() == 'Rejected'}
-                                        or ${workItem.getStatus().getStatus() == 'Accepted'}"
+                                        <td th:unless="${workItem.getCreator().getId() != user.getId()}"
                                             class="text-center"><a th:href="@{/work_item/{id}(id=${workItem.getId()})}">
                                             <button type="button" class="btn bg-warning btn-rounded btn-icon-text">
                                                 <i class="text" style="color: #FFFFFF">Update</i>
                                                 <i class="ti-pencil btn-icon-append" style="color: #FFFFFF"></i>
                                             </button>
                                         </a>
-                                        </td>
-                                        <td th:if="${workItem.getCreator().getId() != user.getId()}
-                                        or ${workItem.getStatus().getStatus() == 'Rejected'}
-                                        or ${workItem.getStatus().getStatus() == 'Accepted'}"
-                                            class="text-center">
-                                            <button type="button" class="btn btn-secondary btn-rounded btn-icon-text"
-                                                    disabled>
-                                                Update
-                                                <i class="ti-pencil btn-icon-append"></i>
-                                            </button>
-                                            </a>
                                         </td>
                                         <td th:unless="${workItem.getStatus().getStatus() == 'Rejected'}
                                          or ${workItem.getStatus().getStatus() == 'Accepted'}" class="text-center"><a

@@ -4,224 +4,17 @@
 <head>
     <!-- Required meta tags -->
     <div th:replace="fragments::css"></div>
-    <title>Dashboard</title>
-
-    <!--    <meta charset="utf-8">-->
-    <!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
-    <!--    <title>Dashboard</title>-->
-    <!--    &lt;!&ndash; plugins:css &ndash;&gt;-->
-    <!--    <link rel="stylesheet" href="dashboard/feather/feather.css">-->
-    <!--    <link rel="stylesheet" href="dashboard/ti-icons/css/themify-icons.css">-->
-    <!--    <link rel="stylesheet" href="dashboard/css/vendor.bundle.base.css">-->
-    <!--    &lt;!&ndash; endinject &ndash;&gt;-->
-    <!--    &lt;!&ndash; Plugin css for this page &ndash;&gt;-->
-    <!--    <link rel="stylesheet" href="dashboard/datatables.net-bs4/dataTables.bootstrap4.css">-->
-    <!--    <link rel="stylesheet" href="dashboard/ti-icons/css/themify-icons.css">-->
-    <!--    <link rel="stylesheet" type="text/css" href="dashboard/js/select.dataTables.min.css">-->
-    <!--    &lt;!&ndash; End plugin css for this page &ndash;&gt;-->
-    <!--    &lt;!&ndash; inject:css &ndash;&gt;-->
-    <!--    <link rel="stylesheet" href="dashboard/css/style.css">-->
-    <!--    &lt;!&ndash; endinject &ndash;&gt;-->
-    <!--    <link rel="shortcut icon" href="dashboard/images/peer-review-logo.png"/>-->
-    <!--    <style>-->
-    <!--        .vertical {-->
-    <!--            border-left: 1px solid darkblue;-->
-    <!--            height: 500px;-->
-    <!--            position: absolute;-->
-    <!--            left: 89%;-->
-    <!--            margin-left: 3px;-->
-    <!--            top: 0;-->
-    <!--        }-->
-    <!--       /* html * {-->
-    <!--            font-family: Nunito !important;-->
-    <!--        }*/-->
-    <!--    </style>-->
+    <title>Peer Review - Dashboard</title>
 </head>
 <body>
 <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
     <div th:replace="fragments::topNav"></div>
-    <!--    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">-->
-    <!--        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center" style="background-color: #314CA3">-->
-    <!--            <a class="text-center" style="color: #F8F9FD; font-weight: bold" th:href="@{/}">HOME-->
-    <!--                &lt;!&ndash;<img src="dashboard/images/PEER_REVIEW_2.png"-->
-    <!--                                                                        class="mr-2" alt="logo"/></a> &ndash;&gt;-->
-    <!--            &lt;!&ndash;  <a class="navbar-brand brand-logo-mini" th:href="@{/}"><img src="/dashboard/images/p-r-logo-2.png"-->
-    <!--                                                                          alt="logo"/></a>&ndash;&gt;-->
-    <!--        </div>-->
-    <!--        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end" style="background-color: #314CA3">-->
-    <!--            &lt;!&ndash; <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">-->
-    <!--                 <span class="icon-menu"></span>-->
-    <!--             </button>&ndash;&gt;-->
-    <!--            <ul class="navbar-nav navbar-nav-right">-->
-    <!--                <li class="nav-item dropdown">-->
-    <!--                    <a class="nav-link count-indicator dropdown-toggle" id="teamDropDown" href="#"-->
-    <!--                       data-toggle="dropdown">-->
-    <!--                        <i class="ti-crown" style="color: #FFFFFF"></i>-->
-    <!--                        <span class="count"></span>-->
-    <!--                    </a>-->
-    <!--                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"-->
-    <!--                         aria-labelledby="notificationDropdown">-->
-    <!--                        <p class="mb-0 font-weight-normal float-left dropdown-header">Invitations</p>-->
-    <!--                        <a th:href="@{/invitation/accept/{id}(id=${invitation.getId()})}"-->
-    <!--                           class="dropdown-item preview-item" th:each="invitation : ${invitations}">-->
-    <!--                            <div class="preview-thumbnail">-->
-    <!--                                <img class="image" th:src="${invitation.getCreator().getGetPhotoForMVC()}" alt="image"/>-->
-    <!--                            </div>-->
-    <!--                            <div class="preview-item-content">-->
-    <!--                                <h6 class="preview-subject font-weight-normal"-->
-    <!--                                    th:value="${invitation.getId()}"-->
-    <!--                                    th:text="${invitation.getCreator().getUsername()} +-->
-    <!--                                         ' invited you to join team: ' +-->
-    <!--                                          ${invitation.getTeam().getName()}"></h6>-->
-    <!--                                <p class="font-weight-light small-text mb-0 text-muted"-->
-    <!--                                   th:text="${invitation.getDate().getDayOfMonth()} + '/' +-->
-    <!--                                   ${invitation.getDate().getMonth().toString().toLowerCase()} + '/' +-->
-    <!--                                    ${invitation.getDate().getYear()}">-->
-    <!--                                </p>-->
-    <!--                            </div>-->
-    <!--                        </a>-->
-    <!--                    </div>-->
-    <!--                </li>-->
-    <!--                <li class="nav-item dropdown">-->
-    <!--                    <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"-->
-    <!--                       data-toggle="dropdown">-->
-    <!--                        <i class="icon-bell mx-0" style="color: #FFFFFF"></i>-->
-    <!--                        <span class="count"></span>-->
-    <!--                    </a>-->
-    <!--                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"-->
-    <!--                         aria-labelledby="notificationDropdown">-->
-    <!--                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>-->
-    <!--                        <a class="dropdown-item preview-item">-->
-    <!--                            <div class="preview-thumbnail">-->
-    <!--                                <div class="preview-icon bg-success">-->
-    <!--                                    <i class="ti-info-alt mx-0"></i>-->
-    <!--                                </div>-->
-    <!--                            </div>-->
-    <!--                            <div class="preview-item-content">-->
-    <!--                                <h6 class="preview-subject font-weight-normal">Application Error</h6>-->
-    <!--                                <p class="font-weight-light small-text mb-0 text-muted">-->
-    <!--                                    Just now-->
-    <!--                                </p>-->
-    <!--                            </div>-->
-    <!--                        </a>-->
-    <!--                        <a class="dropdown-item preview-item">-->
-    <!--                            <div class="preview-thumbnail">-->
-    <!--                                <div class="preview-icon bg-warning">-->
-    <!--                                    <i class="ti-settings mx-0"></i>-->
-    <!--                                </div>-->
-    <!--                            </div>-->
-    <!--                            <div class="preview-item-content">-->
-    <!--                                <h6 class="preview-subject font-weight-normal">Settings</h6>-->
-    <!--                                <p class="font-weight-light small-text mb-0 text-muted">-->
-    <!--                                    Private message-->
-    <!--                                </p>-->
-    <!--                            </div>-->
-    <!--                        </a>-->
-    <!--                        <a class="dropdown-item preview-item">-->
-    <!--                            <div class="preview-thumbnail">-->
-    <!--                                <div class="preview-icon bg-info">-->
-    <!--                                    <i class="ti-user mx-0"></i>-->
-    <!--                                </div>-->
-    <!--                            </div>-->
-    <!--                            <div class="preview-item-content">-->
-    <!--                                <h6 class="preview-subject font-weight-normal">New user registration</h6>-->
-    <!--                                <p class="font-weight-light small-text mb-0 text-muted">-->
-    <!--                                    2 days ago-->
-    <!--                                </p>-->
-    <!--                            </div>-->
-    <!--                        </a>-->
-    <!--                    </div>-->
-    <!--                </li>-->
-    <!--                <li class="nav-item nav-profile dropdown">-->
-    <!--                    <a class="nav-link dropdown-toggle" data-toggle="dropdown"-->
-    <!--                       id="profileDropdown">-->
-    <!--                        <img th:src="${user.getGetPhotoForMVC()}" alt="image" class="img-fluid">-->
-    <!--                    </a>-->
-    <!--                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">-->
-    <!--                        <a class="dropdown-item" th:href="@{/users}">-->
-    <!--                            <i class="ti-settings text-primary"></i>-->
-    <!--                            Settings-->
-    <!--                        </a>-->
-    <!--                        <a class="dropdown-item" th:href="@{/login/logout}">-->
-    <!--                            <i class="ti-power-off text-primary"></i>-->
-    <!--                            Logout-->
-    <!--                        </a>-->
-    <!--                    </div>-->
-    <!--                </li>-->
-    <!--            </ul>-->
-    <!--            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"-->
-    <!--                    data-toggle="offcanvas">-->
-    <!--                <span class="icon-menu"></span>-->
-    <!--            </button>-->
-    <!--        </div>-->
-    <!--    </nav>-->
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
         <!-- partial -->
         <!-- partial:partials/_sidebar.html -->
         <div th:replace="fragments::rightNav"></div>
-
-        <!--        <nav class="sidebar sidebar-offcanvas" id="sidebar" style="background-image: url('/images/hero_bg_1.jpg');">-->
-        <!--            <ul class="nav">-->
-        <!--                <li class="nav-item">-->
-        <!--                    <a class="nav-link" th:href="@{/dashboard}" style="color: #FFFFFF">-->
-        <!--                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>-->
-        <!--                        <span class="menu-title">Dashboard</span>-->
-        <!--                    </a>-->
-        <!--                </li>-->
-        <!--                <li class="nav-item">-->
-        <!--                    <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false"-->
-        <!--                       aria-controls="charts">-->
-        <!--                        <i class="icon-bar-graph menu-icon" style="color: #FFFFFF"></i>-->
-        <!--                        <span class="menu-title" style="color: #FFFFFF">Work Items</span>-->
-        <!--                        <i class="menu-arrow" style="color: #FFFFFF"></i>-->
-        <!--                    </a>-->
-        <!--                    <div class="collapse" id="charts">-->
-        <!--                        <ul class="nav flex-column sub-menu">-->
-        <!--                            <li class="nav-item"><a class="nav-link"-->
-        <!--                                                    th:href="@{/work_item}">Create Work Item</a></li>-->
-        <!--                        </ul>-->
-        <!--                        <ul class="nav flex-column sub-menu">-->
-        <!--                            <li class="nav-item"><a class="nav-link"-->
-        <!--                                                    th:href="@{/work_item/all}">My Work Items</a></li>-->
-        <!--                        </ul>-->
-        <!--                        <ul class="nav flex-column sub-menu">-->
-        <!--                            <li class="nav-item"><a class="nav-link"-->
-        <!--                                                    th:href="@{/work_item/for_review}">For Review</a></li>-->
-        <!--                        </ul>-->
-        <!--                        <ul class="nav flex-column sub-menu">-->
-        <!--                            <li class="nav-item"><a class="nav-link"-->
-        <!--                                                    th:href="@{/work_item/change_request}">Change Requested</a></li>-->
-        <!--                        </ul>-->
-        <!--                    </div>-->
-        <!--                </li>-->
-        <!--                <li class="nav-item">-->
-        <!--                    <a class="nav-link" data-toggle="collapse" href="#team" aria-expanded="false"-->
-        <!--                       aria-controls="team">-->
-        <!--                        <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>-->
-        <!--                        <span class="menu-title" style="color: #FFFFFF">Team</span>-->
-        <!--                        <i class="menu-arrow" style="color: #FFFFFF"></i>-->
-        <!--                    </a>-->
-        <!--                    <div class="collapse" id="team">-->
-        <!--                        <ul class="nav flex-column sub-menu">-->
-        <!--                            <li class="nav-item"><a class="nav-link"-->
-        <!--                                                    th:href="@{/team/all}">My Team</a></li>-->
-        <!--                        </ul>-->
-        <!--                        <ul class="nav flex-column sub-menu">-->
-        <!--                            <li class="nav-item"><a class="nav-link"-->
-        <!--                                                    th:href="@{/team}">Create team</a></li>-->
-        <!--                        </ul>-->
-        <!--                    </div>-->
-        <!--                </li>-->
-        <!--                <li class="nav-item">-->
-        <!--                    <a class="nav-link" th:href="@{/invitation/all}" style="color: #FFFFFF">-->
-        <!--                        <i class="icon-grid menu-icon" style="color: #FFFFFF"></i>-->
-        <!--                        <span class="menu-title">Invitations</span>-->
-        <!--                    </a>-->
-        <!--                </li>-->
-        <!--            </ul>-->
-        <!--        </nav>-->
         <!-- partial -->
         <div class="main-panel">
             <div class="content-wrapper" style="background-color: #F8F9FD">
@@ -249,8 +42,8 @@
                             <div class="row">
                                 <a th:if="${user.getTeam() != null}" class="col-6" th:href="@{/team}">
                                     <button type="submit" class="btn btn-block btn-primary btn-lg"
-                                            th:href="@{/team}">
-                                        MY TEAM
+                                            th:href="@{/team}"
+                                            th:text="'TEAM: ' + ${user.getTeam().getName().toUpperCase()}">
                                     </button>
                                 </a>
                                 <a th:if="${user.getTeam() == null}" class="col-6">

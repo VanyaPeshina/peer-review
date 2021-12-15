@@ -1,6 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.models;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "comments")
@@ -54,5 +55,13 @@ public class Comment {
 
     public void setWorkItem(WorkItem workItem) {
         this.workItem = workItem;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment incomingComment = (Comment) o;
+        return incomingComment.comment.equals(this.comment);
     }
 }

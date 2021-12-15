@@ -1,6 +1,8 @@
 package com.telerikacademy.finalprojectpeerreview.services.contracts;
 
+import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 
 import java.util.List;
@@ -11,9 +13,9 @@ public interface CRUDService<E> {
 
     E getById(int id) throws EntityNotFoundException;
 
-    void create(E entity, User user);
+    void create(E entity, User user) throws DuplicateEntityException;
 
-    void update(E entity, User user);
+    void update(E entity, User user) throws DuplicateEntityException, UnauthorizedOperationException;
 
     void delete(int id, User user) throws EntityNotFoundException;
 

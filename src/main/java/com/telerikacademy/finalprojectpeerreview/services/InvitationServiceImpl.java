@@ -8,7 +8,6 @@ import com.telerikacademy.finalprojectpeerreview.repositories.contracts.CRUDRepo
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.InvitationRepository;
 import com.telerikacademy.finalprojectpeerreview.repositories.contracts.UserRepository;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.InvitationService;
-import com.telerikacademy.finalprojectpeerreview.utils.WorkItemsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,28 +16,23 @@ public class InvitationServiceImpl extends CRUDServiceImpl<Invitation> implement
 
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
-    private final WorkItemsHelper workItemsHelper;
 
     @Autowired
     public InvitationServiceImpl(CRUDRepository<Invitation> crudRepository,
                                  InvitationRepository invitationRepository,
-                                 UserRepository userRepository,
-                                 WorkItemsHelper workItemsHelper) {
+                                 UserRepository userRepository) {
         super(crudRepository);
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
-        this.workItemsHelper = workItemsHelper;
     }
 
     @Override
-    public void update(Invitation invitation, User user) {
+    public void update(Invitation invitation, User user) throws DuplicateEntityException {
         if (user.getTeam() != null && user.getTeam().getName().equals(invitation.getTeam().getName())) {
             throw new DuplicateEntityException("user", "this", "team");
         }
-        //workItemsHelper.checkForUnfinishedWorkItems(user);
-        user.setTeam(invitation.getTeam());
-        userRepository.update(user);
-        invitationRepository.delete(invitation);
+        user.setTeam(invitation.getTeam()); userRepository.update(user);
+        invitation.setDelete(1); invitationRepository.update(invitation);
     }
 
     @Override
