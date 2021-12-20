@@ -1,6 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.utils;
 
 import com.telerikacademy.finalprojectpeerreview.models.Invitation;
+import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.InvitationService;
 import com.telerikacademy.finalprojectpeerreview.services.contracts.TeamService;
@@ -76,6 +77,18 @@ public class UserHelper {
                 .stream()
                 .filter(invitation -> invitation.getDelete() == 0)
                 .filter(invitation -> invitation.getInvited().getId() == user.getId())
+                .collect(Collectors.toList());
+    }
+
+    public List<Team> yourTeam(User user) {
+        List<Team> teams = teamService.getAll();
+        if (teams.isEmpty()) {
+            return teams;
+        }
+        return teams
+                .stream()
+                .filter(team -> team.getDelete() == 0)
+                .filter(team -> team.getId() == user.getId())
                 .collect(Collectors.toList());
     }
 }

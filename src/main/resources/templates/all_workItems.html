@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>All Work Items</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/dashboard/feather/feather.css">
+    <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/dashboard/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/dashboard/datatables.net-bs4/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="/dashboard/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" type="text/css" href="/dashboard/js/select.dataTables.min.css">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="/dashboard/css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="/dashboard/images/favicon.png"/>
+</head>
+<body>
+<div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <div th:replace="fragments::topNav"></div>
+
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_settings-panel.html -->
+        <!-- partial -->
+        <!-- partial:partials/_sidebar.html -->
+        <div th:replace="fragments::rightNav"></div>
+
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper" style="background-color: #C9E3F6">
+<!--                <form th:if="${workItems.size() != 0}" action="#" th:action="@{/work_item/filter}"-->
+<!--                      th:object="${workItemDto}" method="post">-->
+<!--                    <div class="d-flex mb-4 justify-content-center">-->
+
+<!--                        &lt;!&ndash; Reviewer filter &ndash;&gt;-->
+<!--                        <select th:field="*{reviewerId}" name="user"-->
+<!--                                class="btn btn-black btn-outline-black small rounded-0"-->
+<!--                                style="background-color: #FFFFFF; color: #314CA3">-->
+<!--                            <option  style="color: #314CA3" name="user" th:value="-1" value="default">Select reviewer</option>-->
+<!--                            <option  style="color: #314CA3" name="user" th:each="user : ${users}"-->
+<!--                                     th:value="${user.id}"-->
+<!--                                     th:text="${user.getUsername()}"></option>-->
+<!--                        </select>-->
+
+<!--                        &lt;!&ndash;Status filter&ndash;&gt;-->
+<!--                        <select th:field="*{statusId}" name="category"-->
+<!--                                class="btn btn-black btn-outline-black small rounded-0"-->
+<!--                                style="background-color: #FFFFFF; color: #314CA3">-->
+<!--                            <option  style="color: #314CA3"  name="category" th:value="-1" value="default">Select Status-->
+<!--                            </option>-->
+<!--                            <option  style="color: #314CA3"  name="category" th:each="status : ${statuses}"-->
+<!--                                     th:value="${status.id}"-->
+<!--                                     th:text="${status.getStatus()}"></option>-->
+<!--                        </select>-->
+
+<!--                        &lt;!&ndash;Filter button&ndash;&gt;-->
+<!--                        <input type="submit" class="btn btn-black btn-outline-black small rounded-0"-->
+<!--                               style="background-color: #3B83CD; color: #FFFFFF" value="Filter"/>-->
+<!--                    </div>-->
+<!--                </form>-->
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title"  style="color: #314CA3; font-weight: bold">All Work Items</h3>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="text-left"  style="color: #314CA3">Title</th>
+                                        <th class="text-center" style="color: #314CA3">Creator</th>
+                                        <th class="text-center" style="color: #314CA3">Reviewer</th>
+                                        <th class="text-center" style="color: #314CA3">Team</th>
+                                        <th class="text-center" style="color: #314CA3">Status</th>
+                                        <th class="text-center" style="color: #314CA3">File</th>
+                                        <th class="text-center" style="color: #314CA3">Update</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="workItem : ${allWorkItems}">
+                                        <td class="text-left" style="white-space: pre-line; color: #314CA3"
+                                            th:text="${workItem.title}"></td>
+                                        <td class="text-center"><img
+                                                th:src="${workItem.getCreator().getGetPhotoForMVC()}" alt="image"/>
+                                        </td>
+                                        <td class="text-center" th:if="${workItem.getReviewer() != null}">
+                                            <img th:src="${workItem.getReviewer().getGetPhotoForMVC()}" alt="image"/>
+                                        </td>
+                                        <td class="text-center" th:text="${workItem.team.name}" style="color: #314CA3"></td>
+                                        <td class="text-center" style="color: #FFFFFF">
+                                            <th:block th:switch="${workItem.status.status}">
+                                                <div th:case="'Pending'">
+                                                    <span class="badge bg-info rounded-pill">Pending</span>
+                                                </div>
+                                                <div th:case="'Under Review'">
+                                                    <span class="badge bg-primary rounded-pill">Under Review</span>
+                                                </div>
+                                                <div th:case="'Change Requested'">
+                                                    <span class="badge bg-warning rounded-pill">Change Requested</span>
+                                                </div>
+                                                <div th:case="'Accepted'">
+                                                    <span class="badge bg-success rounded-pill">Accepted</span>
+                                                </div>
+                                                <div th:case="'Rejected'">
+                                                    <span class="badge bg-danger rounded-pill">Rejected</span>
+                                                </div>
+                                            </th:block>
+                                        </td>
+                                        <td class="text-center"
+                                            th:if="${workItem.getFileName() != null && workItem.getFileName().length() > 0}">
+                                            <a th:method="get" th:href="${workItem.getDownloadForMvc()}"
+                                               th:download="${workItem.getFileName()}">
+                                                <button type="button" class="btn btn-success btn-rounded btn-icon">
+                                                    <i class="ti-download"></i>
+                                                </button>
+                                            </a></td>
+                                        <td class="text-center"
+                                            th:if="${workItem.getFileName() == null || workItem.getFileName().length() == 0}">
+                                            <button type="button" class="btn btn-secondary btn-rounded btn-icon"
+                                                    disabled>
+                                                <i class="ti-download"></i>
+                                            </button>
+                                        </td>
+                                        <td class="text-center"><a th:href="@{/work_item/{id}(id=${workItem.getId()})}">
+                                            <button type="button" class="btn bg-warning btn-rounded btn-icon-text">
+                                                <i class="text" style="color: #FFFFFF">Review</i>
+                                                <i class="ti-pencil btn-icon-append" style="color: #FFFFFF"></i>
+                                            </button>
+                                        </a>
+                                        </td>
+<!--                                        <td th:unless="${workItem.getStatus().getStatus() == 'Rejected'}-->
+<!--                                         or ${workItem.getStatus().getStatus() == 'Accepted'}" class="text-center"><a-->
+<!--                                                th:href="@{/work_item/delete/{id}(id=${workItem.getId()})}">-->
+<!--                                            <button type="button" class="btn btn-danger btn-rounded btn-icon">-->
+<!--                                                <i class="ti-close"></i>-->
+<!--                                            </button>-->
+<!--                                        </a>-->
+<!--                                        </td>-->
+<!--                                        <td th:if="${workItem.getStatus().getStatus() == 'Rejected'}-->
+<!--                                        or ${workItem.getStatus().getStatus() == 'Accepted'}" class="text-center"><a>-->
+<!--                                            <button type="button" class="btn btn-secondary btn-rounded btn-icon"-->
+<!--                                                    disabled>-->
+<!--                                                <i class="ti-close"></i>-->
+<!--                                            </button>-->
+<!--                                        </a>-->
+<!--                                        </td>-->
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+
+<!-- plugins:js -->
+<script src="/dashboard/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="/dashboard/chart.js/Chart.min.js"></script>
+<script src="/dashboard/datatables.net/jquery.dataTables.js"></script>
+<script src="/dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<script src="/dashboard/js/dataTables.select.min.js"></script>
+
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="/dashboard/js/off-canvas.js"></script>
+<script src="/dashboard/js/hoverable-collapse.js"></script>
+<script src="/dashboard/js/template.js"></script>
+<script src="/dashboard/js/settings.js"></script>
+<script src="/dashboard/js/todolist.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="/dashboard/js/dashboard.js"></script>
+<script src="/dashboard/js/Chart.roundedBarCharts.js"></script>
+<!-- End custom js for this page-->
+</body>
+
+</html>

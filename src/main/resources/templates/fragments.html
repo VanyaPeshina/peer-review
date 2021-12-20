@@ -41,7 +41,7 @@
                     </ul>
                 </div>
             </li>
-            <li class="nav-item">
+            <li th:if="${user.getTeam() != null}" class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#team"
                    aria-controls="team">
                     <i class="icon-paper menu-icon" style="color: #FFFFFF"></i>
@@ -74,6 +74,28 @@
                     <ul class="nav flex-column sub-menu">
                         <li class="nav-item"><a class="nav-link"
                                                 th:href="@{/invitation/all}">Sent Invitations</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li th:if="${isAdmin}" class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#admin"
+                   aria-controls="invitations">
+                    <i class="ti-crown menu-icon" style="color: #FFFFFF"></i>
+                    <span class="menu-title" style="color: #FFFFFF">Administrator</span>
+                    <i class="menu-arrow" style="color: #FFFFFF"></i>
+                </a>
+                <div class="collapse" id="admin">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"><a class="nav-link"
+                                                th:href="@{/admin/use_rs}">All Users</a></li>
+                    </ul>
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"><a class="nav-link"
+                                                th:href="@{/admin/te_am}">All Teams</a></li>
+                    </ul>
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item"><a class="nav-link"
+                                                th:href="@{/admin/workItems}">All WorkItems</a></li>
                     </ul>
                 </div>
             </li>
@@ -127,56 +149,6 @@
                         </a>
                     </div>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#"
-                       data-toggle="dropdown">
-                        <i class="icon-bell mx-0" style="color: #FFFFFF"></i>
-                        <span class="count"></span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
-                         aria-labelledby="notificationDropdown">
-                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-success">
-                                    <i class="ti-info-alt mx-0"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">Application Error</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    Just now
-                                </p>
-                            </div>
-                        </a>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-warning">
-                                    <i class="ti-settings mx-0"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">Settings</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    Private message
-                                </p>
-                            </div>
-                        </a>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-info">
-                                    <i class="ti-user mx-0"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">New user registration</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    2 days ago
-                                </p>
-                            </div>
-                        </a>
-                    </div>
-                </li>
                 <li class="nav-item nav-profile dropdown">
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown"
                        id="profileDropdown">
@@ -185,7 +157,11 @@
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                         <a class="dropdown-item" th:href="@{/users/profile}">
                             <i class="ti-settings text-primary"></i>
-                            Settings
+                            Profile
+                        </a>
+                        <a class="dropdown-item" th:href="@{/users/change_password}">
+                            <i class="ti-key text-primary"></i>
+                            Change Password
                         </a>
                         <a class="dropdown-item" th:href="@{/logout}">
                             <i class="ti-power-off text-primary"></i>
@@ -221,9 +197,139 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="/dashboard/css/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="/dashboard/images/favicon.png"/>
+   <!-- <link rel="shortcut icon" href="/dashboard/images/peer-review-logo.png"/>-->
 </div>
+<!-- User card -->
+<div id="card" th:fragment="card">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
+        * {
+            box-sizing: border-box;
+        }
+
+       /* body {
+            background-color: #28223F;
+            font-family: Montserrat, sans-serif;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+
+            min-height: 100vh;
+            margin: 0;
+        }
+*/
+        h3 {
+            margin: 10px 0;
+        }
+
+        h6 {
+            margin: 5px 0;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 21px;
+        }
+
+        .card-container {
+            background-color: #FFFFFF;
+            border-radius: 5px;
+            box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.75);
+            color: #B3B8CD;
+            padding-top: 30px;
+            position: relative;
+            width: 350px;
+            max-width: 100%;
+            text-align: center;
+        }
+
+        .card-container .pro {
+            color: #314CA3;
+            background-color: #C2E54F;
+            border-radius: 3px;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 3px 7px;
+            position: absolute;
+            top: 30px;
+            left: 30px;
+        }
+
+        .card-container .round {
+            border: 1px solid #03BFCB;
+            border-radius: 50%;
+            padding: 7px;
+            width: 70%;
+            height: auto;
+        }
+
+        button.primary {
+            background-color: #03BFCB;
+            border: 1px solid #03BFCB;
+            border-radius: 3px;
+            color: #231E39;
+            font-family: Montserrat, sans-serif;
+            font-weight: 500;
+            padding: 10px 25px;
+        }
+
+        button.primary.ghost {
+            background-color: transparent;
+            color: #02899C;
+        }
+
+        .skills {
+            background-color: #FFFFFF;
+            text-align: left;
+            padding: 15px;
+            margin-top: 30px;
+        }
+
+        .skills ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .skills ul li {
+            border: 1px solid #2D2747;
+            border-radius: 2px;
+            display: inline-block;
+            font-size: 12px;
+            margin: 0 7px 7px 0;
+            padding: 7px;
+        }
+
+        footer {
+            background-color: #222;
+            color: #fff;
+            font-size: 14px;
+            bottom: 0;
+            position: fixed;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 999;
+        }
+
+        footer p {
+            margin: 10px 0;
+        }
+
+        footer i {
+            color: red;
+        }
+
+        footer a {
+            color: #3c97bf;
+            text-decoration: none;
+        }
+    </style>
+</div>
 
 </body>
 </html>

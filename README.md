@@ -26,7 +26,7 @@ Swagger: http://localhost:8080/swagger-ui/#/
 3. Run on LocalHost.
 
 ## Visuals
-DB Relations:
+DB Relations: final-project-peer-review-web\db\peer-review-relations.PNG
 
 ## Repo
 ```

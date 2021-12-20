@@ -41,6 +41,12 @@ public class DashboardMvcController {
         return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
     }
 
+    @ModelAttribute("isAdmin")
+    public boolean checkForAdmin(Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        return user.getRole().getRole().equals("Admin");
+    }
+
     @ModelAttribute("invitationsForYou")
     public List<Invitation> populateInvitations(Principal principal) {
         return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));

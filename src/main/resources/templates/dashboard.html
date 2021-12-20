@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <!-- Required meta tags -->
     <div th:replace="fragments::css"></div>
+    <link rel="icon" type="image/png" href="../dashboard/images/peer-review-logo.png"/>
+    <link rel="stylesheet" href="../iziToast-master/dist/css/iziToast.min.css">
     <title>Peer Review - Dashboard</title>
 </head>
 <body>
@@ -86,7 +87,7 @@
                                 <div class="card card-dark-blue">
                                     <div th:if="${user.getTeam() != null}" class="card-body">
                                         <a style="color: #F8F9FD;" th:href="@{/team}">
-                                            <h3 class="mb-4">Team's Items</h3>
+                                            <h3 class="mb-4">My Team's Items</h3>
                                         </a>
                                         <p class="fs-30 mb-2" th:text="${teamItems.size()}"></p>
                                     </div>
@@ -152,116 +153,131 @@
                 <!-- page-body-wrapper ends -->
             </div>
         </div>
-        <!-- container-scroller -->
+    </div>
+</div>
+<!-- container-scroller -->
 
-        <!-- plugins:js -->
-        <script src="dashboard/js/vendor.bundle.base.js"></script>
-        <!-- endinject -->
-        <!-- Plugin js for this page -->
-        <script src="dashboard/chart.js/Chart.min.js"></script>
-        <script src="dashboard/datatables.net/jquery.dataTables.js"></script>
-        <script src="dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
-        <script src="dashboard/js/dataTables.select.min.js"></script>
+<!-- plugins:js -->
+<script src="dashboard/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="dashboard/chart.js/Chart.min.js"></script>
+<script src="dashboard/datatables.net/jquery.dataTables.js"></script>
+<script src="dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<script src="dashboard/js/dataTables.select.min.js"></script>
 
-        <!-- End plugin js for this page -->
-        <!-- inject:js -->
-        <script src="dashboard/js/off-canvas.js"></script>
-        <script src="dashboard/js/hoverable-collapse.js"></script>
-        <script src="dashboard/js/template.js"></script>
-        <script src="dashboard/js/settings.js"></script>
-        <script src="dashboard/js/todolist.js"></script>
-        <!-- endinject -->
-        <!-- Custom js for this page-->
-        <script src="dashboard/js/dashboard.js"></script>
-        <script src="dashboard/js/Chart.roundedBarCharts.js"></script>
-        <!-- file upload/download -->
-        <script>'use strict'
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="dashboard/js/off-canvas.js"></script>
+<script src="dashboard/js/hoverable-collapse.js"></script>
+<script src="dashboard/js/template.js"></script>
+<script src="dashboard/js/settings.js"></script>
+<script src="dashboard/js/todolist.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="dashboard/js/dashboard.js"></script>
+<script src="dashboard/js/Chart.roundedBarCharts.js"></script>
 
-        var singleUploadForm = document.querySelector('#singleUploadForm');
-        var singleFileUploadInput = document.querySelector('#singleFileUploadInput');
-        var singleFileUploadError = document.querySelector('#singleFileUploadError');
-        var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
+<script src="../iziToast-master/dist/js/iziToast.min.js" type="text/javascript"></script>
+<!-- End custom js for this page-->
 
-        var multipleUploadForm = document.querySelector('#multipleUploadForm');
-        var multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
-        var multipleFileUploadError = document.querySelector('#multipleFileUploadError');
-        var multipleFileUploadSuccess = document.querySelector('#multipleFileUploadSuccess');
+<!-- Toast -->
+<script>iziToast.show({
+    title: 'Hey',
+    message: 'Don`t forget to check your items for review! Have a nice day!',
+    position: 'topRight',
+    timeout: 7000,
+    color: 'green'
+});</script>
 
-        function uploadSingleFile(file) {
-            var formData = new FormData();
-            formData.append("file", file);
+<!-- file upload/download -->
+<script>'use strict'
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/uploadFile");
+var singleUploadForm = document.querySelector('#singleUploadForm');
+var singleFileUploadInput = document.querySelector('#singleFileUploadInput');
+var singleFileUploadError = document.querySelector('#singleFileUploadError');
+var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
 
-            xhr.onload = function () {
-                console.log(xhr.responseText);
-                var response = JSON.parse(xhr.responseText);
-                if (xhr.status == 200) {
-                    singleFileUploadError.style.display = "none";
-                    singleFileUploadSuccess.innerHTML = "<p>File Uploaded Successfully.</p><p>DownloadUrl : <a href='" + response.fileDownloadUri + "' target='_blank'>" + response.fileDownloadUri + "</a></p>";
-                    singleFileUploadSuccess.style.display = "block";
-                } else {
-                    singleFileUploadSuccess.style.display = "none";
-                    singleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
-                }
-            }
+var multipleUploadForm = document.querySelector('#multipleUploadForm');
+var multipleFileUploadInput = document.querySelector('#multipleFileUploadInput');
+var multipleFileUploadError = document.querySelector('#multipleFileUploadError');
+var multipleFileUploadSuccess = document.querySelector('#multipleFileUploadSuccess');
 
-            xhr.send(formData);
+function uploadSingleFile(file) {
+    var formData = new FormData();
+    formData.append("file", file);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/uploadFile");
+
+    xhr.onload = function () {
+        console.log(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status == 200) {
+            singleFileUploadError.style.display = "none";
+            singleFileUploadSuccess.innerHTML = "<p>File Uploaded Successfully.</p><p>DownloadUrl : <a href='" + response.fileDownloadUri + "' target='_blank'>" + response.fileDownloadUri + "</a></p>";
+            singleFileUploadSuccess.style.display = "block";
+        } else {
+            singleFileUploadSuccess.style.display = "none";
+            singleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
         }
+    }
 
-        function uploadMultipleFiles(files) {
-            var formData = new FormData();
-            for (var index = 0; index < files.length; index++) {
-                formData.append("files", files[index]);
+    xhr.send(formData);
+}
+
+function uploadMultipleFiles(files) {
+    var formData = new FormData();
+    for (var index = 0; index < files.length; index++) {
+        formData.append("files", files[index]);
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/uploadMultipleFiles");
+
+    xhr.onload = function () {
+        console.log(xhr.responseText);
+        var response = JSON.parse(xhr.responseText);
+        if (xhr.status == 200) {
+            multipleFileUploadError.style.display = "none";
+            var content = "<p>All Files Uploaded Successfully</p>";
+            for (var i = 0; i < response.length; i++) {
+                content += "<p>DownloadUrl : <a href='" + response[i].fileDownloadUri + "' target='_blank'>" + response[i].fileDownloadUri + "</a></p>";
             }
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/uploadMultipleFiles");
-
-            xhr.onload = function () {
-                console.log(xhr.responseText);
-                var response = JSON.parse(xhr.responseText);
-                if (xhr.status == 200) {
-                    multipleFileUploadError.style.display = "none";
-                    var content = "<p>All Files Uploaded Successfully</p>";
-                    for (var i = 0; i < response.length; i++) {
-                        content += "<p>DownloadUrl : <a href='" + response[i].fileDownloadUri + "' target='_blank'>" + response[i].fileDownloadUri + "</a></p>";
-                    }
-                    multipleFileUploadSuccess.innerHTML = content;
-                    multipleFileUploadSuccess.style.display = "block";
-                } else {
-                    multipleFileUploadSuccess.style.display = "none";
-                    multipleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
-                }
-            }
-
-            xhr.send(formData);
+            multipleFileUploadSuccess.innerHTML = content;
+            multipleFileUploadSuccess.style.display = "block";
+        } else {
+            multipleFileUploadSuccess.style.display = "none";
+            multipleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
         }
+    }
+
+    xhr.send(formData);
+}
 
 
-        singleUploadForm.addEventListener('submit', function (event) {
-            var files = singleFileUploadInput.files;
-            if (files.length === 0) {
-                singleFileUploadError.innerHTML = "Please select a file";
-                singleFileUploadError.style.display = "block";
-            }
-            uploadSingleFile(files[0]);
-            event.preventDefault();
-        }, true);
+singleUploadForm.addEventListener('submit', function (event) {
+    var files = singleFileUploadInput.files;
+    if (files.length === 0) {
+        singleFileUploadError.innerHTML = "Please select a file";
+        singleFileUploadError.style.display = "block";
+    }
+    uploadSingleFile(files[0]);
+    event.preventDefault();
+}, true);
 
 
-        multipleUploadForm.addEventListener('submit', function (event) {
-            var files = multipleFileUploadInput.files;
-            if (files.length === 0) {
-                multipleFileUploadError.innerHTML = "Please select at least one file";
-                multipleFileUploadError.style.display = "block";
-            }
-            uploadMultipleFiles(files);
-            event.preventDefault();
-        }, true);
-        </script>
-        <!-- End custom js for this page-->
+multipleUploadForm.addEventListener('submit', function (event) {
+    var files = multipleFileUploadInput.files;
+    if (files.length === 0) {
+        multipleFileUploadError.innerHTML = "Please select at least one file";
+        multipleFileUploadError.style.display = "block";
+    }
+    uploadMultipleFiles(files);
+    event.preventDefault();
+}, true);
+</script>
+<!-- End custom js for this page-->
 </body>
 
 </html>

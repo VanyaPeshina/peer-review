@@ -1,6 +1,7 @@
 package com.telerikacademy.finalprojectpeerreview.models.mappers;
 
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
+import com.telerikacademy.finalprojectpeerreview.exceptions.WrongPasswordException;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.UserDTO;
 import com.telerikacademy.finalprojectpeerreview.models.Team;
 import com.telerikacademy.finalprojectpeerreview.models.User;
@@ -35,7 +36,7 @@ public class UserMapper {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User fromDto(UserDTO userDTO) throws IOException, EntityNotFoundException {
+    public User fromDto(UserDTO userDTO) throws EntityNotFoundException {
         User user;
         if (userDTO.getId() == 0) {
             user = new User();
@@ -54,11 +55,8 @@ public class UserMapper {
         doPhotoName(userDTO, user);
         doTeam(userDTO, user);
         doUserRole(userDTO, user);
-        if (userDTO.getId() == 0) {
-            user.setDelete(0);
-            user.setEnabled(false);
-            user.setLocked(false);
-        }
+        doSecondPassword(userDTO, user);
+        setNewUser(userDTO, user);
     }
 
     public UserDTO toDto(User user) {
@@ -72,12 +70,13 @@ public class UserMapper {
 
     private void doUserRole(UserDTO userDTO, User user) throws EntityNotFoundException {
         UserRole userRole;
-        if (userDTO.getUserRole() > 0) {
-            userRole = userRoleRepository.getByField("role", userDTO.getUserRole());
-        } else {
+        if (userDTO.getUserRole() > 0 && user.getRole() != null) {
+            userRole = userRoleRepository.getByField("id", userDTO.getUserRole());
+            user.setRole(userRole);
+        } else if (user.getRole() == null) {
             userRole = userRoleRepository.getByField("role", "User");
+            user.setRole(userRole);
         }
-        user.setRole(userRole);
     }
 
     private void doTeam(UserDTO userDTO, User user) throws EntityNotFoundException {
@@ -145,6 +144,24 @@ public class UserMapper {
             } else {
                 throw new IllegalArgumentException(PASSWORD_SHOULD_CONTAIN);
             }
+        }
+    }
+
+    private void doSecondPassword(UserDTO userDTO, User user) {
+        if (userDTO.getSecondPassword() != null) {
+            if (!passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
+                throw new WrongPasswordException("Wrong password provided");
+            }
+            userDTO.setPassword(userDTO.getSecondPassword());
+            doPassword(userDTO, user);
+        }
+    }
+
+    private void setNewUser(UserDTO userDTO, User user) {
+        if (userDTO.getId() == 0) {
+            user.setDelete(0);
+            user.setEnabled(false);
+            user.setLocked(false);
         }
     }
 }

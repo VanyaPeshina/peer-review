@@ -63,6 +63,12 @@ public class WorkItemMvcController {
         return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
     }
 
+    @ModelAttribute("isAdmin")
+    public boolean checkForAdmin(Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        return user.getRole().getRole().equals("Admin");
+    }
+
     @ModelAttribute("invitationsForYou")
     public List<Invitation> populateIs(Principal principal) {
         return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));
@@ -120,7 +126,7 @@ public class WorkItemMvcController {
         return "change_request";
     }
 
-    @GetMapping("/view/{id}")
+   /* @GetMapping("/view/{id}")
     public String viewWorkItemPage(@PathVariable int id,
                                    Model model,
                                    Principal principal) {
@@ -135,9 +141,9 @@ public class WorkItemMvcController {
         } catch (EntityNotFoundException e) {
             return "error-404";
         }
-    }
+    }*/
 
-    @PostMapping("/view/{id}")
+  /*  @PostMapping("/view/{id}")
     public String createComment(@PathVariable int id,
                                 @Valid @ModelAttribute("commentDto") CommentDTO commentDTO,
                                 BindingResult result,
@@ -164,7 +170,7 @@ public class WorkItemMvcController {
             e.printStackTrace();
             return "view_workItem";
         }
-    }
+    }*/
 
     @GetMapping("/submit")
     public String showNewWorkItemPage(Model model, Principal principal) {
@@ -249,7 +255,7 @@ public class WorkItemMvcController {
                 commentService.create(commentMapper.fromDto(commentDTO), user);
             }
             workItemService.update(workItemToUpdate, user);
-            return "redirect:/work_item";
+            return "redirect:/team";
         } catch (IllegalArgumentException e) {
             return "conflict_409";
         } catch (EntityNotFoundException e) {

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:replace="fragments::css"></div>
+    <title>All Users</title>
+</head>
+<body>
+<div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <div th:replace="fragments::topNav"></div>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_settings-panel.html -->
+        <div th:replace="fragments::rightNav"></div>
+        <!-- partial -->
+        <div class="main-panel">
+            <div class="content-wrapper" style="background-color: #C9E3F6">
+                <div class="row">
+                    <div class="col-lg-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title" style="color: #314CA3">All Users</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th class="text-center" style="color: #314CA3">Id</th>
+                                            <th class="text-center" style="color: #314CA3">Username</th>
+                                            <th class="text-center" style="color: #314CA3">Email</th>
+                                            <th class="text-center" style="color: #314CA3">Phone</th>
+                                            <th class="text-center" style="color: #314CA3">Team</th>
+                                            <th class="text-center" style="color: #314CA3">Role</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="user : ${allUsers}">
+                                            <td> <a th:href="@{/admin/{id}(id=${user.getId()})}" th:text="${user.id}" style="color: #314CA3"></a>
+                                            </td>
+                                            <td class="text-center" th:text="${user.username}" style="color: #314CA3"></td>
+                                            <td class="text-center" th:text="${user.email}" style="color: #314CA3"></td>
+                                            <td class="text-center" th:text="${user.phone}" style="color: #314CA3"></td>
+                                            <td class="text-center" th:if="${user.getTeam() != null}"
+                                                th:text="${user.getTeam().getName()}" style="color: #314CA3"></td>
+                                            <td class="text-center" th:if="${user.getTeam() == null}" style="color: grey"> No Team</td>
+                                            <td class="text-center" style="color: #FFFFFF">
+                                                <th:block  class="text-center" th:switch="${user.getRole().getRole()}">
+                                                    <div th:case="'Admin'">
+                                                        <span class="text-center badge bg-primary rounded-pill">Admin</span>
+                                                    </div>
+                                                    <div th:case="'User'">
+                                                        <span class="text-center badge bg-success rounded-pill">User</span>
+                                                    </div>
+                                                </th:block>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page-body-wrapper ends -->
+</div>
+<!-- container-scroller -->
+
+<!-- plugins:js -->
+<script src="/dashboard/js/vendor.bundle.base.js"></script>
+<!-- endinject -->
+<!-- Plugin js for this page -->
+<script src="/dashboard/chart.js/Chart.min.js"></script>
+<script src="/dashboard/datatables.net/jquery.dataTables.js"></script>
+<script src="/dashboard/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+<script src="/dashboard/js/dataTables.select.min.js"></script>
+
+<!-- End plugin js for this page -->
+<!-- inject:js -->
+<script src="/dashboard/js/off-canvas.js"></script>
+<script src="/dashboard/js/hoverable-collapse.js"></script>
+<script src="/dashboard/js/template.js"></script>
+<script src="/dashboard/js/settings.js"></script>
+<script src="/dashboard/js/todolist.js"></script>
+<!-- endinject -->
+<!-- Custom js for this page-->
+<script src="/dashboard/js/dashboard.js"></script>
+<script src="/dashboard/js/Chart.roundedBarCharts.js"></script>
+<!-- End custom js for this page-->
+</body>
+
+</html>
+

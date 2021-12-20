@@ -54,6 +54,12 @@ public class TeamMvcController {
         return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
     }
 
+    @ModelAttribute("isAdmin")
+    public boolean checkForAdmin(Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        return user.getRole().getRole().equals("Admin");
+    }
+
     @ModelAttribute("invitationsForYou")
     public List<Invitation> populateIs(Principal principal) {
         return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));
@@ -94,12 +100,12 @@ public class TeamMvcController {
         user.setTeam(null);
         try {
             userService.update(user, user);
+            return "redirect:/my_dashboard";
         } catch (DuplicateEntityException | UnauthorizedOperationException e) {
             //TODO
             e.printStackTrace();
             return "team";
         }
-        return "redirect:/my_dashboard";
     }
 
     @GetMapping("/create")
@@ -119,6 +125,11 @@ public class TeamMvcController {
 
         if (errors.hasErrors()) {
             return "create_team";
+        }
+        if (user.getTeam() != null) {
+            if (workItemsHelper.checkForUnfinishedWorkItems(user)) {
+                return "error_leave_team";
+            }
         }
         try {
             teamDTO.setOwnerId(user.getId());

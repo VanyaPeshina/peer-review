@@ -145,11 +145,12 @@
                         <table class="table table-hover">
                             <tbody>
                             <tr th:each="comment : ${comments}">
-                                <td class="text-left"><img th:src="${comment.getCreator().getGetPhotoForMVC()}"
-                                                           alt="image"/>
+                                <td><img th:src="${comment.getCreator().getGetPhotoForMVC()}" alt="image"
+                                         style="white-space: pre-line; color: #314CA3; text-align: left"
+                                         th:text="'   ' + ${comment.getComment().toString()}"/>
                                 </td>
-                                <td class="text-left" style="white-space: pre-line; color: #314CA3"
-                                    th:text="${comment.getComment().toString()}"></td>
+                               <!-- <td class="text-left" style="white-space: pre-line; color: #314CA3; text-align: left"
+                                    th:text="${comment.getComment().toString()}"></td>-->
                             </tr>
                             </tbody>
                         </table>

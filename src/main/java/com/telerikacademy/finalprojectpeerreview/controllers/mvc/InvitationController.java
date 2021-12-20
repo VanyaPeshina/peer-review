@@ -48,6 +48,12 @@ public class InvitationController {
         return session.getAttribute("SPRING_SECURITY_CONTEXT") != null;
     }
 
+    @ModelAttribute("isAdmin")
+    public boolean checkForAdmin(Principal principal) {
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        return user.getRole().getRole().equals("Admin");
+    }
+
     @ModelAttribute("invitationsForYou")
     public List<Invitation> populateIs(Principal principal) {
         return userHelper.invitationsForYou((User) userService.loadUserByUsername(principal.getName()));
@@ -131,7 +137,7 @@ public class InvitationController {
         try {
             Invitation invitation = invitationService.getById(id);
             invitationService.update(invitation, user);
-            return "redirect:/invitation/all";
+            return "redirect:/my_dashboard";
         } catch (EntityNotFoundException e) {
             return "error-404";
         } catch (DuplicateEntityException | UnauthorizedOperationException e) {

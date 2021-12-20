@@ -20,7 +20,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="dashboard/vertical-layout-light/style.css">
     <!-- endinject -->
-    <link rel="shortcut icon" href="dashboard/images/favicon.png"/>
+    <link rel="shortcut icon" href="dashboard/images/peer-review-logo.png"/>
 </head>
 
 <body>
@@ -61,13 +61,13 @@
                                         Keep me signed in
                                     </label>
                                 </div>
-                                <a href="#" class="auth-link text-black">Forgot password?</a>
+                                <a th:href="@{/password/request}" class="auth-link text-black">Forgot password?</a>
                             </div>
-                            <div class="mb-2">
+                           <!-- <div class="mb-2">
                                 <button type="button" class="btn btn-block btn-facebook auth-form-btn">
                                     <i class="ti-facebook mr-2"></i>Connect using facebook
                                 </button>
-                            </div>
+                            </div>-->
                             <div class="text-center mt-4 font-weight-light">
                                 Don't have an account? <a th:href="@{/register}" class="text-primary">Create</a>
                             </div>

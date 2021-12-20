@@ -45,6 +45,8 @@ public class WorkItemsHelper {
             return workItemService.getAll().stream()
                     .filter(workItem -> workItem.getTeam().getId() == user.getTeam().getId())
                     .filter(workItem -> workItem.getReviewer().getId() == user.getId())
+                    .filter(workItem -> workItem.getStatus().getId() != 4)
+                    .filter(workItem -> workItem.getStatus().getId() != 5)
                     .collect(Collectors.toList());
         }
         return new ArrayList<>();

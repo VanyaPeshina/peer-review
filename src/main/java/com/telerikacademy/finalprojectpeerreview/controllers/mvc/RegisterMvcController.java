@@ -4,6 +4,7 @@ import com.telerikacademy.finalprojectpeerreview.exceptions.DuplicateEntityExcep
 import com.telerikacademy.finalprojectpeerreview.exceptions.EntityNotFoundException;
 import com.telerikacademy.finalprojectpeerreview.exceptions.UnauthorizedOperationException;
 import com.telerikacademy.finalprojectpeerreview.models.ConfirmationToken;
+import com.telerikacademy.finalprojectpeerreview.models.DTOs.LoginDto;
 import com.telerikacademy.finalprojectpeerreview.models.DTOs.UserDTO;
 import com.telerikacademy.finalprojectpeerreview.models.User;
 import com.telerikacademy.finalprojectpeerreview.models.mappers.UserMapper;
@@ -52,11 +53,6 @@ public class RegisterMvcController {
         if (errors.hasErrors()) {
             return "register";
         }
-//        if (!userDTO.getPassword().equals(userDTO.getSecondPassword())) {
-//            errors.rejectValue("secondPassword", "password_error",
-//                    "Password confirmation should be same as password");
-//            return "register";
-//        }
         try {
             //TODO: Why we harcoded this???
             User creator = userService.getById(1);
@@ -78,7 +74,7 @@ public class RegisterMvcController {
         } catch (DuplicateEntityException | IllegalArgumentException e) {
             errors.rejectValue("password", "email_error", e.getMessage());
             return "register";
-        } catch (IOException | EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             return "error-404";
         }
     }
@@ -87,12 +83,18 @@ public class RegisterMvcController {
     public String confirm(@RequestParam("token") String token) throws EntityNotFoundException {
         try {
             userService.confirmToken(token);
-            return "redirect:/login";
+            return "redirect:/register/first_login";
         } catch (DuplicateEntityException | UnauthorizedOperationException e) {
             //TODO
             e.printStackTrace();
             return "redirect:/register/confirm";
         }
+    }
+
+    @GetMapping("/first_login")
+    public String firstLogin(Model model) {
+        model.addAttribute("user", new LoginDto());
+        return "first_login";
     }
 }
 

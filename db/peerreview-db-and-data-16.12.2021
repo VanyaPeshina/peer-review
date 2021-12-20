@@ -1,0 +1,221 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.6.4-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             11.3.0.6295
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+-- Dumping database structure for peerreview
+DROP DATABASE IF EXISTS `peerreview`;
+CREATE DATABASE IF NOT EXISTS `peerreview` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `peerreview`;
+
+-- Dumping structure for table peerreview.comments
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `comment` varchar(2000) NOT NULL,
+  `creator_id` int(11) NOT NULL,
+  `work_item_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `comments_user_fk` (`creator_id`),
+  KEY `comments_work_item_fk` (`work_item_id`),
+  CONSTRAINT `comments_user_fk` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `comments_work_item_fk` FOREIGN KEY (`work_item_id`) REFERENCES `work_items` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.comments: ~2 rows (approximately)
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+INSERT INTO `comments` (`id`, `comment`, `creator_id`, `work_item_id`) VALUES
+	(1, 'learn in Telerik Academy', 2, 2),
+	(3, 'Team 008 is a Dream Team!', 2, 2);
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.invitations
+DROP TABLE IF EXISTS `invitations`;
+CREATE TABLE IF NOT EXISTS `invitations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `invitation_creator_id` int(11) NOT NULL,
+  `team_id` int(11) NOT NULL,
+  `invited_user_id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `to_delete` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `invitations_creator_fk` (`invitation_creator_id`),
+  KEY `invitations_invited_user_fk` (`invited_user_id`),
+  KEY `invitations_team_fk` (`team_id`),
+  CONSTRAINT `invitations_creator_fk` FOREIGN KEY (`invitation_creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `invitations_invited_user_fk` FOREIGN KEY (`invited_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `invitations_team_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.invitations: ~0 rows (approximately)
+/*!40000 ALTER TABLE `invitations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `invitations` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.statuses
+DROP TABLE IF EXISTS `statuses`;
+CREATE TABLE IF NOT EXISTS `statuses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `statuses_status_uindex` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.statuses: ~5 rows (approximately)
+/*!40000 ALTER TABLE `statuses` DISABLE KEYS */;
+INSERT INTO `statuses` (`id`, `status`) VALUES
+	(4, 'Accepted'),
+	(3, 'Change Requested'),
+	(1, 'Pending'),
+	(5, 'Rejected'),
+	(2, 'Under Review');
+/*!40000 ALTER TABLE `statuses` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.teams
+DROP TABLE IF EXISTS `teams`;
+CREATE TABLE IF NOT EXISTS `teams` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `to_delete` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `teams_name_uindex` (`name`),
+  KEY `teams_owners_fk` (`owner_id`),
+  CONSTRAINT `teams_owners_fk` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.teams: ~2 rows (approximately)
+/*!40000 ALTER TABLE `teams` DISABLE KEYS */;
+INSERT INTO `teams` (`id`, `name`, `owner_id`, `to_delete`) VALUES
+	(1, 'Avengers', 2, 0),
+	(2, 'Justice League', 6, 0);
+/*!40000 ALTER TABLE `teams` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.tokens
+DROP TABLE IF EXISTS `tokens`;
+CREATE TABLE IF NOT EXISTS `tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `token` varchar(250) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `confirmed_at` datetime DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tokens_user_id_fk` (`user_id`),
+  CONSTRAINT `tokens_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.tokens: ~8 rows (approximately)
+/*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
+INSERT INTO `tokens` (`id`, `token`, `created_at`, `expires_at`, `confirmed_at`, `user_id`) VALUES
+	(1, 'fadacafc-ac31-4d0c-aafe-fde4f3370667', '2021-12-16 18:18:44', '2021-12-16 18:33:44', '2021-12-16 18:19:18', 2),
+	(2, '721125e5-e5f8-4bb4-b10e-7b2da51c71e0', '2021-12-16 18:28:25', '2021-12-16 18:43:25', '2021-12-16 18:28:48', 3),
+	(3, '32b29986-9d06-48d4-a023-027da59cc689', '2021-12-16 18:38:23', '2021-12-16 18:53:23', '2021-12-16 18:38:30', 4),
+	(4, 'c5fd1cfc-5342-45e0-a958-54091413a67c', '2021-12-16 18:42:44', '2021-12-16 18:57:44', '2021-12-16 18:43:46', 5),
+	(5, '150f4fdc-997b-4b20-9a38-369755d91ea7', '2021-12-16 18:49:21', '2021-12-16 19:04:21', '2021-12-16 18:50:05', 6),
+	(6, '56f03256-258c-4d00-bef8-53667614ac99', '2021-12-16 18:57:09', '2021-12-16 19:12:09', '2021-12-16 18:57:40', 7),
+	(7, '9a8bb29c-adb0-49e7-8c8e-b308e49d78da', '2021-12-16 19:16:18', '2021-12-16 19:31:18', '2021-12-16 19:17:23', 8),
+	(8, '472d2147-4d4b-4995-b72f-f6c8342dd280', '2021-12-16 19:20:55', '2021-12-16 19:35:55', '2021-12-16 19:21:05', 9);
+/*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.users
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(20) NOT NULL,
+  `password` varchar(350) NOT NULL,
+  `email` varchar(350) NOT NULL,
+  `phone` varchar(10) NOT NULL,
+  `team_id` int(11) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `photo_name` varchar(255) DEFAULT NULL,
+  `to_delete` int(11) NOT NULL,
+  `enabled` tinyint(1) DEFAULT NULL,
+  `locked` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_uindex` (`email`),
+  UNIQUE KEY `users_phone_uindex` (`phone`),
+  UNIQUE KEY `users_username_uindex` (`username`),
+  KEY `users_role_fk` (`role_id`),
+  KEY `users_team_fk` (`team_id`),
+  CONSTRAINT `users_role_fk` FOREIGN KEY (`role_id`) REFERENCES `user_roles` (`id`),
+  CONSTRAINT `users_team_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.users: ~9 rows (approximately)
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `phone`, `team_id`, `role_id`, `photo_name`, `to_delete`, `enabled`, `locked`) VALUES
+	(1, 'superuser.gabi', 'Passw0rd#', 'gabi@peerreview.com', '0888888888', NULL, 1, 'avatardefault.png', 0, 1, 0),
+	(2, 'vanya.peshina', '$2a$10$h6axCrt2Ad0gqkka6fLF6e8DKTDccZCIaEHikFNbsYORmlfEXHV8a', 'vanya.peshina@gmail.com', '0886062243', 1, 2, 'Untitled.jpg', 0, 1, 0),
+	(3, 'hulk', '$2a$10$j9tkgeivP0IE0t2DuLoMqOBo3NxYoXbRq/fKb6PxawBnQWAVKi1BG', 'vania_peshina1@abv.bg', '0886062241', 1, 2, 'hukl.jpg', 0, 1, 0),
+	(4, 'natasha.romanov', '$2a$10$cJTwM/89Z8qtDbMvKexczuEvQugCNTT0FLSXQMj6dNzuU8/AQluN6', 'peshina_vanya@abv.bg', '0886062244', 1, 2, '2861.jpg', 0, 1, 0),
+	(5, 'captain.chris', '$2a$10$99DMF/BxjNEv86NWau4/we7yHhiyy26f6i/jUvMz56AY2GDfyhrHy', 'h.kostadinov@abv.bg', '0886062245', 1, 2, 'dcvmr5k-17bd749d-829d-43a9-ba69-fa4f62d95fe1.png', 0, 1, 0),
+	(6, 'mihail.paskov', '$2a$10$jaHKsnzR0MVpZFac2SjzOuLgRzrd1BMYns41Jib31aC/RMLFl0bsS', 'mihaillpaskov@gmail.com', '0888787272', 2, 2, 'MicrosoftTeams-image (3).png', 0, 1, 0),
+	(7, 'batman', '$2a$10$7RkKLVeX504StfwToAQ5n.tObYi32e1pkeLmrXimavmRPlg.yE6py', 'batman@peerreview.com', '0886062247', 2, 2, 'Bat-Symbol-square.jpg', 0, 1, 0),
+	(8, 'superman', '$2a$10$Co8Y/iaJTQ6aNxJM8r1oxeje8PC4DS8OyiI9.K6xonebo2.W4L8aq', 'superman@peerreview.com', '0886062248', 2, 2, '1-16194_superman-logo-on-texture-square-superman-logo-round.png', 0, 1, 0),
+	(9, 'wonder.woman', '$2a$10$N6Y6rXOSR8uplI47SDXgSO/qknxHjST3887bhlIcNZx9BfPhFFBZW', 'vania_peshina@abv.bg', '0886062249', 2, 2, 'Cover-Wonder-Woman-FTR.jpg', 0, 1, 0);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.user_roles
+DROP TABLE IF EXISTS `user_roles`;
+CREATE TABLE IF NOT EXISTS `user_roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role` varchar(30) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_roles_role_uindex` (`role`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.user_roles: ~2 rows (approximately)
+/*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
+INSERT INTO `user_roles` (`id`, `role`) VALUES
+	(1, 'Admin'),
+	(2, 'User');
+/*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
+
+-- Dumping structure for table peerreview.work_items
+DROP TABLE IF EXISTS `work_items`;
+CREATE TABLE IF NOT EXISTS `work_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(80) NOT NULL,
+  `description` text NOT NULL,
+  `reviewer_id` int(11) DEFAULT NULL,
+  `status_id` int(11) DEFAULT NULL,
+  `creator_id` int(11) NOT NULL,
+  `team_id` int(11) NOT NULL,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_download_uri` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `work_items_creator_fk` (`creator_id`),
+  KEY `work_items_reviewer_fk` (`reviewer_id`),
+  KEY `work_items_status_fk` (`status_id`),
+  KEY `work_items_team_fk` (`team_id`),
+  CONSTRAINT `work_items_creator_fk` FOREIGN KEY (`creator_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `work_items_reviewer_fk` FOREIGN KEY (`reviewer_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `work_items_status_fk` FOREIGN KEY (`status_id`) REFERENCES `statuses` (`id`),
+  CONSTRAINT `work_items_team_fk` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table peerreview.work_items: ~6 rows (approximately)
+/*!40000 ALTER TABLE `work_items` DISABLE KEYS */;
+INSERT INTO `work_items` (`id`, `title`, `description`, `reviewer_id`, `status_id`, `creator_id`, `team_id`, `file_name`, `file_download_uri`) VALUES
+	(1, 'What is Lorem Ipsum?', 'Lorem Ipsum is simply a dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.', 2, 4, 3, 1, NULL, NULL),
+	(2, 'How to make a web', 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).', 2, 5, 4, 1, 'DuP34l7XgAApQmq.jpg', NULL),
+	(3, 'How to be the best leader', 'What is Lorem Ipsum?\r\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.\r\n\r\nWhy do we use it?\r\nIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for \'lorem ipsum\' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).\r\n\r\n\r\nWhere does it come from?\r\nContrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.\r\n\r\nThe standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.\r\n\r\nWhere can I get some?\r\nThere are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don\'t look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn\'t anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.', 4, 1, 5, 1, 'big-o-cheatsheet (1).pdf', NULL),
+	(4, 'Give me the Cat woman\'s phone!!!', 'Come on bro! I really need the Cat Woman\'s phone! Just give it to me! I even registered on your app!!', 6, 1, 7, 2, NULL, NULL),
+	(5, 'Tell me more about Java', 'I need to know more about Java!', 6, 1, 8, 2, 'thumb_cries-in-bad-at-java-72496323.png', NULL),
+	(6, 'Clean Code', 'Tell me if this is a good read.', 6, 1, 9, 2, 'Clean Code.pdf', NULL);
+/*!40000 ALTER TABLE `work_items` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

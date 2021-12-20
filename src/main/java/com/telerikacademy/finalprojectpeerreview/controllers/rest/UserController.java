@@ -110,7 +110,7 @@ public class UserController {
             User user = userMapper.fromDto(userDTO);
             userService.create(user, userToAuthenticate);
             return user;
-        } catch (IOException | DuplicateEntityException e) {
+        } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -127,7 +127,7 @@ public class UserController {
             User user = userMapper.fromDto(userDTO);
             userService.update(user, userToAuthenticate);
             return user;
-        } catch (IOException | DuplicateEntityException e) {
+        } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());

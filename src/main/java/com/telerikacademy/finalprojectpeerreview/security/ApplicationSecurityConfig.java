@@ -37,8 +37,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 //handle roles and authentication
                 .authorizeRequests()
                 /*.anyRequest().permitAll()*/
-                .antMatchers("/fonts/**", "/css/**", "/dashboard/**", "/js/**", "/static/**", "/images/**").permitAll()
-                .antMatchers("/", "/login/**", "/register/**", "**/logout", "/swagger-ui/**").permitAll()
+                .antMatchers("/fonts/**", "/css/**", "/dashboard/**", "/js/**", "/static/**",
+                        "/images/**", "/iziToast-master/**").permitAll()
+                .antMatchers("/", "/login/**", "/register/**", "**/logout", "/swagger-ui/**", "/password/**").permitAll()
                 .antMatchers("/api/**").permitAll()   //hasAnyRole(ADMIN.name(), SIMPLE_USER.name())
                 .antMatchers("management/api/**", "/management/**").hasRole(ADMIN.name())
                 .anyRequest()

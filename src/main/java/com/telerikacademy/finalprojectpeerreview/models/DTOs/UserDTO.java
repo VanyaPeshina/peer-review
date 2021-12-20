@@ -18,6 +18,8 @@ public class UserDTO {
     //TODO: Regex to validate password
     private String password;
 
+    private String secondPassword;
+
     @Email(message = EMAIL_SHOULD_BE_VALID)
     //TODO: Regex to validate email
     private String email;
@@ -126,4 +128,11 @@ public class UserDTO {
         this.userRole = userRole;
     }
 
+    public String getSecondPassword() {
+        return secondPassword;
+    }
+
+    public void setSecondPassword(String secondPassword) {
+        this.secondPassword = secondPassword;
+    }
 }
